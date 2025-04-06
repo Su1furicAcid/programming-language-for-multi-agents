@@ -1,5 +1,4 @@
 import ply.lex as lex
-import re
 
 # -------------------------------
 # 关键字和保留字
