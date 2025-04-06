@@ -1,0 +1,121 @@
+Created by PLY (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AGENT
+    ARROW
+    CHAT
+    COLON
+    COMMA
+    CONNECT
+    DEDENT
+    DEF
+    DIVIDE
+    DOT
+    ELIF
+    ELSE
+    EQ
+    EQUALS
+    FOR
+    GE
+    GLOBAL
+    GT
+    IDENTIFIER
+    IF
+    IN
+    INDENT
+    INPUT
+    LBRACE
+    LE
+    LPAREN
+    LT
+    MEMORY
+    MINUS
+    MOD
+    MODEL
+    NEQ
+    NEWLINE
+    NUMBER
+    OUTPUT
+    PLUS
+    RBRACE
+    RPAREN
+    SEMICOLON
+    STRING
+    TIMES
+    TRIPLE_STRING
+    TYPE_BOOL
+    TYPE_FLOAT
+    TYPE_INT
+    TYPE_LIST
+    TYPE_RECORD
+    TYPE_STR
+    TYPE_TUPLE
+    WHILE
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> global_block program_body
+Rule 2     program -> program_body
+
+Terminals, with rules where they appear
+
+AGENT                : 
+ARROW                : 
+CHAT                 : 
+COLON                : 
+COMMA                : 
+CONNECT              : 
+DEDENT               : 
+DEF                  : 
+DIVIDE               : 
+DOT                  : 
+ELIF                 : 
+ELSE                 : 
+EQ                   : 
+EQUALS               : 
+FOR                  : 
+GE                   : 
+GLOBAL               : 
+GT                   : 
+IDENTIFIER           : 
+IF                   : 
+IN                   : 
+INDENT               : 
+INPUT                : 
+LBRACE               : 
+LE                   : 
+LPAREN               : 
+LT                   : 
+MEMORY               : 
+MINUS                : 
+MOD                  : 
+MODEL                : 
+NEQ                  : 
+NEWLINE              : 
+NUMBER               : 
+OUTPUT               : 
+PLUS                 : 
+RBRACE               : 
+RPAREN               : 
+SEMICOLON            : 
+STRING               : 
+TIMES                : 
+TRIPLE_STRING        : 
+TYPE_BOOL            : 
+TYPE_FLOAT           : 
+TYPE_INT             : 
+TYPE_LIST            : 
+TYPE_RECORD          : 
+TYPE_STR             : 
+TYPE_TUPLE           : 
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+global_block         : 1
+program              : 0
+program_body         : 1 2
+
