@@ -1,12 +1,9 @@
 program         ::= global_block? (statement | agent_def | connect_block | func_def)+
-global_block    ::= "global:" INDENT global_var_decl+ DEDENT
-global_var_decl ::= IDENTIFIER (":" type)? ("=" expr)?
+global_block    ::= "global:" INDENT var_decl_list DEDENT
 agent_def       ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
 agent_body      ::= (input_block | output_block | memory_block | model_block | statement | chat_block)+
 input_block     ::= "input:" INDENT var_decl_list DEDENT
 output_block    ::= "output:" INDENT var_decl_list DEDENT
-var_decl_list   ::= var_decl+
-var_decl        ::= IDENTIFIER ":" type
 memory_block    ::= "memory:" INDENT var_decl_list DEDENT
 model_block     ::= "model:" STRING
 chat_block      ::= "chat" IDENTIFIER ":" TRIPLE_STRING
@@ -15,7 +12,9 @@ connection      ::= IDENTIFIER ":" type agent_ref "->" agent_ref
 agent_ref       ::= IDENTIFIER ("." IDENTIFIER)+
 func_def        ::= "def" IDENTIFIER "(" param_list? ")" (":" type)? ":" INDENT stmt_block DEDENT
 param_list      ::= param_decl ("," param_decl)*
-param_decl      ::= IDENTIFIER (":" type)? ("=" expr)?
+param_decl      ::= var_decl
+var_decl_list   ::= var_decl+
+var_decl        ::= IDENTIFIER (":" type)? ("=" expr)?
 type            ::= base_type | list_type | record_type | tuple_type
 base_type       ::= "str" | "int" | "float" | "bool" | IDENTIFIER
 list_type       ::= "list[" type "]"
