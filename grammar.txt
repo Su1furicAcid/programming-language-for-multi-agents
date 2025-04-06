@@ -6,7 +6,7 @@ output_block    ::= "output:" INDENT var_decl_list DEDENT
 var_decl_list   ::= var_decl+
 var_decl        ::= IDENTIFIER ":" type
 model_block     ::= "model:" STRING
-chat_block      ::= "chat" IDENTIFIER "=" TRIPLE_STRING
+chat_block      ::= "chat" IDENTIFIER ":" TRIPLE_STRING
 connect_block   ::= "connect:" INDENT connection+ DEDENT
 connection      ::= IDENTIFIER ":" type agent_ref "->" agent_ref
 agent_ref       ::= IDENTIFIER ("." IDENTIFIER)+

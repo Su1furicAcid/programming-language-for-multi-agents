@@ -164,7 +164,7 @@ code = '''agent Analyzer:
         score: float
     model: "gpt-4o"
 
-    chat analyze_summary = """
+    chat analyze_summary : """
     Analyze the summary below and provide a sentiment and score.
     Summary: {summary}
     Sentiment: ${sentiment}
