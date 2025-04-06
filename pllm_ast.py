@@ -192,3 +192,8 @@ class FieldAccess(Expr):
     """字段访问"""
     def __init__(self, obj, field):
         super().__init__(obj=obj, field=field)
+
+class FieldAssign(Stmt):
+    """字段赋值"""
+    def __init__(self, obj, field, value):
+        super().__init__(obj=obj, field=field, value=value)

@@ -158,8 +158,6 @@ def p_model_block(p):
     '''model_block : MODEL COLON STRING'''
     p[0] = ModelBlock(model_name=p[3])
 
-# ----------------------- Checked -----------------------
-
 # chat_block ::= "chat" IDENTIFIER ":" TRIPLE_STRING
 def p_chat_block(p):
     '''chat_block : CHAT IDENTIFIER COLON TRIPLE_STRING'''
@@ -250,6 +248,188 @@ def p_statement(p):
                  | break_stmt
                  | continue_stmt
                  | return_stmt'''
+    p[0] = p[1]
+
+# assign_stmt ::= IDENTIFIER (":" type)? "=" expr
+def p_assign_stmt(p):
+    '''assign_stmt : IDENTIFIER COLON type EQUALS expr
+                   | IDENTIFIER EQUALS expr'''
+    if len(p) == 5:
+        p[0] = AssignStmt(name=p[1], var_type=p[3], value=p[5])
+    else:
+        p[0] = AssignStmt(name=p[1], value=p[3])
+
+# expr_stmt ::= expr
+def p_expr_stmt(p):
+    '''expr_stmt : expr'''
+    p[0] = ExprStmt(expr=p[1])
+
+# return_stmt ::= "return" expr?
+def p_return_stmt(p):
+    '''return_stmt : RETURN expr
+                   | RETURN'''
+    if len(p) == 3:
+        p[0] = ReturnStmt(value=p[2])
+    else:
+        p[0] = ReturnStmt(value=None)
+
+# for_stmt ::= "for" IDENTIFIER "in" expr ":" stmt_block
+def p_for_stmt(p):
+    '''for_stmt : FOR IDENTIFIER IN expr COLON stmt_block'''
+    p[0] = ForStmt(var_name=p[2], iterable=p[4], body=p[6])
+
+# break_stmt ::= "break"
+def p_break_stmt(p):
+    '''break_stmt : BREAK'''
+    p[0] = BreakStmt()
+
+# continue_stmt ::= "continue"
+def p_continue_stmt(p):
+    '''continue_stmt : CONTINUE'''
+    p[0] = ContinueStmt()
+
+# if_stmt ::= "if" expr ":" stmt_block ("elif" expr ":" stmt_block)* ("else" ":" stmt_block)?
+def p_if_stmt(p):
+    '''if_stmt : IF expr COLON stmt_block if_stmt_tail
+               | IF expr COLON stmt_block'''
+    if len(p) == 6:
+        p[0] = IfStmt(condition=p[2], body=p[4], elifs=p[5])
+    else:
+        p[0] = IfStmt(condition=p[2], body=p[4], elifs=[])
+
+def p_if_stmt_tail(p):
+    '''if_stmt_tail : elif_stmt if_stmt_tail
+                    | else_stmt if_stmt_tail
+                    | empty'''
+    if len(p) == 3:
+        p[0] = [p[1]] + p[2]
+    else:
+        p[0] = []
+
+# while_stmt ::= "while" expr ":" stmt_block
+def p_while_stmt(p):
+    '''while_stmt : WHILE expr COLON stmt_block'''
+    p[0] = WhileStmt(condition=p[2], body=p[4])
+
+# expr ::= atom | expr bin_op expr | list_expr | record_expr | tuple_expr | field_access | func_call
+def p_expr(p):
+    '''expr : atom
+            | expr bin_op expr
+            | list_expr
+            | record_expr
+            | tuple_expr
+            | field_access
+            | func_call'''
+    if len(p) == 2:
+        p[0] = p[1]
+    elif len(p) == 4:
+        p[0] = BinaryOp(left=p[1], operator=p[2], right=p[3])
+    else:
+        p[0] = p[1]
+
+# atom ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
+def p_atom(p):
+    '''atom : IDENTIFIER
+            | STRING
+            | NUMBER
+            | LPAREN expr RPAREN'''
+    if len(p) == 2:
+        p[0] = Atom(value=p[1])
+    else:
+        p[0] = p[2]
+
+# list_expr ::= "[" (expr ("," expr)*)? "]"
+def p_list_expr(p):
+    '''list_expr : LBRACE list_elements RBRACE'''
+    p[0] = ListExpr(elements=p[2])
+
+def p_list_elements(p):
+    '''list_elements : expr list_elements_tail
+                     | empty'''
+    if len(p) == 3:
+        p[0] = [p[1]] + p[2]
+    else:
+        p[0] = []
+
+def p_list_elements_tail(p):
+    '''list_elements_tail : COMMA expr list_elements_tail
+                          | empty'''
+    if len(p) == 4:
+        p[0] = [p[2]] + p[3]
+    else:
+        p[0] = []
+
+# record_expr ::= "{" field_assign ("," field_assign)* "}"
+def p_record_expr(p):
+    '''record_expr : LBRACE record_elements RBRACE'''
+    p[0] = RecordExpr(fields=p[2])
+
+def p_record_elements(p):
+    '''record_elements : field_assign record_elements_tail
+                      | empty'''
+    if len(p) == 3:
+        p[0] = [p[1]] + p[2]
+    else:
+        p[0] = []
+
+def p_record_elements_tail(p):
+    '''record_elements_tail : COMMA field_assign record_elements_tail
+                            | empty'''
+    if len(p) == 4:
+        p[0] = [p[2]] + p[3]
+    else:
+        p[0] = []
+
+# field_assign ::= IDENTIFIER "=" expr
+def p_field_assign(p):
+    '''field_assign : IDENTIFIER EQUALS expr'''
+    p[0] = FieldAssign(name=p[1], value=p[3])
+
+# tuple_expr ::= "(" expr ("," expr)* ")"
+def p_tuple_expr(p):
+    '''tuple_expr : LPAREN tuple_elements RPAREN'''
+    p[0] = TupleExpr(elements=p[2])
+
+# field_access ::= expr "." IDENTIFIER
+def p_field_access(p):
+    '''field_access : expr DOT IDENTIFIER'''
+    p[0] = FieldAccess(obj=p[1], field=p[3])
+
+# func_call ::= IDENTIFIER "(" arg_list? ")"
+def p_func_call(p):
+    '''func_call : IDENTIFIER LPAREN arg_list RPAREN'''
+    p[0] = FuncCall(func_name=p[1], args=p[3])
+
+# arg_list ::= expr ("," expr)*
+def p_arg_list(p):
+    '''arg_list : expr arg_list_tail
+                | empty'''
+    if len(p) == 3:
+        p[0] = [p[1]] + p[2]
+    else:
+        p[0] = []
+
+def p_arg_list_tail(p):
+    '''arg_list_tail : COMMA expr arg_list_tail
+                     | empty'''
+    if len(p) == 4:
+        p[0] = [p[2]] + p[3]
+    else:
+        p[0] = []
+
+# bin_op ::= PLUS | MINUS | TIMES | DIVIDE | MOD | EQ | NEQ | LT | GT | LE | GE
+def p_bin_op(p):
+    '''bin_op : PLUS
+              | MINUS
+              | TIMES
+              | DIVIDE
+              | MOD
+              | EQ
+              | NEQ
+              | LT
+              | GT
+              | LE
+              | GE'''
     p[0] = p[1]
 
 # 空规则
