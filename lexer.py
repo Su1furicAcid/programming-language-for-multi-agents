@@ -161,34 +161,3 @@ def t_error(t):
 lexer = lex.lex()
 lexer.token_original = lexer.token
 lexer.token = lexer_token
-
-# -------------------------------
-# 测试代码
-# -------------------------------
-code = '''
-global:
-    retries: int = 3
-    config: record{host: str, port: int} = {host="localhost", port=8080}
-
-agent Analyzer:
-    input:
-        summary: str
-    output:
-        sentiment: str
-        score: float
-    model: "gpt-4o"
-
-    memory:
-        counter: int = 0
-
-    chat analyze_summary : """
-    Analyze the summary below and provide a sentiment and score.
-    Summary: {summary}
-    Sentiment: ${sentiment}
-    Score: ${score}
-    """
-'''
-
-lexer.input(code)
-for tok in lexer:
-    print(tok)

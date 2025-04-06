@@ -183,6 +183,11 @@ class TupleExpr(Expr):
     def __init__(self, elements=None):
         super().__init__(elements=elements or [])
 
+class FieldDecl(ASTNode):
+    """字段声明"""
+    def __init__(self, name, field_type):
+        super().__init__(name=name, field_type=field_type)
+
 class FieldAccess(Expr):
     """字段访问"""
     def __init__(self, obj, field):
