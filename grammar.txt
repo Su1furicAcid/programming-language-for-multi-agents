@@ -1,0 +1,29 @@
+program         ::= agent_def+ connect_block?
+agent_def       ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
+agent_body      ::= (input_block | output_block | model_block | statement | chat_block)+
+input_block     ::= "input:" INDENT var_decl_list DEDENT
+output_block    ::= "output:" INDENT var_decl_list DEDENT
+var_decl_list   ::= var_decl+
+var_decl        ::= IDENTIFIER ":" type
+model_block     ::= "model:" STRING
+chat_block      ::= "chat" IDENTIFIER "=" TRIPLE_STRING
+connect_block   ::= "connect:" INDENT connection+ DEDENT
+connection      ::= IDENTIFIER ":" type agent_ref "->" agent_ref
+agent_ref       ::= IDENTIFIER ("." IDENTIFIER)+
+type            ::= "str" | "int" | "float" | "bool" | IDENTIFIER
+IDENTIFIER      ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+STRING          ::= /"[^"]*"/
+TRIPLE_STRING   ::= /""".*?"""/s
+NUMBER          ::= /\d+(\.\d+)?/
+INDENT, DEDENT  ::= handled by parser (e.g. Lark's PythonIndenter)
+statement       ::= for_stmt | if_stmt | while_stmt | assign_stmt | expr_stmt
+assign_stmt     ::= IDENTIFIER "=" expr
+expr_stmt       ::= expr
+for_stmt        ::= "for" IDENTIFIER "in" expr ":" INDENT statement+ DEDENT
+if_stmt         ::= "if" expr ":" INDENT statement+ DEDENT
+                    ("elif" expr ":" INDENT statement+ DEDENT)*
+                    ("else" ":" INDENT statement+ DEDENT)?
+while_stmt      ::= "while" expr ":" INDENT statement+ DEDENT
+expr            ::= atom | expr bin_op expr |
+atom            ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
+bin_op          ::= "+" | "-" | "*" | "/" | "%" | "==" | "!=" | "<" | ">" | "<=" | ">="
