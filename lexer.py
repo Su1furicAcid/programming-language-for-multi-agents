@@ -10,6 +10,12 @@ reserved = {
     "model": "MODEL",
     "chat": "CHAT",
     "connect": "CONNECT",
+    "memory": "MEMORY",
+    "global": "GLOBAL",
+    "record": "TYPE_RECORD",
+    "tuple": "TYPE_TUPLE",
+    "list": "TYPE_LIST",
+    "def": "DEF",
     "for": "FOR",
     "in": "IN",
     "if": "IF",
@@ -156,13 +162,24 @@ lexer = lex.lex()
 lexer.token_original = lexer.token
 lexer.token = lexer_token
 
-code = '''agent Analyzer:
+# -------------------------------
+# 测试代码
+# -------------------------------
+code = '''
+global:
+    retries: int = 3
+    config: record{host: str, port: int} = {host="localhost", port=8080}
+
+agent Analyzer:
     input:
         summary: str
     output:
         sentiment: str
         score: float
     model: "gpt-4o"
+
+    memory:
+        counter: int = 0
 
     chat analyze_summary : """
     Analyze the summary below and provide a sentiment and score.
