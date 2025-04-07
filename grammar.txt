@@ -24,7 +24,7 @@
 > stmt_block      ::= INDENT statement+ DEDENT
 > statement       ::= for_stmt | if_stmt | while_stmt | assign_stmt | break_stmt | continue_stmt | return_stmt
 > assign_stmt     ::= IDENTIFIER (":" type)? "=" expr
-> return_stmt     ::= "return" expr?
+> return_stmt     ::= "return" expr
 > for_stmt        ::= "for" IDENTIFIER "in" expr ":" stmt_block
 > break_stmt      ::= "break"
 > continue_stmt   ::= "continue"

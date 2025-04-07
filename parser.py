@@ -244,14 +244,10 @@ def p_assign_stmt(p):
     else:
         p[0] = AssignStmt(name=p[1], value=p[3])
 
-# return_stmt ::= "return" expr?
+# return_stmt ::= "return" expr
 def p_return_stmt(p):
-    '''return_stmt : RETURN expr
-                   | RETURN'''
-    if len(p) == 3:
-        p[0] = ReturnStmt(value=p[2])
-    else:
-        p[0] = ReturnStmt(value=None)
+    '''return_stmt : RETURN expr'''
+    p[0] = ReturnStmt(value=p[2])
 
 # for_stmt ::= "for" IDENTIFIER "in" expr ":" stmt_block
 def p_for_stmt(p):
