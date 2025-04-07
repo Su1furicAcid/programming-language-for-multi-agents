@@ -11,7 +11,7 @@
 > connect_block   ::= "connect" ":" INDENT connection+ DEDENT
 > connection      ::= IDENTIFIER ":" type agent_ref "->" agent_ref
 > agent_ref       ::= IDENTIFIER ("." IDENTIFIER)+
-> func_def        ::= "def" IDENTIFIER "(" param_list? ")" (":" type)? ":" INDENT stmt_block DEDENT
+> func_def        ::= "def" IDENTIFIER "(" param_list? ")" (":" type)? ":" stmt_block
 > param_list      ::= param_decl ("," param_decl)*
 > param_decl      ::= var_decl
 > var_decl_list   ::= var_decl+
@@ -22,9 +22,8 @@
 > record_type     ::= "record" "{" field_decl ("," field_decl)* "}"
 > field_decl      ::= IDENTIFIER ":" type
 > stmt_block      ::= INDENT statement+ DEDENT
-> statement       ::= for_stmt | if_stmt | while_stmt | assign_stmt | expr_stmt | break_stmt | continue_stmt | return_stmt
+> statement       ::= for_stmt | if_stmt | while_stmt | assign_stmt | break_stmt | continue_stmt | return_stmt
 > assign_stmt     ::= IDENTIFIER (":" type)? "=" expr
-> expr_stmt       ::= expr
 > return_stmt     ::= "return" expr?
 > for_stmt        ::= "for" IDENTIFIER "in" expr ":" stmt_block
 > break_stmt      ::= "break"

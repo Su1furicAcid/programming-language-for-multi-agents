@@ -182,8 +182,8 @@ def p_agent_ref_tail(p):
 
 # func_def ::= "def" IDENTIFIER "(" param_list? ")" (":" type)? ":" INDENT stmt_block DEDENT
 def p_func_def(p):
-    '''func_def : DEF IDENTIFIER LPAREN param_list RPAREN COLON type COLON INDENT stmt_block DEDENT
-                | DEF IDENTIFIER LPAREN param_list RPAREN COLON INDENT stmt_block DEDENT'''
+    '''func_def : DEF IDENTIFIER LPAREN param_list RPAREN COLON type COLON stmt_block
+                | DEF IDENTIFIER LPAREN param_list RPAREN COLON stmt_block'''
     if len(p) == 11:
         p[0] = FuncDef(name=p[2], params=p[4], return_type=p[7], stmt_body=p[9])
     else:
@@ -224,13 +224,12 @@ def p_statement_list(p):
     else:
         p[0] = [p[1]]
 
-# statement ::= for_stmt | if_stmt | while_stmt | assign_stmt | expr_stmt | break_stmt | continue_stmt | return_stmt
+# statement ::= for_stmt | if_stmt | while_stmt | assign_stmt | break_stmt | continue_stmt | return_stmt
 def p_statement(p):
     '''statement : for_stmt
                  | if_stmt
                  | while_stmt
                  | assign_stmt
-                 | expr_stmt
                  | break_stmt
                  | continue_stmt
                  | return_stmt'''
@@ -244,11 +243,6 @@ def p_assign_stmt(p):
         p[0] = AssignStmt(name=p[1], var_type=p[3], value=p[5])
     else:
         p[0] = AssignStmt(name=p[1], value=p[3])
-
-# expr_stmt ::= expr
-def p_expr_stmt(p):
-    '''expr_stmt : expr'''
-    p[0] = ExprStmt(expr=p[1])
 
 # return_stmt ::= "return" expr?
 def p_return_stmt(p):
