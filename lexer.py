@@ -25,7 +25,10 @@ reserved = {
     "str": "TYPE_STR",
     "int": "TYPE_INT",
     "float": "TYPE_FLOAT",
-    "bool": "TYPE_BOOL"
+    "bool": "TYPE_BOOL",
+    "return": "RETURN",
+    "break": "BREAK",
+    "continue": "CONTINUE"
 }
 
 # -------------------------------
@@ -47,7 +50,7 @@ tokens = [
     "DOT",
     "PLUS", "MINUS", "TIMES", "DIVIDE", "MOD",
     "EQ", "NEQ", "LT", "GT", "LE", "GE",
-    "COMMA", "SEMICOLON"
+    "COMMA"
 ] + list(reserved.values())
 
 # -------------------------------
@@ -73,7 +76,6 @@ t_GT = r">"
 t_LE = r"<="
 t_GE = r">="
 t_COMMA = r","
-t_SEMICOLON = r";"
 
 # -------------------------------
 # 字面值

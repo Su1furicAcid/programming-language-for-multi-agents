@@ -2,7 +2,7 @@ import ply.yacc as yacc
 from pllm_ast import *
 from lexer import lexer, tokens
 
-# 优先级规则（用于解析二元操作符）
+# 优先级规则
 precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE', 'MOD'),
@@ -306,6 +306,14 @@ def p_if_stmt_tail(p):
     else:
         p[0] = []
 
+def p_elif_stmt(p):
+    '''elif_stmt : ELIF expr COLON stmt_block'''
+    p[0] = ElifStmt(condition=p[2], body=p[4])
+
+def p_else_stmt(p):
+    '''else_stmt : ELSE COLON stmt_block'''
+    p[0] = ElseStmt(body=p[3])
+
 # while_stmt ::= "while" expr ":" stmt_block
 def p_while_stmt(p):
     '''while_stmt : WHILE expr COLON stmt_block'''
@@ -390,6 +398,22 @@ def p_tuple_expr(p):
     '''tuple_expr : LPAREN tuple_elements RPAREN'''
     p[0] = TupleExpr(elements=p[2])
 
+def p_tuple_elements(p):
+    '''tuple_elements : expr tuple_elements_tail
+                      | empty'''
+    if len(p) == 3:
+        p[0] = [p[1]] + p[2]
+    else:
+        p[0] = []
+
+def p_tuple_elements_tail(p):
+    '''tuple_elements_tail : COMMA expr tuple_elements_tail
+                           | empty'''
+    if len(p) == 4:
+        p[0] = [p[2]] + p[3]
+    else:
+        p[0] = []
+
 # field_access ::= expr "." IDENTIFIER
 def p_field_access(p):
     '''field_access : expr DOT IDENTIFIER'''
@@ -442,4 +466,4 @@ def p_error(p):
     print(f"Syntax error at {p.value!r}" if p else "Syntax error at EOF")
 
 # 构建解析器
-parser = yacc.yacc()
+parser = yacc.yacc(debug=True)

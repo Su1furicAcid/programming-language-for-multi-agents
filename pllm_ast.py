@@ -128,6 +128,16 @@ class IfStmt(Stmt):
     def __init__(self, condition, body, elif_blocks=None, else_block=None):
         super().__init__(condition=condition, body=body, elif_blocks=elif_blocks or [], else_block=else_block)
 
+class ElifStmt(Stmt):
+    """elif 语句"""
+    def __init__(self, condition, body):
+        super().__init__(condition=condition, body=body)
+
+class ElseStmt(Stmt):
+    """else 语句"""
+    def __init__(self, body):
+        super().__init__(body=body)
+
 class WhileStmt(Stmt):
     """循环语句"""
     def __init__(self, condition, body):
