@@ -466,4 +466,4 @@ def p_error(p):
     print(f"Syntax error at {p.value!r}" if p else "Syntax error at EOF")
 
 # 构建解析器
-parser = yacc.yacc(debug=True)
+parser = yacc.yacc(debug=True, debugfile='parser.out')
