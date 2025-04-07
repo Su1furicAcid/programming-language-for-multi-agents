@@ -88,15 +88,15 @@ Rule 78    continue_stmt -> CONTINUE
 Rule 79    if_stmt -> IF expr COLON stmt_block ELSE COLON stmt_block
 Rule 80    if_stmt -> IF expr COLON stmt_block
 Rule 81    while_stmt -> WHILE expr COLON stmt_block
-Rule 82    expr -> expr_head expr_tail
-Rule 83    expr_head -> atom
-Rule 84    expr_head -> list_expr
-Rule 85    expr_head -> record_expr
-Rule 86    expr_head -> tuple_expr
-Rule 87    expr_head -> field_access
-Rule 88    expr_head -> func_call
-Rule 89    expr_tail -> bin_op expr_head expr_tail
-Rule 90    expr_tail -> empty
+Rule 82    expr -> expr_head bin_op expr_tail
+Rule 83    expr -> expr_head
+Rule 84    expr_head -> atom
+Rule 85    expr_head -> list_expr
+Rule 86    expr_head -> record_expr
+Rule 87    expr_head -> tuple_expr
+Rule 88    expr_head -> field_access
+Rule 89    expr_head -> func_call
+Rule 90    expr_tail -> expr
 Rule 91    atom -> IDENTIFIER
 Rule 92    atom -> STRING
 Rule 93    atom -> NUMBER
@@ -201,33 +201,33 @@ agent_ref_tail       : 50 51
 arg_list             : 112
 arg_list_tail        : 113 115
 assign_stmt          : 66
-atom                 : 83
+atom                 : 84
 base_type            : 16
-bin_op               : 89
+bin_op               : 82
 break_stmt           : 68
 chat_block           : 40
 connect_block        : 7
 connection           : 47 48
 connection_list      : 46 47
 continue_stmt        : 69
-empty                : 52 56 58 90 97 99 102 104 108 110 114 116
-expr                 : 12 14 71 72 73 74 76 79 80 81 94 96 98 105 107 109 111 113 115
-expr_head            : 82 89
+empty                : 52 56 58 97 99 102 104 108 110 114 116
+expr                 : 12 14 71 72 73 74 76 79 80 81 90 94 96 98 105 107 109 111 113 115
+expr_head            : 82 83
 expr_stmt            : 67
-expr_tail            : 82 89
-field_access         : 87
+expr_tail            : 82
+field_access         : 88
 field_assign         : 101 103
 field_decl           : 26 27
 field_decl_list      : 25 26
 for_stmt             : 63
-func_call            : 88
+func_call            : 89
 func_def             : 8
 global_block         : 1
 if_stmt              : 64
 input_block          : 35
 list_elements        : 95
 list_elements_tail   : 96 98
-list_expr            : 84
+list_expr            : 85
 list_type            : 17
 memory_block         : 37
 model_block          : 38
@@ -240,7 +240,7 @@ program_body         : 1 2 3
 program_body_item    : 3 4
 record_elements      : 100
 record_elements_tail : 101 103
-record_expr          : 85
+record_expr          : 86
 record_type          : 18
 return_stmt          : 70
 statement            : 5 39 61 62
@@ -248,7 +248,7 @@ statement_list       : 60 61
 stmt_block           : 53 54 76 79 79 80 81
 tuple_elements       : 106
 tuple_elements_tail  : 107 109
-tuple_expr           : 86
+tuple_expr           : 87
 tuple_type           : 19
 type                 : 12 13 24 28 30 31 49 53 71
 type_list_in_tuple   : 29 30
@@ -292,13 +292,14 @@ state 0
     (78) continue_stmt -> . CONTINUE
     (74) return_stmt -> . RETURN expr
     (75) return_stmt -> . RETURN
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -388,13 +389,14 @@ state 2
     (78) continue_stmt -> . CONTINUE
     (74) return_stmt -> . RETURN expr
     (75) return_stmt -> . RETURN
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -490,13 +492,14 @@ state 5
     (78) continue_stmt -> . CONTINUE
     (74) return_stmt -> . RETURN expr
     (75) return_stmt -> . RETURN
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -919,15 +922,16 @@ state 22
 
     (94) atom -> LPAREN . expr RPAREN
     (106) tuple_expr -> LPAREN . tuple_elements RPAREN
-    (82) expr -> . expr_head expr_tail
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
     (107) tuple_elements -> . expr tuple_elements_tail
     (108) tuple_elements -> . empty
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (128) empty -> .
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
@@ -997,13 +1001,14 @@ state 25
 
     (79) if_stmt -> IF . expr COLON stmt_block ELSE COLON stmt_block
     (80) if_stmt -> IF . expr COLON stmt_block
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -1032,13 +1037,14 @@ state 25
 state 26
 
     (81) while_stmt -> WHILE . expr COLON stmt_block
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -1122,13 +1128,14 @@ state 29
 
     (74) return_stmt -> RETURN . expr
     (75) return_stmt -> RETURN .
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -1183,9 +1190,8 @@ state 29
 
 state 30
 
-    (82) expr -> expr_head . expr_tail
-    (89) expr_tail -> . bin_op expr_head expr_tail
-    (90) expr_tail -> . empty
+    (82) expr -> expr_head . bin_op expr_tail
+    (83) expr -> expr_head .
     (117) bin_op -> . PLUS
     (118) bin_op -> . MINUS
     (119) bin_op -> . TIMES
@@ -1197,306 +1203,303 @@ state 30
     (125) bin_op -> . GT
     (126) bin_op -> . LE
     (127) bin_op -> . GE
-    (128) empty -> .
 
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 63
-    DIVIDE          shift and go to state 64
-    MOD             shift and go to state 65
-    EQ              shift and go to state 66
-    NEQ             shift and go to state 67
-    LT              shift and go to state 68
-    GT              shift and go to state 69
-    LE              shift and go to state 70
-    GE              shift and go to state 71
-    DOT             reduce using rule 128 (empty -> .)
-    AGENT           reduce using rule 128 (empty -> .)
-    CONNECT         reduce using rule 128 (empty -> .)
-    DEF             reduce using rule 128 (empty -> .)
-    FOR             reduce using rule 128 (empty -> .)
-    IF              reduce using rule 128 (empty -> .)
-    WHILE           reduce using rule 128 (empty -> .)
-    IDENTIFIER      reduce using rule 128 (empty -> .)
-    BREAK           reduce using rule 128 (empty -> .)
-    CONTINUE        reduce using rule 128 (empty -> .)
-    RETURN          reduce using rule 128 (empty -> .)
-    STRING          reduce using rule 128 (empty -> .)
-    NUMBER          reduce using rule 128 (empty -> .)
-    LPAREN          reduce using rule 128 (empty -> .)
-    LBRACE          reduce using rule 128 (empty -> .)
-    $end            reduce using rule 128 (empty -> .)
-    RPAREN          reduce using rule 128 (empty -> .)
-    COMMA           reduce using rule 128 (empty -> .)
-    COLON           reduce using rule 128 (empty -> .)
-    INPUT           reduce using rule 128 (empty -> .)
-    OUTPUT          reduce using rule 128 (empty -> .)
-    MEMORY          reduce using rule 128 (empty -> .)
-    MODEL           reduce using rule 128 (empty -> .)
-    CHAT            reduce using rule 128 (empty -> .)
-    DEDENT          reduce using rule 128 (empty -> .)
-    RBRACE          reduce using rule 128 (empty -> .)
+    DOT             reduce using rule 83 (expr -> expr_head .)
+    AGENT           reduce using rule 83 (expr -> expr_head .)
+    CONNECT         reduce using rule 83 (expr -> expr_head .)
+    DEF             reduce using rule 83 (expr -> expr_head .)
+    FOR             reduce using rule 83 (expr -> expr_head .)
+    IF              reduce using rule 83 (expr -> expr_head .)
+    WHILE           reduce using rule 83 (expr -> expr_head .)
+    IDENTIFIER      reduce using rule 83 (expr -> expr_head .)
+    BREAK           reduce using rule 83 (expr -> expr_head .)
+    CONTINUE        reduce using rule 83 (expr -> expr_head .)
+    RETURN          reduce using rule 83 (expr -> expr_head .)
+    STRING          reduce using rule 83 (expr -> expr_head .)
+    NUMBER          reduce using rule 83 (expr -> expr_head .)
+    LPAREN          reduce using rule 83 (expr -> expr_head .)
+    LBRACE          reduce using rule 83 (expr -> expr_head .)
+    $end            reduce using rule 83 (expr -> expr_head .)
+    RPAREN          reduce using rule 83 (expr -> expr_head .)
+    COMMA           reduce using rule 83 (expr -> expr_head .)
+    COLON           reduce using rule 83 (expr -> expr_head .)
+    INPUT           reduce using rule 83 (expr -> expr_head .)
+    OUTPUT          reduce using rule 83 (expr -> expr_head .)
+    MEMORY          reduce using rule 83 (expr -> expr_head .)
+    MODEL           reduce using rule 83 (expr -> expr_head .)
+    CHAT            reduce using rule 83 (expr -> expr_head .)
+    DEDENT          reduce using rule 83 (expr -> expr_head .)
+    RBRACE          reduce using rule 83 (expr -> expr_head .)
+    PLUS            shift and go to state 59
+    MINUS           shift and go to state 60
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 62
+    MOD             shift and go to state 63
+    EQ              shift and go to state 64
+    NEQ             shift and go to state 65
+    LT              shift and go to state 66
+    GT              shift and go to state 67
+    LE              shift and go to state 68
+    GE              shift and go to state 69
 
-    expr_tail                      shift and go to state 58
-    bin_op                         shift and go to state 59
-    empty                          shift and go to state 60
+    bin_op                         shift and go to state 58
 
 state 31
 
-    (83) expr_head -> atom .
+    (84) expr_head -> atom .
 
-    PLUS            reduce using rule 83 (expr_head -> atom .)
-    MINUS           reduce using rule 83 (expr_head -> atom .)
-    TIMES           reduce using rule 83 (expr_head -> atom .)
-    DIVIDE          reduce using rule 83 (expr_head -> atom .)
-    MOD             reduce using rule 83 (expr_head -> atom .)
-    EQ              reduce using rule 83 (expr_head -> atom .)
-    NEQ             reduce using rule 83 (expr_head -> atom .)
-    LT              reduce using rule 83 (expr_head -> atom .)
-    GT              reduce using rule 83 (expr_head -> atom .)
-    LE              reduce using rule 83 (expr_head -> atom .)
-    GE              reduce using rule 83 (expr_head -> atom .)
-    DOT             reduce using rule 83 (expr_head -> atom .)
-    AGENT           reduce using rule 83 (expr_head -> atom .)
-    CONNECT         reduce using rule 83 (expr_head -> atom .)
-    DEF             reduce using rule 83 (expr_head -> atom .)
-    FOR             reduce using rule 83 (expr_head -> atom .)
-    IF              reduce using rule 83 (expr_head -> atom .)
-    WHILE           reduce using rule 83 (expr_head -> atom .)
-    IDENTIFIER      reduce using rule 83 (expr_head -> atom .)
-    BREAK           reduce using rule 83 (expr_head -> atom .)
-    CONTINUE        reduce using rule 83 (expr_head -> atom .)
-    RETURN          reduce using rule 83 (expr_head -> atom .)
-    STRING          reduce using rule 83 (expr_head -> atom .)
-    NUMBER          reduce using rule 83 (expr_head -> atom .)
-    LPAREN          reduce using rule 83 (expr_head -> atom .)
-    LBRACE          reduce using rule 83 (expr_head -> atom .)
-    $end            reduce using rule 83 (expr_head -> atom .)
-    RPAREN          reduce using rule 83 (expr_head -> atom .)
-    COMMA           reduce using rule 83 (expr_head -> atom .)
-    COLON           reduce using rule 83 (expr_head -> atom .)
-    INPUT           reduce using rule 83 (expr_head -> atom .)
-    OUTPUT          reduce using rule 83 (expr_head -> atom .)
-    MEMORY          reduce using rule 83 (expr_head -> atom .)
-    MODEL           reduce using rule 83 (expr_head -> atom .)
-    CHAT            reduce using rule 83 (expr_head -> atom .)
-    DEDENT          reduce using rule 83 (expr_head -> atom .)
-    RBRACE          reduce using rule 83 (expr_head -> atom .)
+    PLUS            reduce using rule 84 (expr_head -> atom .)
+    MINUS           reduce using rule 84 (expr_head -> atom .)
+    TIMES           reduce using rule 84 (expr_head -> atom .)
+    DIVIDE          reduce using rule 84 (expr_head -> atom .)
+    MOD             reduce using rule 84 (expr_head -> atom .)
+    EQ              reduce using rule 84 (expr_head -> atom .)
+    NEQ             reduce using rule 84 (expr_head -> atom .)
+    LT              reduce using rule 84 (expr_head -> atom .)
+    GT              reduce using rule 84 (expr_head -> atom .)
+    LE              reduce using rule 84 (expr_head -> atom .)
+    GE              reduce using rule 84 (expr_head -> atom .)
+    DOT             reduce using rule 84 (expr_head -> atom .)
+    AGENT           reduce using rule 84 (expr_head -> atom .)
+    CONNECT         reduce using rule 84 (expr_head -> atom .)
+    DEF             reduce using rule 84 (expr_head -> atom .)
+    FOR             reduce using rule 84 (expr_head -> atom .)
+    IF              reduce using rule 84 (expr_head -> atom .)
+    WHILE           reduce using rule 84 (expr_head -> atom .)
+    IDENTIFIER      reduce using rule 84 (expr_head -> atom .)
+    BREAK           reduce using rule 84 (expr_head -> atom .)
+    CONTINUE        reduce using rule 84 (expr_head -> atom .)
+    RETURN          reduce using rule 84 (expr_head -> atom .)
+    STRING          reduce using rule 84 (expr_head -> atom .)
+    NUMBER          reduce using rule 84 (expr_head -> atom .)
+    LPAREN          reduce using rule 84 (expr_head -> atom .)
+    LBRACE          reduce using rule 84 (expr_head -> atom .)
+    $end            reduce using rule 84 (expr_head -> atom .)
+    RPAREN          reduce using rule 84 (expr_head -> atom .)
+    COMMA           reduce using rule 84 (expr_head -> atom .)
+    COLON           reduce using rule 84 (expr_head -> atom .)
+    INPUT           reduce using rule 84 (expr_head -> atom .)
+    OUTPUT          reduce using rule 84 (expr_head -> atom .)
+    MEMORY          reduce using rule 84 (expr_head -> atom .)
+    MODEL           reduce using rule 84 (expr_head -> atom .)
+    CHAT            reduce using rule 84 (expr_head -> atom .)
+    DEDENT          reduce using rule 84 (expr_head -> atom .)
+    RBRACE          reduce using rule 84 (expr_head -> atom .)
 
 
 state 32
 
-    (84) expr_head -> list_expr .
+    (85) expr_head -> list_expr .
 
-    PLUS            reduce using rule 84 (expr_head -> list_expr .)
-    MINUS           reduce using rule 84 (expr_head -> list_expr .)
-    TIMES           reduce using rule 84 (expr_head -> list_expr .)
-    DIVIDE          reduce using rule 84 (expr_head -> list_expr .)
-    MOD             reduce using rule 84 (expr_head -> list_expr .)
-    EQ              reduce using rule 84 (expr_head -> list_expr .)
-    NEQ             reduce using rule 84 (expr_head -> list_expr .)
-    LT              reduce using rule 84 (expr_head -> list_expr .)
-    GT              reduce using rule 84 (expr_head -> list_expr .)
-    LE              reduce using rule 84 (expr_head -> list_expr .)
-    GE              reduce using rule 84 (expr_head -> list_expr .)
-    DOT             reduce using rule 84 (expr_head -> list_expr .)
-    AGENT           reduce using rule 84 (expr_head -> list_expr .)
-    CONNECT         reduce using rule 84 (expr_head -> list_expr .)
-    DEF             reduce using rule 84 (expr_head -> list_expr .)
-    FOR             reduce using rule 84 (expr_head -> list_expr .)
-    IF              reduce using rule 84 (expr_head -> list_expr .)
-    WHILE           reduce using rule 84 (expr_head -> list_expr .)
-    IDENTIFIER      reduce using rule 84 (expr_head -> list_expr .)
-    BREAK           reduce using rule 84 (expr_head -> list_expr .)
-    CONTINUE        reduce using rule 84 (expr_head -> list_expr .)
-    RETURN          reduce using rule 84 (expr_head -> list_expr .)
-    STRING          reduce using rule 84 (expr_head -> list_expr .)
-    NUMBER          reduce using rule 84 (expr_head -> list_expr .)
-    LPAREN          reduce using rule 84 (expr_head -> list_expr .)
-    LBRACE          reduce using rule 84 (expr_head -> list_expr .)
-    $end            reduce using rule 84 (expr_head -> list_expr .)
-    RPAREN          reduce using rule 84 (expr_head -> list_expr .)
-    COMMA           reduce using rule 84 (expr_head -> list_expr .)
-    COLON           reduce using rule 84 (expr_head -> list_expr .)
-    INPUT           reduce using rule 84 (expr_head -> list_expr .)
-    OUTPUT          reduce using rule 84 (expr_head -> list_expr .)
-    MEMORY          reduce using rule 84 (expr_head -> list_expr .)
-    MODEL           reduce using rule 84 (expr_head -> list_expr .)
-    CHAT            reduce using rule 84 (expr_head -> list_expr .)
-    DEDENT          reduce using rule 84 (expr_head -> list_expr .)
-    RBRACE          reduce using rule 84 (expr_head -> list_expr .)
+    PLUS            reduce using rule 85 (expr_head -> list_expr .)
+    MINUS           reduce using rule 85 (expr_head -> list_expr .)
+    TIMES           reduce using rule 85 (expr_head -> list_expr .)
+    DIVIDE          reduce using rule 85 (expr_head -> list_expr .)
+    MOD             reduce using rule 85 (expr_head -> list_expr .)
+    EQ              reduce using rule 85 (expr_head -> list_expr .)
+    NEQ             reduce using rule 85 (expr_head -> list_expr .)
+    LT              reduce using rule 85 (expr_head -> list_expr .)
+    GT              reduce using rule 85 (expr_head -> list_expr .)
+    LE              reduce using rule 85 (expr_head -> list_expr .)
+    GE              reduce using rule 85 (expr_head -> list_expr .)
+    DOT             reduce using rule 85 (expr_head -> list_expr .)
+    AGENT           reduce using rule 85 (expr_head -> list_expr .)
+    CONNECT         reduce using rule 85 (expr_head -> list_expr .)
+    DEF             reduce using rule 85 (expr_head -> list_expr .)
+    FOR             reduce using rule 85 (expr_head -> list_expr .)
+    IF              reduce using rule 85 (expr_head -> list_expr .)
+    WHILE           reduce using rule 85 (expr_head -> list_expr .)
+    IDENTIFIER      reduce using rule 85 (expr_head -> list_expr .)
+    BREAK           reduce using rule 85 (expr_head -> list_expr .)
+    CONTINUE        reduce using rule 85 (expr_head -> list_expr .)
+    RETURN          reduce using rule 85 (expr_head -> list_expr .)
+    STRING          reduce using rule 85 (expr_head -> list_expr .)
+    NUMBER          reduce using rule 85 (expr_head -> list_expr .)
+    LPAREN          reduce using rule 85 (expr_head -> list_expr .)
+    LBRACE          reduce using rule 85 (expr_head -> list_expr .)
+    $end            reduce using rule 85 (expr_head -> list_expr .)
+    RPAREN          reduce using rule 85 (expr_head -> list_expr .)
+    COMMA           reduce using rule 85 (expr_head -> list_expr .)
+    COLON           reduce using rule 85 (expr_head -> list_expr .)
+    INPUT           reduce using rule 85 (expr_head -> list_expr .)
+    OUTPUT          reduce using rule 85 (expr_head -> list_expr .)
+    MEMORY          reduce using rule 85 (expr_head -> list_expr .)
+    MODEL           reduce using rule 85 (expr_head -> list_expr .)
+    CHAT            reduce using rule 85 (expr_head -> list_expr .)
+    DEDENT          reduce using rule 85 (expr_head -> list_expr .)
+    RBRACE          reduce using rule 85 (expr_head -> list_expr .)
 
 
 state 33
 
-    (85) expr_head -> record_expr .
+    (86) expr_head -> record_expr .
 
-    PLUS            reduce using rule 85 (expr_head -> record_expr .)
-    MINUS           reduce using rule 85 (expr_head -> record_expr .)
-    TIMES           reduce using rule 85 (expr_head -> record_expr .)
-    DIVIDE          reduce using rule 85 (expr_head -> record_expr .)
-    MOD             reduce using rule 85 (expr_head -> record_expr .)
-    EQ              reduce using rule 85 (expr_head -> record_expr .)
-    NEQ             reduce using rule 85 (expr_head -> record_expr .)
-    LT              reduce using rule 85 (expr_head -> record_expr .)
-    GT              reduce using rule 85 (expr_head -> record_expr .)
-    LE              reduce using rule 85 (expr_head -> record_expr .)
-    GE              reduce using rule 85 (expr_head -> record_expr .)
-    DOT             reduce using rule 85 (expr_head -> record_expr .)
-    AGENT           reduce using rule 85 (expr_head -> record_expr .)
-    CONNECT         reduce using rule 85 (expr_head -> record_expr .)
-    DEF             reduce using rule 85 (expr_head -> record_expr .)
-    FOR             reduce using rule 85 (expr_head -> record_expr .)
-    IF              reduce using rule 85 (expr_head -> record_expr .)
-    WHILE           reduce using rule 85 (expr_head -> record_expr .)
-    IDENTIFIER      reduce using rule 85 (expr_head -> record_expr .)
-    BREAK           reduce using rule 85 (expr_head -> record_expr .)
-    CONTINUE        reduce using rule 85 (expr_head -> record_expr .)
-    RETURN          reduce using rule 85 (expr_head -> record_expr .)
-    STRING          reduce using rule 85 (expr_head -> record_expr .)
-    NUMBER          reduce using rule 85 (expr_head -> record_expr .)
-    LPAREN          reduce using rule 85 (expr_head -> record_expr .)
-    LBRACE          reduce using rule 85 (expr_head -> record_expr .)
-    $end            reduce using rule 85 (expr_head -> record_expr .)
-    RPAREN          reduce using rule 85 (expr_head -> record_expr .)
-    COMMA           reduce using rule 85 (expr_head -> record_expr .)
-    COLON           reduce using rule 85 (expr_head -> record_expr .)
-    INPUT           reduce using rule 85 (expr_head -> record_expr .)
-    OUTPUT          reduce using rule 85 (expr_head -> record_expr .)
-    MEMORY          reduce using rule 85 (expr_head -> record_expr .)
-    MODEL           reduce using rule 85 (expr_head -> record_expr .)
-    CHAT            reduce using rule 85 (expr_head -> record_expr .)
-    DEDENT          reduce using rule 85 (expr_head -> record_expr .)
-    RBRACE          reduce using rule 85 (expr_head -> record_expr .)
+    PLUS            reduce using rule 86 (expr_head -> record_expr .)
+    MINUS           reduce using rule 86 (expr_head -> record_expr .)
+    TIMES           reduce using rule 86 (expr_head -> record_expr .)
+    DIVIDE          reduce using rule 86 (expr_head -> record_expr .)
+    MOD             reduce using rule 86 (expr_head -> record_expr .)
+    EQ              reduce using rule 86 (expr_head -> record_expr .)
+    NEQ             reduce using rule 86 (expr_head -> record_expr .)
+    LT              reduce using rule 86 (expr_head -> record_expr .)
+    GT              reduce using rule 86 (expr_head -> record_expr .)
+    LE              reduce using rule 86 (expr_head -> record_expr .)
+    GE              reduce using rule 86 (expr_head -> record_expr .)
+    DOT             reduce using rule 86 (expr_head -> record_expr .)
+    AGENT           reduce using rule 86 (expr_head -> record_expr .)
+    CONNECT         reduce using rule 86 (expr_head -> record_expr .)
+    DEF             reduce using rule 86 (expr_head -> record_expr .)
+    FOR             reduce using rule 86 (expr_head -> record_expr .)
+    IF              reduce using rule 86 (expr_head -> record_expr .)
+    WHILE           reduce using rule 86 (expr_head -> record_expr .)
+    IDENTIFIER      reduce using rule 86 (expr_head -> record_expr .)
+    BREAK           reduce using rule 86 (expr_head -> record_expr .)
+    CONTINUE        reduce using rule 86 (expr_head -> record_expr .)
+    RETURN          reduce using rule 86 (expr_head -> record_expr .)
+    STRING          reduce using rule 86 (expr_head -> record_expr .)
+    NUMBER          reduce using rule 86 (expr_head -> record_expr .)
+    LPAREN          reduce using rule 86 (expr_head -> record_expr .)
+    LBRACE          reduce using rule 86 (expr_head -> record_expr .)
+    $end            reduce using rule 86 (expr_head -> record_expr .)
+    RPAREN          reduce using rule 86 (expr_head -> record_expr .)
+    COMMA           reduce using rule 86 (expr_head -> record_expr .)
+    COLON           reduce using rule 86 (expr_head -> record_expr .)
+    INPUT           reduce using rule 86 (expr_head -> record_expr .)
+    OUTPUT          reduce using rule 86 (expr_head -> record_expr .)
+    MEMORY          reduce using rule 86 (expr_head -> record_expr .)
+    MODEL           reduce using rule 86 (expr_head -> record_expr .)
+    CHAT            reduce using rule 86 (expr_head -> record_expr .)
+    DEDENT          reduce using rule 86 (expr_head -> record_expr .)
+    RBRACE          reduce using rule 86 (expr_head -> record_expr .)
 
 
 state 34
 
-    (86) expr_head -> tuple_expr .
+    (87) expr_head -> tuple_expr .
 
-    PLUS            reduce using rule 86 (expr_head -> tuple_expr .)
-    MINUS           reduce using rule 86 (expr_head -> tuple_expr .)
-    TIMES           reduce using rule 86 (expr_head -> tuple_expr .)
-    DIVIDE          reduce using rule 86 (expr_head -> tuple_expr .)
-    MOD             reduce using rule 86 (expr_head -> tuple_expr .)
-    EQ              reduce using rule 86 (expr_head -> tuple_expr .)
-    NEQ             reduce using rule 86 (expr_head -> tuple_expr .)
-    LT              reduce using rule 86 (expr_head -> tuple_expr .)
-    GT              reduce using rule 86 (expr_head -> tuple_expr .)
-    LE              reduce using rule 86 (expr_head -> tuple_expr .)
-    GE              reduce using rule 86 (expr_head -> tuple_expr .)
-    DOT             reduce using rule 86 (expr_head -> tuple_expr .)
-    AGENT           reduce using rule 86 (expr_head -> tuple_expr .)
-    CONNECT         reduce using rule 86 (expr_head -> tuple_expr .)
-    DEF             reduce using rule 86 (expr_head -> tuple_expr .)
-    FOR             reduce using rule 86 (expr_head -> tuple_expr .)
-    IF              reduce using rule 86 (expr_head -> tuple_expr .)
-    WHILE           reduce using rule 86 (expr_head -> tuple_expr .)
-    IDENTIFIER      reduce using rule 86 (expr_head -> tuple_expr .)
-    BREAK           reduce using rule 86 (expr_head -> tuple_expr .)
-    CONTINUE        reduce using rule 86 (expr_head -> tuple_expr .)
-    RETURN          reduce using rule 86 (expr_head -> tuple_expr .)
-    STRING          reduce using rule 86 (expr_head -> tuple_expr .)
-    NUMBER          reduce using rule 86 (expr_head -> tuple_expr .)
-    LPAREN          reduce using rule 86 (expr_head -> tuple_expr .)
-    LBRACE          reduce using rule 86 (expr_head -> tuple_expr .)
-    $end            reduce using rule 86 (expr_head -> tuple_expr .)
-    RPAREN          reduce using rule 86 (expr_head -> tuple_expr .)
-    COMMA           reduce using rule 86 (expr_head -> tuple_expr .)
-    COLON           reduce using rule 86 (expr_head -> tuple_expr .)
-    INPUT           reduce using rule 86 (expr_head -> tuple_expr .)
-    OUTPUT          reduce using rule 86 (expr_head -> tuple_expr .)
-    MEMORY          reduce using rule 86 (expr_head -> tuple_expr .)
-    MODEL           reduce using rule 86 (expr_head -> tuple_expr .)
-    CHAT            reduce using rule 86 (expr_head -> tuple_expr .)
-    DEDENT          reduce using rule 86 (expr_head -> tuple_expr .)
-    RBRACE          reduce using rule 86 (expr_head -> tuple_expr .)
+    PLUS            reduce using rule 87 (expr_head -> tuple_expr .)
+    MINUS           reduce using rule 87 (expr_head -> tuple_expr .)
+    TIMES           reduce using rule 87 (expr_head -> tuple_expr .)
+    DIVIDE          reduce using rule 87 (expr_head -> tuple_expr .)
+    MOD             reduce using rule 87 (expr_head -> tuple_expr .)
+    EQ              reduce using rule 87 (expr_head -> tuple_expr .)
+    NEQ             reduce using rule 87 (expr_head -> tuple_expr .)
+    LT              reduce using rule 87 (expr_head -> tuple_expr .)
+    GT              reduce using rule 87 (expr_head -> tuple_expr .)
+    LE              reduce using rule 87 (expr_head -> tuple_expr .)
+    GE              reduce using rule 87 (expr_head -> tuple_expr .)
+    DOT             reduce using rule 87 (expr_head -> tuple_expr .)
+    AGENT           reduce using rule 87 (expr_head -> tuple_expr .)
+    CONNECT         reduce using rule 87 (expr_head -> tuple_expr .)
+    DEF             reduce using rule 87 (expr_head -> tuple_expr .)
+    FOR             reduce using rule 87 (expr_head -> tuple_expr .)
+    IF              reduce using rule 87 (expr_head -> tuple_expr .)
+    WHILE           reduce using rule 87 (expr_head -> tuple_expr .)
+    IDENTIFIER      reduce using rule 87 (expr_head -> tuple_expr .)
+    BREAK           reduce using rule 87 (expr_head -> tuple_expr .)
+    CONTINUE        reduce using rule 87 (expr_head -> tuple_expr .)
+    RETURN          reduce using rule 87 (expr_head -> tuple_expr .)
+    STRING          reduce using rule 87 (expr_head -> tuple_expr .)
+    NUMBER          reduce using rule 87 (expr_head -> tuple_expr .)
+    LPAREN          reduce using rule 87 (expr_head -> tuple_expr .)
+    LBRACE          reduce using rule 87 (expr_head -> tuple_expr .)
+    $end            reduce using rule 87 (expr_head -> tuple_expr .)
+    RPAREN          reduce using rule 87 (expr_head -> tuple_expr .)
+    COMMA           reduce using rule 87 (expr_head -> tuple_expr .)
+    COLON           reduce using rule 87 (expr_head -> tuple_expr .)
+    INPUT           reduce using rule 87 (expr_head -> tuple_expr .)
+    OUTPUT          reduce using rule 87 (expr_head -> tuple_expr .)
+    MEMORY          reduce using rule 87 (expr_head -> tuple_expr .)
+    MODEL           reduce using rule 87 (expr_head -> tuple_expr .)
+    CHAT            reduce using rule 87 (expr_head -> tuple_expr .)
+    DEDENT          reduce using rule 87 (expr_head -> tuple_expr .)
+    RBRACE          reduce using rule 87 (expr_head -> tuple_expr .)
 
 
 state 35
 
-    (87) expr_head -> field_access .
+    (88) expr_head -> field_access .
 
-    PLUS            reduce using rule 87 (expr_head -> field_access .)
-    MINUS           reduce using rule 87 (expr_head -> field_access .)
-    TIMES           reduce using rule 87 (expr_head -> field_access .)
-    DIVIDE          reduce using rule 87 (expr_head -> field_access .)
-    MOD             reduce using rule 87 (expr_head -> field_access .)
-    EQ              reduce using rule 87 (expr_head -> field_access .)
-    NEQ             reduce using rule 87 (expr_head -> field_access .)
-    LT              reduce using rule 87 (expr_head -> field_access .)
-    GT              reduce using rule 87 (expr_head -> field_access .)
-    LE              reduce using rule 87 (expr_head -> field_access .)
-    GE              reduce using rule 87 (expr_head -> field_access .)
-    DOT             reduce using rule 87 (expr_head -> field_access .)
-    AGENT           reduce using rule 87 (expr_head -> field_access .)
-    CONNECT         reduce using rule 87 (expr_head -> field_access .)
-    DEF             reduce using rule 87 (expr_head -> field_access .)
-    FOR             reduce using rule 87 (expr_head -> field_access .)
-    IF              reduce using rule 87 (expr_head -> field_access .)
-    WHILE           reduce using rule 87 (expr_head -> field_access .)
-    IDENTIFIER      reduce using rule 87 (expr_head -> field_access .)
-    BREAK           reduce using rule 87 (expr_head -> field_access .)
-    CONTINUE        reduce using rule 87 (expr_head -> field_access .)
-    RETURN          reduce using rule 87 (expr_head -> field_access .)
-    STRING          reduce using rule 87 (expr_head -> field_access .)
-    NUMBER          reduce using rule 87 (expr_head -> field_access .)
-    LPAREN          reduce using rule 87 (expr_head -> field_access .)
-    LBRACE          reduce using rule 87 (expr_head -> field_access .)
-    $end            reduce using rule 87 (expr_head -> field_access .)
-    RPAREN          reduce using rule 87 (expr_head -> field_access .)
-    COMMA           reduce using rule 87 (expr_head -> field_access .)
-    COLON           reduce using rule 87 (expr_head -> field_access .)
-    INPUT           reduce using rule 87 (expr_head -> field_access .)
-    OUTPUT          reduce using rule 87 (expr_head -> field_access .)
-    MEMORY          reduce using rule 87 (expr_head -> field_access .)
-    MODEL           reduce using rule 87 (expr_head -> field_access .)
-    CHAT            reduce using rule 87 (expr_head -> field_access .)
-    DEDENT          reduce using rule 87 (expr_head -> field_access .)
-    RBRACE          reduce using rule 87 (expr_head -> field_access .)
+    PLUS            reduce using rule 88 (expr_head -> field_access .)
+    MINUS           reduce using rule 88 (expr_head -> field_access .)
+    TIMES           reduce using rule 88 (expr_head -> field_access .)
+    DIVIDE          reduce using rule 88 (expr_head -> field_access .)
+    MOD             reduce using rule 88 (expr_head -> field_access .)
+    EQ              reduce using rule 88 (expr_head -> field_access .)
+    NEQ             reduce using rule 88 (expr_head -> field_access .)
+    LT              reduce using rule 88 (expr_head -> field_access .)
+    GT              reduce using rule 88 (expr_head -> field_access .)
+    LE              reduce using rule 88 (expr_head -> field_access .)
+    GE              reduce using rule 88 (expr_head -> field_access .)
+    DOT             reduce using rule 88 (expr_head -> field_access .)
+    AGENT           reduce using rule 88 (expr_head -> field_access .)
+    CONNECT         reduce using rule 88 (expr_head -> field_access .)
+    DEF             reduce using rule 88 (expr_head -> field_access .)
+    FOR             reduce using rule 88 (expr_head -> field_access .)
+    IF              reduce using rule 88 (expr_head -> field_access .)
+    WHILE           reduce using rule 88 (expr_head -> field_access .)
+    IDENTIFIER      reduce using rule 88 (expr_head -> field_access .)
+    BREAK           reduce using rule 88 (expr_head -> field_access .)
+    CONTINUE        reduce using rule 88 (expr_head -> field_access .)
+    RETURN          reduce using rule 88 (expr_head -> field_access .)
+    STRING          reduce using rule 88 (expr_head -> field_access .)
+    NUMBER          reduce using rule 88 (expr_head -> field_access .)
+    LPAREN          reduce using rule 88 (expr_head -> field_access .)
+    LBRACE          reduce using rule 88 (expr_head -> field_access .)
+    $end            reduce using rule 88 (expr_head -> field_access .)
+    RPAREN          reduce using rule 88 (expr_head -> field_access .)
+    COMMA           reduce using rule 88 (expr_head -> field_access .)
+    COLON           reduce using rule 88 (expr_head -> field_access .)
+    INPUT           reduce using rule 88 (expr_head -> field_access .)
+    OUTPUT          reduce using rule 88 (expr_head -> field_access .)
+    MEMORY          reduce using rule 88 (expr_head -> field_access .)
+    MODEL           reduce using rule 88 (expr_head -> field_access .)
+    CHAT            reduce using rule 88 (expr_head -> field_access .)
+    DEDENT          reduce using rule 88 (expr_head -> field_access .)
+    RBRACE          reduce using rule 88 (expr_head -> field_access .)
 
 
 state 36
 
-    (88) expr_head -> func_call .
+    (89) expr_head -> func_call .
 
-    PLUS            reduce using rule 88 (expr_head -> func_call .)
-    MINUS           reduce using rule 88 (expr_head -> func_call .)
-    TIMES           reduce using rule 88 (expr_head -> func_call .)
-    DIVIDE          reduce using rule 88 (expr_head -> func_call .)
-    MOD             reduce using rule 88 (expr_head -> func_call .)
-    EQ              reduce using rule 88 (expr_head -> func_call .)
-    NEQ             reduce using rule 88 (expr_head -> func_call .)
-    LT              reduce using rule 88 (expr_head -> func_call .)
-    GT              reduce using rule 88 (expr_head -> func_call .)
-    LE              reduce using rule 88 (expr_head -> func_call .)
-    GE              reduce using rule 88 (expr_head -> func_call .)
-    DOT             reduce using rule 88 (expr_head -> func_call .)
-    AGENT           reduce using rule 88 (expr_head -> func_call .)
-    CONNECT         reduce using rule 88 (expr_head -> func_call .)
-    DEF             reduce using rule 88 (expr_head -> func_call .)
-    FOR             reduce using rule 88 (expr_head -> func_call .)
-    IF              reduce using rule 88 (expr_head -> func_call .)
-    WHILE           reduce using rule 88 (expr_head -> func_call .)
-    IDENTIFIER      reduce using rule 88 (expr_head -> func_call .)
-    BREAK           reduce using rule 88 (expr_head -> func_call .)
-    CONTINUE        reduce using rule 88 (expr_head -> func_call .)
-    RETURN          reduce using rule 88 (expr_head -> func_call .)
-    STRING          reduce using rule 88 (expr_head -> func_call .)
-    NUMBER          reduce using rule 88 (expr_head -> func_call .)
-    LPAREN          reduce using rule 88 (expr_head -> func_call .)
-    LBRACE          reduce using rule 88 (expr_head -> func_call .)
-    $end            reduce using rule 88 (expr_head -> func_call .)
-    RPAREN          reduce using rule 88 (expr_head -> func_call .)
-    COMMA           reduce using rule 88 (expr_head -> func_call .)
-    COLON           reduce using rule 88 (expr_head -> func_call .)
-    INPUT           reduce using rule 88 (expr_head -> func_call .)
-    OUTPUT          reduce using rule 88 (expr_head -> func_call .)
-    MEMORY          reduce using rule 88 (expr_head -> func_call .)
-    MODEL           reduce using rule 88 (expr_head -> func_call .)
-    CHAT            reduce using rule 88 (expr_head -> func_call .)
-    DEDENT          reduce using rule 88 (expr_head -> func_call .)
-    RBRACE          reduce using rule 88 (expr_head -> func_call .)
+    PLUS            reduce using rule 89 (expr_head -> func_call .)
+    MINUS           reduce using rule 89 (expr_head -> func_call .)
+    TIMES           reduce using rule 89 (expr_head -> func_call .)
+    DIVIDE          reduce using rule 89 (expr_head -> func_call .)
+    MOD             reduce using rule 89 (expr_head -> func_call .)
+    EQ              reduce using rule 89 (expr_head -> func_call .)
+    NEQ             reduce using rule 89 (expr_head -> func_call .)
+    LT              reduce using rule 89 (expr_head -> func_call .)
+    GT              reduce using rule 89 (expr_head -> func_call .)
+    LE              reduce using rule 89 (expr_head -> func_call .)
+    GE              reduce using rule 89 (expr_head -> func_call .)
+    DOT             reduce using rule 89 (expr_head -> func_call .)
+    AGENT           reduce using rule 89 (expr_head -> func_call .)
+    CONNECT         reduce using rule 89 (expr_head -> func_call .)
+    DEF             reduce using rule 89 (expr_head -> func_call .)
+    FOR             reduce using rule 89 (expr_head -> func_call .)
+    IF              reduce using rule 89 (expr_head -> func_call .)
+    WHILE           reduce using rule 89 (expr_head -> func_call .)
+    IDENTIFIER      reduce using rule 89 (expr_head -> func_call .)
+    BREAK           reduce using rule 89 (expr_head -> func_call .)
+    CONTINUE        reduce using rule 89 (expr_head -> func_call .)
+    RETURN          reduce using rule 89 (expr_head -> func_call .)
+    STRING          reduce using rule 89 (expr_head -> func_call .)
+    NUMBER          reduce using rule 89 (expr_head -> func_call .)
+    LPAREN          reduce using rule 89 (expr_head -> func_call .)
+    LBRACE          reduce using rule 89 (expr_head -> func_call .)
+    $end            reduce using rule 89 (expr_head -> func_call .)
+    RPAREN          reduce using rule 89 (expr_head -> func_call .)
+    COMMA           reduce using rule 89 (expr_head -> func_call .)
+    COLON           reduce using rule 89 (expr_head -> func_call .)
+    INPUT           reduce using rule 89 (expr_head -> func_call .)
+    OUTPUT          reduce using rule 89 (expr_head -> func_call .)
+    MEMORY          reduce using rule 89 (expr_head -> func_call .)
+    MODEL           reduce using rule 89 (expr_head -> func_call .)
+    CHAT            reduce using rule 89 (expr_head -> func_call .)
+    DEDENT          reduce using rule 89 (expr_head -> func_call .)
+    RBRACE          reduce using rule 89 (expr_head -> func_call .)
 
 
 state 37
@@ -1593,15 +1596,16 @@ state 39
     (97) list_elements -> . empty
     (101) record_elements -> . field_assign record_elements_tail
     (102) record_elements -> . empty
-    (82) expr -> . expr_head expr_tail
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
     (128) empty -> .
     (105) field_assign -> . IDENTIFIER EQUALS expr
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -1613,17 +1617,17 @@ state 39
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     RBRACE          reduce using rule 128 (empty -> .)
-    IDENTIFIER      shift and go to state 77
+    IDENTIFIER      shift and go to state 75
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    list_elements                  shift and go to state 72
-    record_elements                shift and go to state 73
-    expr                           shift and go to state 74
-    empty                          shift and go to state 75
-    field_assign                   shift and go to state 76
+    list_elements                  shift and go to state 70
+    record_elements                shift and go to state 71
+    expr                           shift and go to state 72
+    empty                          shift and go to state 73
+    field_assign                   shift and go to state 74
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -1643,7 +1647,7 @@ state 41
 
     (9) global_block -> GLOBAL COLON . INDENT var_decl_list DEDENT
 
-    INDENT          shift and go to state 78
+    INDENT          shift and go to state 76
 
 
 state 42
@@ -1657,7 +1661,7 @@ state 43
 
     (32) agent_def -> AGENT IDENTIFIER . COLON INDENT agent_body DEDENT
 
-    COLON           shift and go to state 79
+    COLON           shift and go to state 77
 
 
 state 44
@@ -1675,30 +1679,31 @@ state 44
     (25) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (29) tuple_type -> . TYPE_TUPLE LPAREN type_list_in_tuple RPAREN
 
-    TYPE_STR        shift and go to state 85
-    TYPE_INT        shift and go to state 86
-    TYPE_FLOAT      shift and go to state 87
-    TYPE_BOOL       shift and go to state 88
-    TYPE_LIST       shift and go to state 89
-    TYPE_RECORD     shift and go to state 90
-    TYPE_TUPLE      shift and go to state 91
+    TYPE_STR        shift and go to state 83
+    TYPE_INT        shift and go to state 84
+    TYPE_FLOAT      shift and go to state 85
+    TYPE_BOOL       shift and go to state 86
+    TYPE_LIST       shift and go to state 87
+    TYPE_RECORD     shift and go to state 88
+    TYPE_TUPLE      shift and go to state 89
 
-    type                           shift and go to state 80
-    base_type                      shift and go to state 81
-    list_type                      shift and go to state 82
-    record_type                    shift and go to state 83
-    tuple_type                     shift and go to state 84
+    type                           shift and go to state 78
+    base_type                      shift and go to state 79
+    list_type                      shift and go to state 80
+    record_type                    shift and go to state 81
+    tuple_type                     shift and go to state 82
 
 state 45
 
     (72) assign_stmt -> IDENTIFIER EQUALS . expr
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -1715,7 +1720,7 @@ state 45
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr                           shift and go to state 92
+    expr                           shift and go to state 90
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -1729,14 +1734,15 @@ state 46
     (112) func_call -> IDENTIFIER LPAREN . arg_list RPAREN
     (113) arg_list -> . expr arg_list_tail
     (114) arg_list -> . empty
-    (82) expr -> . expr_head expr_tail
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
     (128) empty -> .
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -1754,9 +1760,9 @@ state 46
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    arg_list                       shift and go to state 93
-    expr                           shift and go to state 94
-    empty                          shift and go to state 95
+    arg_list                       shift and go to state 91
+    expr                           shift and go to state 92
+    empty                          shift and go to state 93
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -1769,7 +1775,7 @@ state 47
 
     (46) connect_block -> CONNECT COLON . INDENT connection_list DEDENT
 
-    INDENT          shift and go to state 96
+    INDENT          shift and go to state 94
 
 
 state 48
@@ -1777,7 +1783,7 @@ state 48
     (53) func_def -> DEF IDENTIFIER . LPAREN param_list RPAREN COLON type COLON INDENT stmt_block DEDENT
     (54) func_def -> DEF IDENTIFIER . LPAREN param_list RPAREN COLON INDENT stmt_block DEDENT
 
-    LPAREN          shift and go to state 97
+    LPAREN          shift and go to state 95
 
 
 state 49
@@ -1790,20 +1796,20 @@ state 49
     (128) empty -> .
 
   ! shift/reduce conflict for RPAREN resolved as shift
-    RPAREN          shift and go to state 98
+    RPAREN          shift and go to state 96
     DOT             shift and go to state 54
-    COMMA           shift and go to state 100
+    COMMA           shift and go to state 98
 
   ! RPAREN          [ reduce using rule 128 (empty -> .) ]
 
-    tuple_elements_tail            shift and go to state 99
-    empty                          shift and go to state 101
+    tuple_elements_tail            shift and go to state 97
+    empty                          shift and go to state 99
 
 state 50
 
     (106) tuple_expr -> LPAREN tuple_elements . RPAREN
 
-    RPAREN          shift and go to state 102
+    RPAREN          shift and go to state 100
 
 
 state 51
@@ -1864,14 +1870,14 @@ state 53
 
     (76) for_stmt -> FOR IDENTIFIER . IN expr COLON stmt_block
 
-    IN              shift and go to state 103
+    IN              shift and go to state 101
 
 
 state 54
 
     (111) field_access -> expr DOT . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 104
+    IDENTIFIER      shift and go to state 102
 
 
 state 55
@@ -1880,7 +1886,7 @@ state 55
     (80) if_stmt -> IF expr . COLON stmt_block
     (111) field_access -> expr . DOT IDENTIFIER
 
-    COLON           shift and go to state 105
+    COLON           shift and go to state 103
     DOT             shift and go to state 54
 
 
@@ -1889,7 +1895,7 @@ state 56
     (81) while_stmt -> WHILE expr . COLON stmt_block
     (111) field_access -> expr . DOT IDENTIFIER
 
-    COLON           shift and go to state 106
+    COLON           shift and go to state 104
     DOT             shift and go to state 54
 
 
@@ -1924,45 +1930,16 @@ state 57
 
 state 58
 
-    (82) expr -> expr_head expr_tail .
-
-    DOT             reduce using rule 82 (expr -> expr_head expr_tail .)
-    AGENT           reduce using rule 82 (expr -> expr_head expr_tail .)
-    CONNECT         reduce using rule 82 (expr -> expr_head expr_tail .)
-    DEF             reduce using rule 82 (expr -> expr_head expr_tail .)
-    FOR             reduce using rule 82 (expr -> expr_head expr_tail .)
-    IF              reduce using rule 82 (expr -> expr_head expr_tail .)
-    WHILE           reduce using rule 82 (expr -> expr_head expr_tail .)
-    IDENTIFIER      reduce using rule 82 (expr -> expr_head expr_tail .)
-    BREAK           reduce using rule 82 (expr -> expr_head expr_tail .)
-    CONTINUE        reduce using rule 82 (expr -> expr_head expr_tail .)
-    RETURN          reduce using rule 82 (expr -> expr_head expr_tail .)
-    STRING          reduce using rule 82 (expr -> expr_head expr_tail .)
-    NUMBER          reduce using rule 82 (expr -> expr_head expr_tail .)
-    LPAREN          reduce using rule 82 (expr -> expr_head expr_tail .)
-    LBRACE          reduce using rule 82 (expr -> expr_head expr_tail .)
-    $end            reduce using rule 82 (expr -> expr_head expr_tail .)
-    RPAREN          reduce using rule 82 (expr -> expr_head expr_tail .)
-    COMMA           reduce using rule 82 (expr -> expr_head expr_tail .)
-    COLON           reduce using rule 82 (expr -> expr_head expr_tail .)
-    INPUT           reduce using rule 82 (expr -> expr_head expr_tail .)
-    OUTPUT          reduce using rule 82 (expr -> expr_head expr_tail .)
-    MEMORY          reduce using rule 82 (expr -> expr_head expr_tail .)
-    MODEL           reduce using rule 82 (expr -> expr_head expr_tail .)
-    CHAT            reduce using rule 82 (expr -> expr_head expr_tail .)
-    DEDENT          reduce using rule 82 (expr -> expr_head expr_tail .)
-    RBRACE          reduce using rule 82 (expr -> expr_head expr_tail .)
-
-
-state 59
-
-    (89) expr_tail -> bin_op . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> expr_head bin_op . expr_tail
+    (90) expr_tail -> . expr
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -1972,7 +1949,6 @@ state 59
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
     (111) field_access -> . expr DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-    (82) expr -> . expr_head expr_tail
 
     IDENTIFIER      shift and go to state 52
     STRING          shift and go to state 37
@@ -1980,48 +1956,17 @@ state 59
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr_head                      shift and go to state 107
+    expr_head                      shift and go to state 30
+    expr_tail                      shift and go to state 105
+    expr                           shift and go to state 106
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
     record_expr                    shift and go to state 33
     tuple_expr                     shift and go to state 34
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
-    expr                           shift and go to state 108
 
-state 60
-
-    (90) expr_tail -> empty .
-
-    DOT             reduce using rule 90 (expr_tail -> empty .)
-    AGENT           reduce using rule 90 (expr_tail -> empty .)
-    CONNECT         reduce using rule 90 (expr_tail -> empty .)
-    DEF             reduce using rule 90 (expr_tail -> empty .)
-    FOR             reduce using rule 90 (expr_tail -> empty .)
-    IF              reduce using rule 90 (expr_tail -> empty .)
-    WHILE           reduce using rule 90 (expr_tail -> empty .)
-    IDENTIFIER      reduce using rule 90 (expr_tail -> empty .)
-    BREAK           reduce using rule 90 (expr_tail -> empty .)
-    CONTINUE        reduce using rule 90 (expr_tail -> empty .)
-    RETURN          reduce using rule 90 (expr_tail -> empty .)
-    STRING          reduce using rule 90 (expr_tail -> empty .)
-    NUMBER          reduce using rule 90 (expr_tail -> empty .)
-    LPAREN          reduce using rule 90 (expr_tail -> empty .)
-    LBRACE          reduce using rule 90 (expr_tail -> empty .)
-    $end            reduce using rule 90 (expr_tail -> empty .)
-    RPAREN          reduce using rule 90 (expr_tail -> empty .)
-    COMMA           reduce using rule 90 (expr_tail -> empty .)
-    COLON           reduce using rule 90 (expr_tail -> empty .)
-    INPUT           reduce using rule 90 (expr_tail -> empty .)
-    OUTPUT          reduce using rule 90 (expr_tail -> empty .)
-    MEMORY          reduce using rule 90 (expr_tail -> empty .)
-    MODEL           reduce using rule 90 (expr_tail -> empty .)
-    CHAT            reduce using rule 90 (expr_tail -> empty .)
-    DEDENT          reduce using rule 90 (expr_tail -> empty .)
-    RBRACE          reduce using rule 90 (expr_tail -> empty .)
-
-
-state 61
+state 59
 
     (117) bin_op -> PLUS .
 
@@ -2032,7 +1977,7 @@ state 61
     LBRACE          reduce using rule 117 (bin_op -> PLUS .)
 
 
-state 62
+state 60
 
     (118) bin_op -> MINUS .
 
@@ -2043,7 +1988,7 @@ state 62
     LBRACE          reduce using rule 118 (bin_op -> MINUS .)
 
 
-state 63
+state 61
 
     (119) bin_op -> TIMES .
 
@@ -2054,7 +1999,7 @@ state 63
     LBRACE          reduce using rule 119 (bin_op -> TIMES .)
 
 
-state 64
+state 62
 
     (120) bin_op -> DIVIDE .
 
@@ -2065,7 +2010,7 @@ state 64
     LBRACE          reduce using rule 120 (bin_op -> DIVIDE .)
 
 
-state 65
+state 63
 
     (121) bin_op -> MOD .
 
@@ -2076,7 +2021,7 @@ state 65
     LBRACE          reduce using rule 121 (bin_op -> MOD .)
 
 
-state 66
+state 64
 
     (122) bin_op -> EQ .
 
@@ -2087,7 +2032,7 @@ state 66
     LBRACE          reduce using rule 122 (bin_op -> EQ .)
 
 
-state 67
+state 65
 
     (123) bin_op -> NEQ .
 
@@ -2098,7 +2043,7 @@ state 67
     LBRACE          reduce using rule 123 (bin_op -> NEQ .)
 
 
-state 68
+state 66
 
     (124) bin_op -> LT .
 
@@ -2109,7 +2054,7 @@ state 68
     LBRACE          reduce using rule 124 (bin_op -> LT .)
 
 
-state 69
+state 67
 
     (125) bin_op -> GT .
 
@@ -2120,7 +2065,7 @@ state 69
     LBRACE          reduce using rule 125 (bin_op -> GT .)
 
 
-state 70
+state 68
 
     (126) bin_op -> LE .
 
@@ -2131,7 +2076,7 @@ state 70
     LBRACE          reduce using rule 126 (bin_op -> LE .)
 
 
-state 71
+state 69
 
     (127) bin_op -> GE .
 
@@ -2142,21 +2087,21 @@ state 71
     LBRACE          reduce using rule 127 (bin_op -> GE .)
 
 
-state 72
+state 70
 
     (95) list_expr -> LBRACE list_elements . RBRACE
 
-    RBRACE          shift and go to state 109
+    RBRACE          shift and go to state 107
 
 
-state 73
+state 71
 
     (100) record_expr -> LBRACE record_elements . RBRACE
 
-    RBRACE          shift and go to state 110
+    RBRACE          shift and go to state 108
 
 
-state 74
+state 72
 
     (96) list_elements -> expr . list_elements_tail
     (111) field_access -> expr . DOT IDENTIFIER
@@ -2165,13 +2110,13 @@ state 74
     (128) empty -> .
 
     DOT             shift and go to state 54
-    COMMA           shift and go to state 112
+    COMMA           shift and go to state 110
     RBRACE          reduce using rule 128 (empty -> .)
 
-    list_elements_tail             shift and go to state 111
-    empty                          shift and go to state 113
+    list_elements_tail             shift and go to state 109
+    empty                          shift and go to state 111
 
-state 75
+state 73
 
     (97) list_elements -> empty .
     (102) record_elements -> empty .
@@ -2182,26 +2127,26 @@ state 75
   ! RBRACE          [ reduce using rule 102 (record_elements -> empty .) ]
 
 
-state 76
+state 74
 
     (101) record_elements -> field_assign . record_elements_tail
     (103) record_elements_tail -> . COMMA field_assign record_elements_tail
     (104) record_elements_tail -> . empty
     (128) empty -> .
 
-    COMMA           shift and go to state 115
+    COMMA           shift and go to state 113
     RBRACE          reduce using rule 128 (empty -> .)
 
-    record_elements_tail           shift and go to state 114
-    empty                          shift and go to state 116
+    record_elements_tail           shift and go to state 112
+    empty                          shift and go to state 114
 
-state 77
+state 75
 
     (105) field_assign -> IDENTIFIER . EQUALS expr
     (91) atom -> IDENTIFIER .
     (112) func_call -> IDENTIFIER . LPAREN arg_list RPAREN
 
-    EQUALS          shift and go to state 117
+    EQUALS          shift and go to state 115
     PLUS            reduce using rule 91 (atom -> IDENTIFIER .)
     MINUS           reduce using rule 91 (atom -> IDENTIFIER .)
     TIMES           reduce using rule 91 (atom -> IDENTIFIER .)
@@ -2219,7 +2164,7 @@ state 77
     LPAREN          shift and go to state 46
 
 
-state 78
+state 76
 
     (9) global_block -> GLOBAL COLON INDENT . var_decl_list DEDENT
     (10) var_decl_list -> . var_decl var_decl_list
@@ -2229,26 +2174,26 @@ state 78
     (14) var_decl -> . IDENTIFIER EQUALS expr
     (15) var_decl -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 120
+    IDENTIFIER      shift and go to state 118
 
-    var_decl_list                  shift and go to state 118
-    var_decl                       shift and go to state 119
+    var_decl_list                  shift and go to state 116
+    var_decl                       shift and go to state 117
 
-state 79
+state 77
 
     (32) agent_def -> AGENT IDENTIFIER COLON . INDENT agent_body DEDENT
 
-    INDENT          shift and go to state 121
+    INDENT          shift and go to state 119
 
 
-state 80
+state 78
 
     (71) assign_stmt -> IDENTIFIER COLON type . EQUALS expr
 
-    EQUALS          shift and go to state 122
+    EQUALS          shift and go to state 120
 
 
-state 81
+state 79
 
     (16) type -> base_type .
 
@@ -2261,7 +2206,7 @@ state 81
     COLON           reduce using rule 16 (type -> base_type .)
 
 
-state 82
+state 80
 
     (17) type -> list_type .
 
@@ -2274,7 +2219,7 @@ state 82
     COLON           reduce using rule 17 (type -> list_type .)
 
 
-state 83
+state 81
 
     (18) type -> record_type .
 
@@ -2287,7 +2232,7 @@ state 83
     COLON           reduce using rule 18 (type -> record_type .)
 
 
-state 84
+state 82
 
     (19) type -> tuple_type .
 
@@ -2300,7 +2245,7 @@ state 84
     COLON           reduce using rule 19 (type -> tuple_type .)
 
 
-state 85
+state 83
 
     (20) base_type -> TYPE_STR .
 
@@ -2313,7 +2258,7 @@ state 85
     COLON           reduce using rule 20 (base_type -> TYPE_STR .)
 
 
-state 86
+state 84
 
     (21) base_type -> TYPE_INT .
 
@@ -2326,7 +2271,7 @@ state 86
     COLON           reduce using rule 21 (base_type -> TYPE_INT .)
 
 
-state 87
+state 85
 
     (22) base_type -> TYPE_FLOAT .
 
@@ -2339,7 +2284,7 @@ state 87
     COLON           reduce using rule 22 (base_type -> TYPE_FLOAT .)
 
 
-state 88
+state 86
 
     (23) base_type -> TYPE_BOOL .
 
@@ -2352,28 +2297,28 @@ state 88
     COLON           reduce using rule 23 (base_type -> TYPE_BOOL .)
 
 
-state 89
+state 87
 
     (24) list_type -> TYPE_LIST . LBRACE type RBRACE
 
-    LBRACE          shift and go to state 123
+    LBRACE          shift and go to state 121
 
 
-state 90
+state 88
 
     (25) record_type -> TYPE_RECORD . LBRACE field_decl_list RBRACE
 
-    LBRACE          shift and go to state 124
+    LBRACE          shift and go to state 122
 
 
-state 91
+state 89
 
     (29) tuple_type -> TYPE_TUPLE . LPAREN type_list_in_tuple RPAREN
 
-    LPAREN          shift and go to state 125
+    LPAREN          shift and go to state 123
 
 
-state 92
+state 90
 
     (72) assign_stmt -> IDENTIFIER EQUALS expr .
     (111) field_access -> expr . DOT IDENTIFIER
@@ -2402,14 +2347,14 @@ state 92
     DOT             shift and go to state 54
 
 
-state 93
+state 91
 
     (112) func_call -> IDENTIFIER LPAREN arg_list . RPAREN
 
-    RPAREN          shift and go to state 126
+    RPAREN          shift and go to state 124
 
 
-state 94
+state 92
 
     (113) arg_list -> expr . arg_list_tail
     (111) field_access -> expr . DOT IDENTIFIER
@@ -2418,32 +2363,32 @@ state 94
     (128) empty -> .
 
     DOT             shift and go to state 54
-    COMMA           shift and go to state 128
+    COMMA           shift and go to state 126
     RPAREN          reduce using rule 128 (empty -> .)
 
-    arg_list_tail                  shift and go to state 127
-    empty                          shift and go to state 129
+    arg_list_tail                  shift and go to state 125
+    empty                          shift and go to state 127
 
-state 95
+state 93
 
     (114) arg_list -> empty .
 
     RPAREN          reduce using rule 114 (arg_list -> empty .)
 
 
-state 96
+state 94
 
     (46) connect_block -> CONNECT COLON INDENT . connection_list DEDENT
     (47) connection_list -> . connection connection_list
     (48) connection_list -> . connection
     (49) connection -> . IDENTIFIER COLON type agent_ref ARROW agent_ref
 
-    IDENTIFIER      shift and go to state 132
+    IDENTIFIER      shift and go to state 130
 
-    connection_list                shift and go to state 130
-    connection                     shift and go to state 131
+    connection_list                shift and go to state 128
+    connection                     shift and go to state 129
 
-state 97
+state 95
 
     (53) func_def -> DEF IDENTIFIER LPAREN . param_list RPAREN COLON type COLON INDENT stmt_block DEDENT
     (54) func_def -> DEF IDENTIFIER LPAREN . param_list RPAREN COLON INDENT stmt_block DEDENT
@@ -2457,14 +2402,14 @@ state 97
     (15) var_decl -> . IDENTIFIER
 
     RPAREN          reduce using rule 128 (empty -> .)
-    IDENTIFIER      shift and go to state 120
+    IDENTIFIER      shift and go to state 118
 
-    param_list                     shift and go to state 133
-    param_decl                     shift and go to state 134
-    empty                          shift and go to state 135
-    var_decl                       shift and go to state 136
+    param_list                     shift and go to state 131
+    param_decl                     shift and go to state 132
+    empty                          shift and go to state 133
+    var_decl                       shift and go to state 134
 
-state 98
+state 96
 
     (94) atom -> LPAREN expr RPAREN .
 
@@ -2507,23 +2452,24 @@ state 98
     RBRACE          reduce using rule 94 (atom -> LPAREN expr RPAREN .)
 
 
-state 99
+state 97
 
     (107) tuple_elements -> expr tuple_elements_tail .
 
     RPAREN          reduce using rule 107 (tuple_elements -> expr tuple_elements_tail .)
 
 
-state 100
+state 98
 
     (109) tuple_elements_tail -> COMMA . expr tuple_elements_tail
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -2540,7 +2486,7 @@ state 100
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr                           shift and go to state 137
+    expr                           shift and go to state 135
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -2549,14 +2495,14 @@ state 100
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 101
+state 99
 
     (110) tuple_elements_tail -> empty .
 
     RPAREN          reduce using rule 110 (tuple_elements_tail -> empty .)
 
 
-state 102
+state 100
 
     (106) tuple_expr -> LPAREN tuple_elements RPAREN .
 
@@ -2599,16 +2545,17 @@ state 102
     RBRACE          reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
 
 
-state 103
+state 101
 
     (76) for_stmt -> FOR IDENTIFIER IN . expr COLON stmt_block
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -2625,7 +2572,7 @@ state 103
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr                           shift and go to state 138
+    expr                           shift and go to state 136
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -2634,7 +2581,7 @@ state 103
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 104
+state 102
 
     (111) field_access -> expr DOT IDENTIFIER .
 
@@ -2677,94 +2624,94 @@ state 104
     RBRACE          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
 
 
-state 105
+state 103
 
     (79) if_stmt -> IF expr COLON . stmt_block ELSE COLON stmt_block
     (80) if_stmt -> IF expr COLON . stmt_block
     (60) stmt_block -> . INDENT statement_list DEDENT
 
-    INDENT          shift and go to state 140
+    INDENT          shift and go to state 138
 
-    stmt_block                     shift and go to state 139
+    stmt_block                     shift and go to state 137
 
-state 106
+state 104
 
     (81) while_stmt -> WHILE expr COLON . stmt_block
     (60) stmt_block -> . INDENT statement_list DEDENT
 
-    INDENT          shift and go to state 140
+    INDENT          shift and go to state 138
 
-    stmt_block                     shift and go to state 141
+    stmt_block                     shift and go to state 139
 
-state 107
+state 105
 
-    (89) expr_tail -> bin_op expr_head . expr_tail
-    (82) expr -> expr_head . expr_tail
-    (89) expr_tail -> . bin_op expr_head expr_tail
-    (90) expr_tail -> . empty
-    (117) bin_op -> . PLUS
-    (118) bin_op -> . MINUS
-    (119) bin_op -> . TIMES
-    (120) bin_op -> . DIVIDE
-    (121) bin_op -> . MOD
-    (122) bin_op -> . EQ
-    (123) bin_op -> . NEQ
-    (124) bin_op -> . LT
-    (125) bin_op -> . GT
-    (126) bin_op -> . LE
-    (127) bin_op -> . GE
-    (128) empty -> .
+    (82) expr -> expr_head bin_op expr_tail .
 
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 63
-    DIVIDE          shift and go to state 64
-    MOD             shift and go to state 65
-    EQ              shift and go to state 66
-    NEQ             shift and go to state 67
-    LT              shift and go to state 68
-    GT              shift and go to state 69
-    LE              shift and go to state 70
-    GE              shift and go to state 71
-    DOT             reduce using rule 128 (empty -> .)
-    AGENT           reduce using rule 128 (empty -> .)
-    CONNECT         reduce using rule 128 (empty -> .)
-    DEF             reduce using rule 128 (empty -> .)
-    FOR             reduce using rule 128 (empty -> .)
-    IF              reduce using rule 128 (empty -> .)
-    WHILE           reduce using rule 128 (empty -> .)
-    IDENTIFIER      reduce using rule 128 (empty -> .)
-    BREAK           reduce using rule 128 (empty -> .)
-    CONTINUE        reduce using rule 128 (empty -> .)
-    RETURN          reduce using rule 128 (empty -> .)
-    STRING          reduce using rule 128 (empty -> .)
-    NUMBER          reduce using rule 128 (empty -> .)
-    LPAREN          reduce using rule 128 (empty -> .)
-    LBRACE          reduce using rule 128 (empty -> .)
-    $end            reduce using rule 128 (empty -> .)
-    RPAREN          reduce using rule 128 (empty -> .)
-    COMMA           reduce using rule 128 (empty -> .)
-    COLON           reduce using rule 128 (empty -> .)
-    INPUT           reduce using rule 128 (empty -> .)
-    OUTPUT          reduce using rule 128 (empty -> .)
-    MEMORY          reduce using rule 128 (empty -> .)
-    MODEL           reduce using rule 128 (empty -> .)
-    CHAT            reduce using rule 128 (empty -> .)
-    DEDENT          reduce using rule 128 (empty -> .)
-    RBRACE          reduce using rule 128 (empty -> .)
+    DOT             reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    AGENT           reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    CONNECT         reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    DEF             reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    FOR             reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    IF              reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    WHILE           reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    IDENTIFIER      reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    BREAK           reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    CONTINUE        reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    RETURN          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    STRING          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    NUMBER          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    LPAREN          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    LBRACE          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    $end            reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    RPAREN          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    COMMA           reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    COLON           reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    INPUT           reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    OUTPUT          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    MEMORY          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    MODEL           reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    CHAT            reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    DEDENT          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
+    RBRACE          reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
 
-    bin_op                         shift and go to state 59
-    expr_tail                      shift and go to state 142
-    empty                          shift and go to state 60
 
-state 108
+state 106
 
+    (90) expr_tail -> expr .
     (111) field_access -> expr . DOT IDENTIFIER
 
+  ! shift/reduce conflict for DOT resolved as shift
+    AGENT           reduce using rule 90 (expr_tail -> expr .)
+    CONNECT         reduce using rule 90 (expr_tail -> expr .)
+    DEF             reduce using rule 90 (expr_tail -> expr .)
+    FOR             reduce using rule 90 (expr_tail -> expr .)
+    IF              reduce using rule 90 (expr_tail -> expr .)
+    WHILE           reduce using rule 90 (expr_tail -> expr .)
+    IDENTIFIER      reduce using rule 90 (expr_tail -> expr .)
+    BREAK           reduce using rule 90 (expr_tail -> expr .)
+    CONTINUE        reduce using rule 90 (expr_tail -> expr .)
+    RETURN          reduce using rule 90 (expr_tail -> expr .)
+    STRING          reduce using rule 90 (expr_tail -> expr .)
+    NUMBER          reduce using rule 90 (expr_tail -> expr .)
+    LPAREN          reduce using rule 90 (expr_tail -> expr .)
+    LBRACE          reduce using rule 90 (expr_tail -> expr .)
+    $end            reduce using rule 90 (expr_tail -> expr .)
+    RPAREN          reduce using rule 90 (expr_tail -> expr .)
+    COMMA           reduce using rule 90 (expr_tail -> expr .)
+    COLON           reduce using rule 90 (expr_tail -> expr .)
+    INPUT           reduce using rule 90 (expr_tail -> expr .)
+    OUTPUT          reduce using rule 90 (expr_tail -> expr .)
+    MEMORY          reduce using rule 90 (expr_tail -> expr .)
+    MODEL           reduce using rule 90 (expr_tail -> expr .)
+    CHAT            reduce using rule 90 (expr_tail -> expr .)
+    DEDENT          reduce using rule 90 (expr_tail -> expr .)
+    RBRACE          reduce using rule 90 (expr_tail -> expr .)
     DOT             shift and go to state 54
 
+  ! DOT             [ reduce using rule 90 (expr_tail -> expr .) ]
 
-state 109
+
+state 107
 
     (95) list_expr -> LBRACE list_elements RBRACE .
 
@@ -2807,7 +2754,7 @@ state 109
     RBRACE          reduce using rule 95 (list_expr -> LBRACE list_elements RBRACE .)
 
 
-state 110
+state 108
 
     (100) record_expr -> LBRACE record_elements RBRACE .
 
@@ -2850,23 +2797,90 @@ state 110
     RBRACE          reduce using rule 100 (record_expr -> LBRACE record_elements RBRACE .)
 
 
-state 111
+state 109
 
     (96) list_elements -> expr list_elements_tail .
 
     RBRACE          reduce using rule 96 (list_elements -> expr list_elements_tail .)
 
 
-state 112
+state 110
 
     (98) list_elements_tail -> COMMA . expr list_elements_tail
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
+    (91) atom -> . IDENTIFIER
+    (92) atom -> . STRING
+    (93) atom -> . NUMBER
+    (94) atom -> . LPAREN expr RPAREN
+    (95) list_expr -> . LBRACE list_elements RBRACE
+    (100) record_expr -> . LBRACE record_elements RBRACE
+    (106) tuple_expr -> . LPAREN tuple_elements RPAREN
+    (111) field_access -> . expr DOT IDENTIFIER
+    (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
+
+    IDENTIFIER      shift and go to state 52
+    STRING          shift and go to state 37
+    NUMBER          shift and go to state 38
+    LPAREN          shift and go to state 22
+    LBRACE          shift and go to state 39
+
+    expr                           shift and go to state 140
+    expr_head                      shift and go to state 30
+    atom                           shift and go to state 31
+    list_expr                      shift and go to state 32
+    record_expr                    shift and go to state 33
+    tuple_expr                     shift and go to state 34
+    field_access                   shift and go to state 35
+    func_call                      shift and go to state 36
+
+state 111
+
+    (99) list_elements_tail -> empty .
+
+    RBRACE          reduce using rule 99 (list_elements_tail -> empty .)
+
+
+state 112
+
+    (101) record_elements -> field_assign record_elements_tail .
+
+    RBRACE          reduce using rule 101 (record_elements -> field_assign record_elements_tail .)
+
+
+state 113
+
+    (103) record_elements_tail -> COMMA . field_assign record_elements_tail
+    (105) field_assign -> . IDENTIFIER EQUALS expr
+
+    IDENTIFIER      shift and go to state 142
+
+    field_assign                   shift and go to state 141
+
+state 114
+
+    (104) record_elements_tail -> empty .
+
+    RBRACE          reduce using rule 104 (record_elements_tail -> empty .)
+
+
+state 115
+
+    (105) field_assign -> IDENTIFIER EQUALS . expr
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -2892,79 +2906,14 @@ state 112
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 113
-
-    (99) list_elements_tail -> empty .
-
-    RBRACE          reduce using rule 99 (list_elements_tail -> empty .)
-
-
-state 114
-
-    (101) record_elements -> field_assign record_elements_tail .
-
-    RBRACE          reduce using rule 101 (record_elements -> field_assign record_elements_tail .)
-
-
-state 115
-
-    (103) record_elements_tail -> COMMA . field_assign record_elements_tail
-    (105) field_assign -> . IDENTIFIER EQUALS expr
-
-    IDENTIFIER      shift and go to state 145
-
-    field_assign                   shift and go to state 144
-
 state 116
-
-    (104) record_elements_tail -> empty .
-
-    RBRACE          reduce using rule 104 (record_elements_tail -> empty .)
-
-
-state 117
-
-    (105) field_assign -> IDENTIFIER EQUALS . expr
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
-    (91) atom -> . IDENTIFIER
-    (92) atom -> . STRING
-    (93) atom -> . NUMBER
-    (94) atom -> . LPAREN expr RPAREN
-    (95) list_expr -> . LBRACE list_elements RBRACE
-    (100) record_expr -> . LBRACE record_elements RBRACE
-    (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
-    (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
-
-    IDENTIFIER      shift and go to state 52
-    STRING          shift and go to state 37
-    NUMBER          shift and go to state 38
-    LPAREN          shift and go to state 22
-    LBRACE          shift and go to state 39
-
-    expr                           shift and go to state 146
-    expr_head                      shift and go to state 30
-    atom                           shift and go to state 31
-    list_expr                      shift and go to state 32
-    record_expr                    shift and go to state 33
-    tuple_expr                     shift and go to state 34
-    field_access                   shift and go to state 35
-    func_call                      shift and go to state 36
-
-state 118
 
     (9) global_block -> GLOBAL COLON INDENT var_decl_list . DEDENT
 
-    DEDENT          shift and go to state 147
+    DEDENT          shift and go to state 144
 
 
-state 119
+state 117
 
     (10) var_decl_list -> var_decl . var_decl_list
     (11) var_decl_list -> var_decl .
@@ -2976,27 +2925,27 @@ state 119
     (15) var_decl -> . IDENTIFIER
 
     DEDENT          reduce using rule 11 (var_decl_list -> var_decl .)
-    IDENTIFIER      shift and go to state 120
+    IDENTIFIER      shift and go to state 118
 
-    var_decl                       shift and go to state 119
-    var_decl_list                  shift and go to state 148
+    var_decl                       shift and go to state 117
+    var_decl_list                  shift and go to state 145
 
-state 120
+state 118
 
     (12) var_decl -> IDENTIFIER . COLON type EQUALS expr
     (13) var_decl -> IDENTIFIER . COLON type
     (14) var_decl -> IDENTIFIER . EQUALS expr
     (15) var_decl -> IDENTIFIER .
 
-    COLON           shift and go to state 149
-    EQUALS          shift and go to state 150
+    COLON           shift and go to state 146
+    EQUALS          shift and go to state 147
     IDENTIFIER      reduce using rule 15 (var_decl -> IDENTIFIER .)
     DEDENT          reduce using rule 15 (var_decl -> IDENTIFIER .)
     COMMA           reduce using rule 15 (var_decl -> IDENTIFIER .)
     RPAREN          reduce using rule 15 (var_decl -> IDENTIFIER .)
 
 
-state 121
+state 119
 
     (32) agent_def -> AGENT IDENTIFIER COLON INDENT . agent_body DEDENT
     (33) agent_body -> . agent_body_item agent_body
@@ -3031,13 +2980,14 @@ state 121
     (78) continue_stmt -> . CONTINUE
     (74) return_stmt -> . RETURN expr
     (75) return_stmt -> . RETURN
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -3048,11 +2998,11 @@ state 121
     (111) field_access -> . expr DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    INPUT           shift and go to state 159
-    OUTPUT          shift and go to state 160
-    MEMORY          shift and go to state 161
-    MODEL           shift and go to state 162
-    CHAT            shift and go to state 163
+    INPUT           shift and go to state 156
+    OUTPUT          shift and go to state 157
+    MEMORY          shift and go to state 158
+    MODEL           shift and go to state 159
+    CHAT            shift and go to state 160
     FOR             shift and go to state 23
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -3065,14 +3015,14 @@ state 121
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    agent_body                     shift and go to state 151
-    agent_body_item                shift and go to state 152
-    input_block                    shift and go to state 153
-    output_block                   shift and go to state 154
-    memory_block                   shift and go to state 155
-    model_block                    shift and go to state 156
-    statement                      shift and go to state 157
-    chat_block                     shift and go to state 158
+    agent_body                     shift and go to state 148
+    agent_body_item                shift and go to state 149
+    input_block                    shift and go to state 150
+    output_block                   shift and go to state 151
+    memory_block                   shift and go to state 152
+    model_block                    shift and go to state 153
+    statement                      shift and go to state 154
+    chat_block                     shift and go to state 155
     for_stmt                       shift and go to state 10
     if_stmt                        shift and go to state 11
     while_stmt                     shift and go to state 12
@@ -3090,16 +3040,17 @@ state 121
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 122
+state 120
 
     (71) assign_stmt -> IDENTIFIER COLON type EQUALS . expr
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -3116,7 +3067,7 @@ state 122
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr                           shift and go to state 164
+    expr                           shift and go to state 161
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -3125,7 +3076,7 @@ state 122
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 123
+state 121
 
     (24) list_type -> TYPE_LIST LBRACE . type RBRACE
     (16) type -> . base_type
@@ -3140,33 +3091,33 @@ state 123
     (25) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (29) tuple_type -> . TYPE_TUPLE LPAREN type_list_in_tuple RPAREN
 
-    TYPE_STR        shift and go to state 85
-    TYPE_INT        shift and go to state 86
-    TYPE_FLOAT      shift and go to state 87
-    TYPE_BOOL       shift and go to state 88
-    TYPE_LIST       shift and go to state 89
-    TYPE_RECORD     shift and go to state 90
-    TYPE_TUPLE      shift and go to state 91
+    TYPE_STR        shift and go to state 83
+    TYPE_INT        shift and go to state 84
+    TYPE_FLOAT      shift and go to state 85
+    TYPE_BOOL       shift and go to state 86
+    TYPE_LIST       shift and go to state 87
+    TYPE_RECORD     shift and go to state 88
+    TYPE_TUPLE      shift and go to state 89
 
-    type                           shift and go to state 165
-    base_type                      shift and go to state 81
-    list_type                      shift and go to state 82
-    record_type                    shift and go to state 83
-    tuple_type                     shift and go to state 84
+    type                           shift and go to state 162
+    base_type                      shift and go to state 79
+    list_type                      shift and go to state 80
+    record_type                    shift and go to state 81
+    tuple_type                     shift and go to state 82
 
-state 124
+state 122
 
     (25) record_type -> TYPE_RECORD LBRACE . field_decl_list RBRACE
     (26) field_decl_list -> . field_decl field_decl_list
     (27) field_decl_list -> . field_decl
     (28) field_decl -> . IDENTIFIER COLON type
 
-    IDENTIFIER      shift and go to state 168
+    IDENTIFIER      shift and go to state 165
 
-    field_decl_list                shift and go to state 166
-    field_decl                     shift and go to state 167
+    field_decl_list                shift and go to state 163
+    field_decl                     shift and go to state 164
 
-state 125
+state 123
 
     (29) tuple_type -> TYPE_TUPLE LPAREN . type_list_in_tuple RPAREN
     (30) type_list_in_tuple -> . type_list_in_tuple COMMA type
@@ -3183,22 +3134,22 @@ state 125
     (25) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (29) tuple_type -> . TYPE_TUPLE LPAREN type_list_in_tuple RPAREN
 
-    TYPE_STR        shift and go to state 85
-    TYPE_INT        shift and go to state 86
-    TYPE_FLOAT      shift and go to state 87
-    TYPE_BOOL       shift and go to state 88
-    TYPE_LIST       shift and go to state 89
-    TYPE_RECORD     shift and go to state 90
-    TYPE_TUPLE      shift and go to state 91
+    TYPE_STR        shift and go to state 83
+    TYPE_INT        shift and go to state 84
+    TYPE_FLOAT      shift and go to state 85
+    TYPE_BOOL       shift and go to state 86
+    TYPE_LIST       shift and go to state 87
+    TYPE_RECORD     shift and go to state 88
+    TYPE_TUPLE      shift and go to state 89
 
-    type_list_in_tuple             shift and go to state 169
-    type                           shift and go to state 170
-    base_type                      shift and go to state 81
-    list_type                      shift and go to state 82
-    record_type                    shift and go to state 83
-    tuple_type                     shift and go to state 84
+    type_list_in_tuple             shift and go to state 166
+    type                           shift and go to state 167
+    base_type                      shift and go to state 79
+    list_type                      shift and go to state 80
+    record_type                    shift and go to state 81
+    tuple_type                     shift and go to state 82
 
-state 126
+state 124
 
     (112) func_call -> IDENTIFIER LPAREN arg_list RPAREN .
 
@@ -3241,23 +3192,24 @@ state 126
     RBRACE          reduce using rule 112 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
 
 
-state 127
+state 125
 
     (113) arg_list -> expr arg_list_tail .
 
     RPAREN          reduce using rule 113 (arg_list -> expr arg_list_tail .)
 
 
-state 128
+state 126
 
     (115) arg_list_tail -> COMMA . expr arg_list_tail
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -3274,7 +3226,7 @@ state 128
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr                           shift and go to state 171
+    expr                           shift and go to state 168
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -3283,21 +3235,21 @@ state 128
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 129
+state 127
 
     (116) arg_list_tail -> empty .
 
     RPAREN          reduce using rule 116 (arg_list_tail -> empty .)
 
 
-state 130
+state 128
 
     (46) connect_block -> CONNECT COLON INDENT connection_list . DEDENT
 
-    DEDENT          shift and go to state 172
+    DEDENT          shift and go to state 169
 
 
-state 131
+state 129
 
     (47) connection_list -> connection . connection_list
     (48) connection_list -> connection .
@@ -3306,47 +3258,47 @@ state 131
     (49) connection -> . IDENTIFIER COLON type agent_ref ARROW agent_ref
 
     DEDENT          reduce using rule 48 (connection_list -> connection .)
-    IDENTIFIER      shift and go to state 132
+    IDENTIFIER      shift and go to state 130
 
-    connection                     shift and go to state 131
-    connection_list                shift and go to state 173
+    connection                     shift and go to state 129
+    connection_list                shift and go to state 170
 
-state 132
+state 130
 
     (49) connection -> IDENTIFIER . COLON type agent_ref ARROW agent_ref
 
-    COLON           shift and go to state 174
+    COLON           shift and go to state 171
 
 
-state 133
+state 131
 
     (53) func_def -> DEF IDENTIFIER LPAREN param_list . RPAREN COLON type COLON INDENT stmt_block DEDENT
     (54) func_def -> DEF IDENTIFIER LPAREN param_list . RPAREN COLON INDENT stmt_block DEDENT
 
-    RPAREN          shift and go to state 175
+    RPAREN          shift and go to state 172
 
 
-state 134
+state 132
 
     (55) param_list -> param_decl . param_list_tail
     (57) param_list_tail -> . COMMA param_decl param_list_tail
     (58) param_list_tail -> . empty
     (128) empty -> .
 
-    COMMA           shift and go to state 177
+    COMMA           shift and go to state 174
     RPAREN          reduce using rule 128 (empty -> .)
 
-    param_list_tail                shift and go to state 176
-    empty                          shift and go to state 178
+    param_list_tail                shift and go to state 173
+    empty                          shift and go to state 175
 
-state 135
+state 133
 
     (56) param_list -> empty .
 
     RPAREN          reduce using rule 56 (param_list -> empty .)
 
 
-state 136
+state 134
 
     (59) param_decl -> var_decl .
 
@@ -3354,7 +3306,7 @@ state 136
     RPAREN          reduce using rule 59 (param_decl -> var_decl .)
 
 
-state 137
+state 135
 
     (109) tuple_elements_tail -> COMMA expr . tuple_elements_tail
     (111) field_access -> expr . DOT IDENTIFIER
@@ -3363,27 +3315,27 @@ state 137
     (128) empty -> .
 
     DOT             shift and go to state 54
-    COMMA           shift and go to state 100
+    COMMA           shift and go to state 98
     RPAREN          reduce using rule 128 (empty -> .)
 
-    tuple_elements_tail            shift and go to state 179
-    empty                          shift and go to state 101
+    tuple_elements_tail            shift and go to state 176
+    empty                          shift and go to state 99
 
-state 138
+state 136
 
     (76) for_stmt -> FOR IDENTIFIER IN expr . COLON stmt_block
     (111) field_access -> expr . DOT IDENTIFIER
 
-    COLON           shift and go to state 180
+    COLON           shift and go to state 177
     DOT             shift and go to state 54
 
 
-state 139
+state 137
 
     (79) if_stmt -> IF expr COLON stmt_block . ELSE COLON stmt_block
     (80) if_stmt -> IF expr COLON stmt_block .
 
-    ELSE            shift and go to state 181
+    ELSE            shift and go to state 178
     AGENT           reduce using rule 80 (if_stmt -> IF expr COLON stmt_block .)
     CONNECT         reduce using rule 80 (if_stmt -> IF expr COLON stmt_block .)
     DEF             reduce using rule 80 (if_stmt -> IF expr COLON stmt_block .)
@@ -3407,7 +3359,7 @@ state 139
     DEDENT          reduce using rule 80 (if_stmt -> IF expr COLON stmt_block .)
 
 
-state 140
+state 138
 
     (60) stmt_block -> INDENT . statement_list DEDENT
     (61) statement_list -> . statement statement_list
@@ -3431,13 +3383,14 @@ state 140
     (78) continue_stmt -> . CONTINUE
     (74) return_stmt -> . RETURN expr
     (75) return_stmt -> . RETURN
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -3460,8 +3413,8 @@ state 140
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    statement_list                 shift and go to state 182
-    statement                      shift and go to state 183
+    statement_list                 shift and go to state 179
+    statement                      shift and go to state 180
     for_stmt                       shift and go to state 10
     if_stmt                        shift and go to state 11
     while_stmt                     shift and go to state 12
@@ -3479,7 +3432,7 @@ state 140
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 141
+state 139
 
     (81) while_stmt -> WHILE expr COLON stmt_block .
 
@@ -3506,43 +3459,7 @@ state 141
     DEDENT          reduce using rule 81 (while_stmt -> WHILE expr COLON stmt_block .)
 
 
-state 142
-
-    (89) expr_tail -> bin_op expr_head expr_tail .
-    (82) expr -> expr_head expr_tail .
-
-  ! reduce/reduce conflict for DOT resolved using rule 82 (expr -> expr_head expr_tail .)
-    AGENT           reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    CONNECT         reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    DEF             reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    FOR             reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    IF              reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    WHILE           reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    IDENTIFIER      reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    BREAK           reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    CONTINUE        reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    RETURN          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    STRING          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    NUMBER          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    LPAREN          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    LBRACE          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    $end            reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    RPAREN          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    COMMA           reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    COLON           reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    INPUT           reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    OUTPUT          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    MEMORY          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    MODEL           reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    CHAT            reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    DEDENT          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    RBRACE          reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .)
-    DOT             reduce using rule 82 (expr -> expr_head expr_tail .)
-
-  ! DOT             [ reduce using rule 89 (expr_tail -> bin_op expr_head expr_tail .) ]
-
-
-state 143
+state 140
 
     (98) list_elements_tail -> COMMA expr . list_elements_tail
     (111) field_access -> expr . DOT IDENTIFIER
@@ -3551,33 +3468,33 @@ state 143
     (128) empty -> .
 
     DOT             shift and go to state 54
-    COMMA           shift and go to state 112
+    COMMA           shift and go to state 110
     RBRACE          reduce using rule 128 (empty -> .)
 
-    list_elements_tail             shift and go to state 184
-    empty                          shift and go to state 113
+    list_elements_tail             shift and go to state 181
+    empty                          shift and go to state 111
 
-state 144
+state 141
 
     (103) record_elements_tail -> COMMA field_assign . record_elements_tail
     (103) record_elements_tail -> . COMMA field_assign record_elements_tail
     (104) record_elements_tail -> . empty
     (128) empty -> .
 
-    COMMA           shift and go to state 115
+    COMMA           shift and go to state 113
     RBRACE          reduce using rule 128 (empty -> .)
 
-    record_elements_tail           shift and go to state 185
-    empty                          shift and go to state 116
+    record_elements_tail           shift and go to state 182
+    empty                          shift and go to state 114
 
-state 145
+state 142
 
     (105) field_assign -> IDENTIFIER . EQUALS expr
 
-    EQUALS          shift and go to state 117
+    EQUALS          shift and go to state 115
 
 
-state 146
+state 143
 
     (105) field_assign -> IDENTIFIER EQUALS expr .
     (111) field_access -> expr . DOT IDENTIFIER
@@ -3587,7 +3504,7 @@ state 146
     DOT             shift and go to state 54
 
 
-state 147
+state 144
 
     (9) global_block -> GLOBAL COLON INDENT var_decl_list DEDENT .
 
@@ -3607,14 +3524,14 @@ state 147
     LBRACE          reduce using rule 9 (global_block -> GLOBAL COLON INDENT var_decl_list DEDENT .)
 
 
-state 148
+state 145
 
     (10) var_decl_list -> var_decl var_decl_list .
 
     DEDENT          reduce using rule 10 (var_decl_list -> var_decl var_decl_list .)
 
 
-state 149
+state 146
 
     (12) var_decl -> IDENTIFIER COLON . type EQUALS expr
     (13) var_decl -> IDENTIFIER COLON . type
@@ -3630,30 +3547,31 @@ state 149
     (25) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (29) tuple_type -> . TYPE_TUPLE LPAREN type_list_in_tuple RPAREN
 
-    TYPE_STR        shift and go to state 85
-    TYPE_INT        shift and go to state 86
-    TYPE_FLOAT      shift and go to state 87
-    TYPE_BOOL       shift and go to state 88
-    TYPE_LIST       shift and go to state 89
-    TYPE_RECORD     shift and go to state 90
-    TYPE_TUPLE      shift and go to state 91
+    TYPE_STR        shift and go to state 83
+    TYPE_INT        shift and go to state 84
+    TYPE_FLOAT      shift and go to state 85
+    TYPE_BOOL       shift and go to state 86
+    TYPE_LIST       shift and go to state 87
+    TYPE_RECORD     shift and go to state 88
+    TYPE_TUPLE      shift and go to state 89
 
-    type                           shift and go to state 186
-    base_type                      shift and go to state 81
-    list_type                      shift and go to state 82
-    record_type                    shift and go to state 83
-    tuple_type                     shift and go to state 84
+    type                           shift and go to state 183
+    base_type                      shift and go to state 79
+    list_type                      shift and go to state 80
+    record_type                    shift and go to state 81
+    tuple_type                     shift and go to state 82
 
-state 150
+state 147
 
     (14) var_decl -> IDENTIFIER EQUALS . expr
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -3670,7 +3588,7 @@ state 150
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr                           shift and go to state 187
+    expr                           shift and go to state 184
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -3679,14 +3597,14 @@ state 150
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 151
+state 148
 
     (32) agent_def -> AGENT IDENTIFIER COLON INDENT agent_body . DEDENT
 
-    DEDENT          shift and go to state 188
+    DEDENT          shift and go to state 185
 
 
-state 152
+state 149
 
     (33) agent_body -> agent_body_item . agent_body
     (34) agent_body -> agent_body_item .
@@ -3722,13 +3640,14 @@ state 152
     (78) continue_stmt -> . CONTINUE
     (74) return_stmt -> . RETURN expr
     (75) return_stmt -> . RETURN
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -3740,11 +3659,11 @@ state 152
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     DEDENT          reduce using rule 34 (agent_body -> agent_body_item .)
-    INPUT           shift and go to state 159
-    OUTPUT          shift and go to state 160
-    MEMORY          shift and go to state 161
-    MODEL           shift and go to state 162
-    CHAT            shift and go to state 163
+    INPUT           shift and go to state 156
+    OUTPUT          shift and go to state 157
+    MEMORY          shift and go to state 158
+    MODEL           shift and go to state 159
+    CHAT            shift and go to state 160
     FOR             shift and go to state 23
     IF              shift and go to state 25
     WHILE           shift and go to state 26
@@ -3757,14 +3676,14 @@ state 152
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    agent_body_item                shift and go to state 152
-    agent_body                     shift and go to state 189
-    input_block                    shift and go to state 153
-    output_block                   shift and go to state 154
-    memory_block                   shift and go to state 155
-    model_block                    shift and go to state 156
-    statement                      shift and go to state 157
-    chat_block                     shift and go to state 158
+    agent_body_item                shift and go to state 149
+    agent_body                     shift and go to state 186
+    input_block                    shift and go to state 150
+    output_block                   shift and go to state 151
+    memory_block                   shift and go to state 152
+    model_block                    shift and go to state 153
+    statement                      shift and go to state 154
+    chat_block                     shift and go to state 155
     for_stmt                       shift and go to state 10
     if_stmt                        shift and go to state 11
     while_stmt                     shift and go to state 12
@@ -3782,7 +3701,7 @@ state 152
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 153
+state 150
 
     (35) agent_body_item -> input_block .
 
@@ -3805,7 +3724,7 @@ state 153
     DEDENT          reduce using rule 35 (agent_body_item -> input_block .)
 
 
-state 154
+state 151
 
     (36) agent_body_item -> output_block .
 
@@ -3828,7 +3747,7 @@ state 154
     DEDENT          reduce using rule 36 (agent_body_item -> output_block .)
 
 
-state 155
+state 152
 
     (37) agent_body_item -> memory_block .
 
@@ -3851,7 +3770,7 @@ state 155
     DEDENT          reduce using rule 37 (agent_body_item -> memory_block .)
 
 
-state 156
+state 153
 
     (38) agent_body_item -> model_block .
 
@@ -3874,7 +3793,7 @@ state 156
     DEDENT          reduce using rule 38 (agent_body_item -> model_block .)
 
 
-state 157
+state 154
 
     (39) agent_body_item -> statement .
 
@@ -3897,7 +3816,7 @@ state 157
     DEDENT          reduce using rule 39 (agent_body_item -> statement .)
 
 
-state 158
+state 155
 
     (40) agent_body_item -> chat_block .
 
@@ -3920,42 +3839,42 @@ state 158
     DEDENT          reduce using rule 40 (agent_body_item -> chat_block .)
 
 
-state 159
+state 156
 
     (41) input_block -> INPUT . COLON INDENT var_decl_list DEDENT
+
+    COLON           shift and go to state 187
+
+
+state 157
+
+    (42) output_block -> OUTPUT . COLON INDENT var_decl_list DEDENT
+
+    COLON           shift and go to state 188
+
+
+state 158
+
+    (43) memory_block -> MEMORY . COLON INDENT var_decl_list DEDENT
+
+    COLON           shift and go to state 189
+
+
+state 159
+
+    (44) model_block -> MODEL . COLON STRING
 
     COLON           shift and go to state 190
 
 
 state 160
 
-    (42) output_block -> OUTPUT . COLON INDENT var_decl_list DEDENT
+    (45) chat_block -> CHAT . IDENTIFIER COLON TRIPLE_STRING
 
-    COLON           shift and go to state 191
+    IDENTIFIER      shift and go to state 191
 
 
 state 161
-
-    (43) memory_block -> MEMORY . COLON INDENT var_decl_list DEDENT
-
-    COLON           shift and go to state 192
-
-
-state 162
-
-    (44) model_block -> MODEL . COLON STRING
-
-    COLON           shift and go to state 193
-
-
-state 163
-
-    (45) chat_block -> CHAT . IDENTIFIER COLON TRIPLE_STRING
-
-    IDENTIFIER      shift and go to state 194
-
-
-state 164
 
     (71) assign_stmt -> IDENTIFIER COLON type EQUALS expr .
     (111) field_access -> expr . DOT IDENTIFIER
@@ -3984,21 +3903,21 @@ state 164
     DOT             shift and go to state 54
 
 
-state 165
+state 162
 
     (24) list_type -> TYPE_LIST LBRACE type . RBRACE
 
-    RBRACE          shift and go to state 195
+    RBRACE          shift and go to state 192
 
 
-state 166
+state 163
 
     (25) record_type -> TYPE_RECORD LBRACE field_decl_list . RBRACE
 
-    RBRACE          shift and go to state 196
+    RBRACE          shift and go to state 193
 
 
-state 167
+state 164
 
     (26) field_decl_list -> field_decl . field_decl_list
     (27) field_decl_list -> field_decl .
@@ -4007,28 +3926,28 @@ state 167
     (28) field_decl -> . IDENTIFIER COLON type
 
     RBRACE          reduce using rule 27 (field_decl_list -> field_decl .)
-    IDENTIFIER      shift and go to state 168
+    IDENTIFIER      shift and go to state 165
 
-    field_decl                     shift and go to state 167
-    field_decl_list                shift and go to state 197
+    field_decl                     shift and go to state 164
+    field_decl_list                shift and go to state 194
 
-state 168
+state 165
 
     (28) field_decl -> IDENTIFIER . COLON type
 
-    COLON           shift and go to state 198
+    COLON           shift and go to state 195
 
 
-state 169
+state 166
 
     (29) tuple_type -> TYPE_TUPLE LPAREN type_list_in_tuple . RPAREN
     (30) type_list_in_tuple -> type_list_in_tuple . COMMA type
 
-    RPAREN          shift and go to state 199
-    COMMA           shift and go to state 200
+    RPAREN          shift and go to state 196
+    COMMA           shift and go to state 197
 
 
-state 170
+state 167
 
     (31) type_list_in_tuple -> type .
 
@@ -4036,7 +3955,7 @@ state 170
     COMMA           reduce using rule 31 (type_list_in_tuple -> type .)
 
 
-state 171
+state 168
 
     (115) arg_list_tail -> COMMA expr . arg_list_tail
     (111) field_access -> expr . DOT IDENTIFIER
@@ -4045,13 +3964,13 @@ state 171
     (128) empty -> .
 
     DOT             shift and go to state 54
-    COMMA           shift and go to state 128
+    COMMA           shift and go to state 126
     RPAREN          reduce using rule 128 (empty -> .)
 
-    arg_list_tail                  shift and go to state 201
-    empty                          shift and go to state 129
+    arg_list_tail                  shift and go to state 198
+    empty                          shift and go to state 127
 
-state 172
+state 169
 
     (46) connect_block -> CONNECT COLON INDENT connection_list DEDENT .
 
@@ -4072,14 +3991,14 @@ state 172
     $end            reduce using rule 46 (connect_block -> CONNECT COLON INDENT connection_list DEDENT .)
 
 
-state 173
+state 170
 
     (47) connection_list -> connection connection_list .
 
     DEDENT          reduce using rule 47 (connection_list -> connection connection_list .)
 
 
-state 174
+state 171
 
     (49) connection -> IDENTIFIER COLON . type agent_ref ARROW agent_ref
     (16) type -> . base_type
@@ -4094,36 +4013,36 @@ state 174
     (25) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (29) tuple_type -> . TYPE_TUPLE LPAREN type_list_in_tuple RPAREN
 
-    TYPE_STR        shift and go to state 85
-    TYPE_INT        shift and go to state 86
-    TYPE_FLOAT      shift and go to state 87
-    TYPE_BOOL       shift and go to state 88
-    TYPE_LIST       shift and go to state 89
-    TYPE_RECORD     shift and go to state 90
-    TYPE_TUPLE      shift and go to state 91
+    TYPE_STR        shift and go to state 83
+    TYPE_INT        shift and go to state 84
+    TYPE_FLOAT      shift and go to state 85
+    TYPE_BOOL       shift and go to state 86
+    TYPE_LIST       shift and go to state 87
+    TYPE_RECORD     shift and go to state 88
+    TYPE_TUPLE      shift and go to state 89
 
-    type                           shift and go to state 202
-    base_type                      shift and go to state 81
-    list_type                      shift and go to state 82
-    record_type                    shift and go to state 83
-    tuple_type                     shift and go to state 84
+    type                           shift and go to state 199
+    base_type                      shift and go to state 79
+    list_type                      shift and go to state 80
+    record_type                    shift and go to state 81
+    tuple_type                     shift and go to state 82
 
-state 175
+state 172
 
     (53) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN . COLON type COLON INDENT stmt_block DEDENT
     (54) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN . COLON INDENT stmt_block DEDENT
 
-    COLON           shift and go to state 203
+    COLON           shift and go to state 200
 
 
-state 176
+state 173
 
     (55) param_list -> param_decl param_list_tail .
 
     RPAREN          reduce using rule 55 (param_list -> param_decl param_list_tail .)
 
 
-state 177
+state 174
 
     (57) param_list_tail -> COMMA . param_decl param_list_tail
     (59) param_decl -> . var_decl
@@ -4132,49 +4051,49 @@ state 177
     (14) var_decl -> . IDENTIFIER EQUALS expr
     (15) var_decl -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 120
+    IDENTIFIER      shift and go to state 118
 
-    param_decl                     shift and go to state 204
-    var_decl                       shift and go to state 136
+    param_decl                     shift and go to state 201
+    var_decl                       shift and go to state 134
 
-state 178
+state 175
 
     (58) param_list_tail -> empty .
 
     RPAREN          reduce using rule 58 (param_list_tail -> empty .)
 
 
-state 179
+state 176
 
     (109) tuple_elements_tail -> COMMA expr tuple_elements_tail .
 
     RPAREN          reduce using rule 109 (tuple_elements_tail -> COMMA expr tuple_elements_tail .)
 
 
-state 180
+state 177
 
     (76) for_stmt -> FOR IDENTIFIER IN expr COLON . stmt_block
     (60) stmt_block -> . INDENT statement_list DEDENT
 
-    INDENT          shift and go to state 140
+    INDENT          shift and go to state 138
 
-    stmt_block                     shift and go to state 205
+    stmt_block                     shift and go to state 202
 
-state 181
+state 178
 
     (79) if_stmt -> IF expr COLON stmt_block ELSE . COLON stmt_block
 
-    COLON           shift and go to state 206
+    COLON           shift and go to state 203
 
 
-state 182
+state 179
 
     (60) stmt_block -> INDENT statement_list . DEDENT
 
-    DEDENT          shift and go to state 207
+    DEDENT          shift and go to state 204
 
 
-state 183
+state 180
 
     (61) statement_list -> statement . statement_list
     (62) statement_list -> statement .
@@ -4199,13 +4118,14 @@ state 183
     (78) continue_stmt -> . CONTINUE
     (74) return_stmt -> . RETURN expr
     (75) return_stmt -> . RETURN
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -4229,8 +4149,8 @@ state 183
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    statement                      shift and go to state 183
-    statement_list                 shift and go to state 208
+    statement                      shift and go to state 180
+    statement_list                 shift and go to state 205
     for_stmt                       shift and go to state 10
     if_stmt                        shift and go to state 11
     while_stmt                     shift and go to state 12
@@ -4248,33 +4168,33 @@ state 183
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 184
+state 181
 
     (98) list_elements_tail -> COMMA expr list_elements_tail .
 
     RBRACE          reduce using rule 98 (list_elements_tail -> COMMA expr list_elements_tail .)
 
 
-state 185
+state 182
 
     (103) record_elements_tail -> COMMA field_assign record_elements_tail .
 
     RBRACE          reduce using rule 103 (record_elements_tail -> COMMA field_assign record_elements_tail .)
 
 
-state 186
+state 183
 
     (12) var_decl -> IDENTIFIER COLON type . EQUALS expr
     (13) var_decl -> IDENTIFIER COLON type .
 
-    EQUALS          shift and go to state 209
+    EQUALS          shift and go to state 206
     IDENTIFIER      reduce using rule 13 (var_decl -> IDENTIFIER COLON type .)
     DEDENT          reduce using rule 13 (var_decl -> IDENTIFIER COLON type .)
     COMMA           reduce using rule 13 (var_decl -> IDENTIFIER COLON type .)
     RPAREN          reduce using rule 13 (var_decl -> IDENTIFIER COLON type .)
 
 
-state 187
+state 184
 
     (14) var_decl -> IDENTIFIER EQUALS expr .
     (111) field_access -> expr . DOT IDENTIFIER
@@ -4286,7 +4206,7 @@ state 187
     DOT             shift and go to state 54
 
 
-state 188
+state 185
 
     (32) agent_def -> AGENT IDENTIFIER COLON INDENT agent_body DEDENT .
 
@@ -4307,49 +4227,49 @@ state 188
     $end            reduce using rule 32 (agent_def -> AGENT IDENTIFIER COLON INDENT agent_body DEDENT .)
 
 
-state 189
+state 186
 
     (33) agent_body -> agent_body_item agent_body .
 
     DEDENT          reduce using rule 33 (agent_body -> agent_body_item agent_body .)
 
 
-state 190
+state 187
 
     (41) input_block -> INPUT COLON . INDENT var_decl_list DEDENT
 
-    INDENT          shift and go to state 210
+    INDENT          shift and go to state 207
+
+
+state 188
+
+    (42) output_block -> OUTPUT COLON . INDENT var_decl_list DEDENT
+
+    INDENT          shift and go to state 208
+
+
+state 189
+
+    (43) memory_block -> MEMORY COLON . INDENT var_decl_list DEDENT
+
+    INDENT          shift and go to state 209
+
+
+state 190
+
+    (44) model_block -> MODEL COLON . STRING
+
+    STRING          shift and go to state 210
 
 
 state 191
 
-    (42) output_block -> OUTPUT COLON . INDENT var_decl_list DEDENT
+    (45) chat_block -> CHAT IDENTIFIER . COLON TRIPLE_STRING
 
-    INDENT          shift and go to state 211
+    COLON           shift and go to state 211
 
 
 state 192
-
-    (43) memory_block -> MEMORY COLON . INDENT var_decl_list DEDENT
-
-    INDENT          shift and go to state 212
-
-
-state 193
-
-    (44) model_block -> MODEL COLON . STRING
-
-    STRING          shift and go to state 213
-
-
-state 194
-
-    (45) chat_block -> CHAT IDENTIFIER . COLON TRIPLE_STRING
-
-    COLON           shift and go to state 214
-
-
-state 195
 
     (24) list_type -> TYPE_LIST LBRACE type RBRACE .
 
@@ -4362,7 +4282,7 @@ state 195
     COLON           reduce using rule 24 (list_type -> TYPE_LIST LBRACE type RBRACE .)
 
 
-state 196
+state 193
 
     (25) record_type -> TYPE_RECORD LBRACE field_decl_list RBRACE .
 
@@ -4375,14 +4295,14 @@ state 196
     COLON           reduce using rule 25 (record_type -> TYPE_RECORD LBRACE field_decl_list RBRACE .)
 
 
-state 197
+state 194
 
     (26) field_decl_list -> field_decl field_decl_list .
 
     RBRACE          reduce using rule 26 (field_decl_list -> field_decl field_decl_list .)
 
 
-state 198
+state 195
 
     (28) field_decl -> IDENTIFIER COLON . type
     (16) type -> . base_type
@@ -4397,21 +4317,21 @@ state 198
     (25) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (29) tuple_type -> . TYPE_TUPLE LPAREN type_list_in_tuple RPAREN
 
-    TYPE_STR        shift and go to state 85
-    TYPE_INT        shift and go to state 86
-    TYPE_FLOAT      shift and go to state 87
-    TYPE_BOOL       shift and go to state 88
-    TYPE_LIST       shift and go to state 89
-    TYPE_RECORD     shift and go to state 90
-    TYPE_TUPLE      shift and go to state 91
+    TYPE_STR        shift and go to state 83
+    TYPE_INT        shift and go to state 84
+    TYPE_FLOAT      shift and go to state 85
+    TYPE_BOOL       shift and go to state 86
+    TYPE_LIST       shift and go to state 87
+    TYPE_RECORD     shift and go to state 88
+    TYPE_TUPLE      shift and go to state 89
 
-    type                           shift and go to state 215
-    base_type                      shift and go to state 81
-    list_type                      shift and go to state 82
-    record_type                    shift and go to state 83
-    tuple_type                     shift and go to state 84
+    type                           shift and go to state 212
+    base_type                      shift and go to state 79
+    list_type                      shift and go to state 80
+    record_type                    shift and go to state 81
+    tuple_type                     shift and go to state 82
 
-state 199
+state 196
 
     (29) tuple_type -> TYPE_TUPLE LPAREN type_list_in_tuple RPAREN .
 
@@ -4424,7 +4344,7 @@ state 199
     COLON           reduce using rule 29 (tuple_type -> TYPE_TUPLE LPAREN type_list_in_tuple RPAREN .)
 
 
-state 200
+state 197
 
     (30) type_list_in_tuple -> type_list_in_tuple COMMA . type
     (16) type -> . base_type
@@ -4439,37 +4359,37 @@ state 200
     (25) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (29) tuple_type -> . TYPE_TUPLE LPAREN type_list_in_tuple RPAREN
 
-    TYPE_STR        shift and go to state 85
-    TYPE_INT        shift and go to state 86
-    TYPE_FLOAT      shift and go to state 87
-    TYPE_BOOL       shift and go to state 88
-    TYPE_LIST       shift and go to state 89
-    TYPE_RECORD     shift and go to state 90
-    TYPE_TUPLE      shift and go to state 91
+    TYPE_STR        shift and go to state 83
+    TYPE_INT        shift and go to state 84
+    TYPE_FLOAT      shift and go to state 85
+    TYPE_BOOL       shift and go to state 86
+    TYPE_LIST       shift and go to state 87
+    TYPE_RECORD     shift and go to state 88
+    TYPE_TUPLE      shift and go to state 89
 
-    type                           shift and go to state 216
-    base_type                      shift and go to state 81
-    list_type                      shift and go to state 82
-    record_type                    shift and go to state 83
-    tuple_type                     shift and go to state 84
+    type                           shift and go to state 213
+    base_type                      shift and go to state 79
+    list_type                      shift and go to state 80
+    record_type                    shift and go to state 81
+    tuple_type                     shift and go to state 82
 
-state 201
+state 198
 
     (115) arg_list_tail -> COMMA expr arg_list_tail .
 
     RPAREN          reduce using rule 115 (arg_list_tail -> COMMA expr arg_list_tail .)
 
 
-state 202
+state 199
 
     (49) connection -> IDENTIFIER COLON type . agent_ref ARROW agent_ref
     (50) agent_ref -> . IDENTIFIER agent_ref_tail
 
-    IDENTIFIER      shift and go to state 217
+    IDENTIFIER      shift and go to state 214
 
-    agent_ref                      shift and go to state 218
+    agent_ref                      shift and go to state 215
 
-state 203
+state 200
 
     (53) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON . type COLON INDENT stmt_block DEDENT
     (54) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON . INDENT stmt_block DEDENT
@@ -4485,35 +4405,35 @@ state 203
     (25) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (29) tuple_type -> . TYPE_TUPLE LPAREN type_list_in_tuple RPAREN
 
-    INDENT          shift and go to state 220
-    TYPE_STR        shift and go to state 85
-    TYPE_INT        shift and go to state 86
-    TYPE_FLOAT      shift and go to state 87
-    TYPE_BOOL       shift and go to state 88
-    TYPE_LIST       shift and go to state 89
-    TYPE_RECORD     shift and go to state 90
-    TYPE_TUPLE      shift and go to state 91
+    INDENT          shift and go to state 217
+    TYPE_STR        shift and go to state 83
+    TYPE_INT        shift and go to state 84
+    TYPE_FLOAT      shift and go to state 85
+    TYPE_BOOL       shift and go to state 86
+    TYPE_LIST       shift and go to state 87
+    TYPE_RECORD     shift and go to state 88
+    TYPE_TUPLE      shift and go to state 89
 
-    type                           shift and go to state 219
-    base_type                      shift and go to state 81
-    list_type                      shift and go to state 82
-    record_type                    shift and go to state 83
-    tuple_type                     shift and go to state 84
+    type                           shift and go to state 216
+    base_type                      shift and go to state 79
+    list_type                      shift and go to state 80
+    record_type                    shift and go to state 81
+    tuple_type                     shift and go to state 82
 
-state 204
+state 201
 
     (57) param_list_tail -> COMMA param_decl . param_list_tail
     (57) param_list_tail -> . COMMA param_decl param_list_tail
     (58) param_list_tail -> . empty
     (128) empty -> .
 
-    COMMA           shift and go to state 177
+    COMMA           shift and go to state 174
     RPAREN          reduce using rule 128 (empty -> .)
 
-    param_list_tail                shift and go to state 221
-    empty                          shift and go to state 178
+    param_list_tail                shift and go to state 218
+    empty                          shift and go to state 175
 
-state 205
+state 202
 
     (76) for_stmt -> FOR IDENTIFIER IN expr COLON stmt_block .
 
@@ -4540,16 +4460,16 @@ state 205
     DEDENT          reduce using rule 76 (for_stmt -> FOR IDENTIFIER IN expr COLON stmt_block .)
 
 
-state 206
+state 203
 
     (79) if_stmt -> IF expr COLON stmt_block ELSE COLON . stmt_block
     (60) stmt_block -> . INDENT statement_list DEDENT
 
-    INDENT          shift and go to state 140
+    INDENT          shift and go to state 138
 
-    stmt_block                     shift and go to state 222
+    stmt_block                     shift and go to state 219
 
-state 207
+state 204
 
     (60) stmt_block -> INDENT statement_list DEDENT .
 
@@ -4577,23 +4497,24 @@ state 207
     DEDENT          reduce using rule 60 (stmt_block -> INDENT statement_list DEDENT .)
 
 
-state 208
+state 205
 
     (61) statement_list -> statement statement_list .
 
     DEDENT          reduce using rule 61 (statement_list -> statement statement_list .)
 
 
-state 209
+state 206
 
     (12) var_decl -> IDENTIFIER COLON type EQUALS . expr
-    (82) expr -> . expr_head expr_tail
-    (83) expr_head -> . atom
-    (84) expr_head -> . list_expr
-    (85) expr_head -> . record_expr
-    (86) expr_head -> . tuple_expr
-    (87) expr_head -> . field_access
-    (88) expr_head -> . func_call
+    (82) expr -> . expr_head bin_op expr_tail
+    (83) expr -> . expr_head
+    (84) expr_head -> . atom
+    (85) expr_head -> . list_expr
+    (86) expr_head -> . record_expr
+    (87) expr_head -> . tuple_expr
+    (88) expr_head -> . field_access
+    (89) expr_head -> . func_call
     (91) atom -> . IDENTIFIER
     (92) atom -> . STRING
     (93) atom -> . NUMBER
@@ -4610,7 +4531,7 @@ state 209
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr                           shift and go to state 223
+    expr                           shift and go to state 220
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -4619,7 +4540,7 @@ state 209
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 210
+state 207
 
     (41) input_block -> INPUT COLON INDENT . var_decl_list DEDENT
     (10) var_decl_list -> . var_decl var_decl_list
@@ -4629,12 +4550,12 @@ state 210
     (14) var_decl -> . IDENTIFIER EQUALS expr
     (15) var_decl -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 120
+    IDENTIFIER      shift and go to state 118
 
-    var_decl_list                  shift and go to state 224
-    var_decl                       shift and go to state 119
+    var_decl_list                  shift and go to state 221
+    var_decl                       shift and go to state 117
 
-state 211
+state 208
 
     (42) output_block -> OUTPUT COLON INDENT . var_decl_list DEDENT
     (10) var_decl_list -> . var_decl var_decl_list
@@ -4644,12 +4565,12 @@ state 211
     (14) var_decl -> . IDENTIFIER EQUALS expr
     (15) var_decl -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 120
+    IDENTIFIER      shift and go to state 118
 
-    var_decl_list                  shift and go to state 225
-    var_decl                       shift and go to state 119
+    var_decl_list                  shift and go to state 222
+    var_decl                       shift and go to state 117
 
-state 212
+state 209
 
     (43) memory_block -> MEMORY COLON INDENT . var_decl_list DEDENT
     (10) var_decl_list -> . var_decl var_decl_list
@@ -4659,12 +4580,12 @@ state 212
     (14) var_decl -> . IDENTIFIER EQUALS expr
     (15) var_decl -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 120
+    IDENTIFIER      shift and go to state 118
 
-    var_decl_list                  shift and go to state 226
-    var_decl                       shift and go to state 119
+    var_decl_list                  shift and go to state 223
+    var_decl                       shift and go to state 117
 
-state 213
+state 210
 
     (44) model_block -> MODEL COLON STRING .
 
@@ -4687,14 +4608,14 @@ state 213
     DEDENT          reduce using rule 44 (model_block -> MODEL COLON STRING .)
 
 
-state 214
+state 211
 
     (45) chat_block -> CHAT IDENTIFIER COLON . TRIPLE_STRING
 
-    TRIPLE_STRING   shift and go to state 227
+    TRIPLE_STRING   shift and go to state 224
 
 
-state 215
+state 212
 
     (28) field_decl -> IDENTIFIER COLON type .
 
@@ -4702,7 +4623,7 @@ state 215
     RBRACE          reduce using rule 28 (field_decl -> IDENTIFIER COLON type .)
 
 
-state 216
+state 213
 
     (30) type_list_in_tuple -> type_list_in_tuple COMMA type .
 
@@ -4710,52 +4631,52 @@ state 216
     COMMA           reduce using rule 30 (type_list_in_tuple -> type_list_in_tuple COMMA type .)
 
 
-state 217
+state 214
 
     (50) agent_ref -> IDENTIFIER . agent_ref_tail
     (51) agent_ref_tail -> . DOT IDENTIFIER agent_ref_tail
     (52) agent_ref_tail -> . empty
     (128) empty -> .
 
-    DOT             shift and go to state 229
+    DOT             shift and go to state 226
     ARROW           reduce using rule 128 (empty -> .)
     IDENTIFIER      reduce using rule 128 (empty -> .)
     DEDENT          reduce using rule 128 (empty -> .)
 
-    agent_ref_tail                 shift and go to state 228
-    empty                          shift and go to state 230
+    agent_ref_tail                 shift and go to state 225
+    empty                          shift and go to state 227
 
-state 218
+state 215
 
     (49) connection -> IDENTIFIER COLON type agent_ref . ARROW agent_ref
 
-    ARROW           shift and go to state 231
+    ARROW           shift and go to state 228
 
 
-state 219
+state 216
 
     (53) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON type . COLON INDENT stmt_block DEDENT
 
-    COLON           shift and go to state 232
+    COLON           shift and go to state 229
 
 
-state 220
+state 217
 
     (54) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON INDENT . stmt_block DEDENT
     (60) stmt_block -> . INDENT statement_list DEDENT
 
-    INDENT          shift and go to state 140
+    INDENT          shift and go to state 138
 
-    stmt_block                     shift and go to state 233
+    stmt_block                     shift and go to state 230
 
-state 221
+state 218
 
     (57) param_list_tail -> COMMA param_decl param_list_tail .
 
     RPAREN          reduce using rule 57 (param_list_tail -> COMMA param_decl param_list_tail .)
 
 
-state 222
+state 219
 
     (79) if_stmt -> IF expr COLON stmt_block ELSE COLON stmt_block .
 
@@ -4782,7 +4703,7 @@ state 222
     DEDENT          reduce using rule 79 (if_stmt -> IF expr COLON stmt_block ELSE COLON stmt_block .)
 
 
-state 223
+state 220
 
     (12) var_decl -> IDENTIFIER COLON type EQUALS expr .
     (111) field_access -> expr . DOT IDENTIFIER
@@ -4794,28 +4715,28 @@ state 223
     DOT             shift and go to state 54
 
 
-state 224
+state 221
 
     (41) input_block -> INPUT COLON INDENT var_decl_list . DEDENT
 
-    DEDENT          shift and go to state 234
+    DEDENT          shift and go to state 231
 
 
-state 225
+state 222
 
     (42) output_block -> OUTPUT COLON INDENT var_decl_list . DEDENT
 
-    DEDENT          shift and go to state 235
+    DEDENT          shift and go to state 232
 
 
-state 226
+state 223
 
     (43) memory_block -> MEMORY COLON INDENT var_decl_list . DEDENT
 
-    DEDENT          shift and go to state 236
+    DEDENT          shift and go to state 233
 
 
-state 227
+state 224
 
     (45) chat_block -> CHAT IDENTIFIER COLON TRIPLE_STRING .
 
@@ -4838,7 +4759,7 @@ state 227
     DEDENT          reduce using rule 45 (chat_block -> CHAT IDENTIFIER COLON TRIPLE_STRING .)
 
 
-state 228
+state 225
 
     (50) agent_ref -> IDENTIFIER agent_ref_tail .
 
@@ -4847,14 +4768,14 @@ state 228
     DEDENT          reduce using rule 50 (agent_ref -> IDENTIFIER agent_ref_tail .)
 
 
-state 229
+state 226
 
     (51) agent_ref_tail -> DOT . IDENTIFIER agent_ref_tail
 
-    IDENTIFIER      shift and go to state 237
+    IDENTIFIER      shift and go to state 234
 
 
-state 230
+state 227
 
     (52) agent_ref_tail -> empty .
 
@@ -4863,30 +4784,30 @@ state 230
     DEDENT          reduce using rule 52 (agent_ref_tail -> empty .)
 
 
-state 231
+state 228
 
     (49) connection -> IDENTIFIER COLON type agent_ref ARROW . agent_ref
     (50) agent_ref -> . IDENTIFIER agent_ref_tail
 
-    IDENTIFIER      shift and go to state 217
+    IDENTIFIER      shift and go to state 214
 
-    agent_ref                      shift and go to state 238
+    agent_ref                      shift and go to state 235
 
-state 232
+state 229
 
     (53) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON type COLON . INDENT stmt_block DEDENT
 
-    INDENT          shift and go to state 239
+    INDENT          shift and go to state 236
 
 
-state 233
+state 230
 
     (54) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON INDENT stmt_block . DEDENT
 
-    DEDENT          shift and go to state 240
+    DEDENT          shift and go to state 237
 
 
-state 234
+state 231
 
     (41) input_block -> INPUT COLON INDENT var_decl_list DEDENT .
 
@@ -4909,7 +4830,7 @@ state 234
     DEDENT          reduce using rule 41 (input_block -> INPUT COLON INDENT var_decl_list DEDENT .)
 
 
-state 235
+state 232
 
     (42) output_block -> OUTPUT COLON INDENT var_decl_list DEDENT .
 
@@ -4932,7 +4853,7 @@ state 235
     DEDENT          reduce using rule 42 (output_block -> OUTPUT COLON INDENT var_decl_list DEDENT .)
 
 
-state 236
+state 233
 
     (43) memory_block -> MEMORY COLON INDENT var_decl_list DEDENT .
 
@@ -4955,22 +4876,22 @@ state 236
     DEDENT          reduce using rule 43 (memory_block -> MEMORY COLON INDENT var_decl_list DEDENT .)
 
 
-state 237
+state 234
 
     (51) agent_ref_tail -> DOT IDENTIFIER . agent_ref_tail
     (51) agent_ref_tail -> . DOT IDENTIFIER agent_ref_tail
     (52) agent_ref_tail -> . empty
     (128) empty -> .
 
-    DOT             shift and go to state 229
+    DOT             shift and go to state 226
     ARROW           reduce using rule 128 (empty -> .)
     IDENTIFIER      reduce using rule 128 (empty -> .)
     DEDENT          reduce using rule 128 (empty -> .)
 
-    agent_ref_tail                 shift and go to state 241
-    empty                          shift and go to state 230
+    agent_ref_tail                 shift and go to state 238
+    empty                          shift and go to state 227
 
-state 238
+state 235
 
     (49) connection -> IDENTIFIER COLON type agent_ref ARROW agent_ref .
 
@@ -4978,16 +4899,16 @@ state 238
     DEDENT          reduce using rule 49 (connection -> IDENTIFIER COLON type agent_ref ARROW agent_ref .)
 
 
-state 239
+state 236
 
     (53) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON type COLON INDENT . stmt_block DEDENT
     (60) stmt_block -> . INDENT statement_list DEDENT
 
-    INDENT          shift and go to state 140
+    INDENT          shift and go to state 138
 
-    stmt_block                     shift and go to state 242
+    stmt_block                     shift and go to state 239
 
-state 240
+state 237
 
     (54) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON INDENT stmt_block DEDENT .
 
@@ -5008,7 +4929,7 @@ state 240
     $end            reduce using rule 54 (func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON INDENT stmt_block DEDENT .)
 
 
-state 241
+state 238
 
     (51) agent_ref_tail -> DOT IDENTIFIER agent_ref_tail .
 
@@ -5017,14 +4938,14 @@ state 241
     DEDENT          reduce using rule 51 (agent_ref_tail -> DOT IDENTIFIER agent_ref_tail .)
 
 
-state 242
+state 239
 
     (53) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON type COLON INDENT stmt_block . DEDENT
 
-    DEDENT          shift and go to state 243
+    DEDENT          shift and go to state 240
 
 
-state 243
+state 240
 
     (53) func_def -> DEF IDENTIFIER LPAREN param_list RPAREN COLON type COLON INDENT stmt_block DEDENT .
 
@@ -5055,8 +4976,7 @@ WARNING: shift/reduce conflict for LPAREN in state 29 resolved as shift
 WARNING: shift/reduce conflict for LBRACE in state 29 resolved as shift
 WARNING: shift/reduce conflict for RPAREN in state 49 resolved as shift
 WARNING: shift/reduce conflict for LPAREN in state 52 resolved as shift
-WARNING: reduce/reduce conflict in state 75 resolved using rule (list_elements -> empty)
-WARNING: rejected rule (record_elements -> empty) in state 75
-WARNING: reduce/reduce conflict in state 142 resolved using rule (expr -> expr_head expr_tail)
-WARNING: rejected rule (expr_tail -> bin_op expr_head expr_tail) in state 142
+WARNING: shift/reduce conflict for DOT in state 106 resolved as shift
+WARNING: reduce/reduce conflict in state 73 resolved using rule (list_elements -> empty)
+WARNING: rejected rule (record_elements -> empty) in state 73
 WARNING: Rule (record_elements -> empty) is never reduced

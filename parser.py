@@ -302,10 +302,14 @@ def p_while_stmt(p):
     '''while_stmt : WHILE expr COLON stmt_block'''
     p[0] = WhileStmt(condition=p[2], body=p[4])
 
-# expr ::= expr_head expr_tail
+# expr ::= expr_head bin_op expr_tail | expr_head
 def p_expr(p):
-    '''expr : expr_head expr_tail'''
-    p[0] = BinaryOp(expr_type='expr', left=p[1], op=p[2].op, right=p[2])
+    '''expr : expr_head bin_op expr_tail
+            | expr_head'''
+    if p[2] is not None:
+        p[0] = BinaryOp(left=p[1], op=p[2].op, right=p[2])
+    else:
+        p[0] = p[1]
 
 # expr_head ::= atom | list_expr | record_expr | tuple_expr | field_access | func_call
 def p_expr_head(p):
@@ -317,14 +321,10 @@ def p_expr_head(p):
                  | func_call'''
     p[0] = p[1]
 
-# expr_tail ::= bin_op expr_head expr_tail
+# expr_tail ::= expr
 def p_expr_tail(p):
-    '''expr_tail : bin_op expr_head expr_tail
-                 | empty'''
-    if len(p) == 4:
-        p[0] = BinaryOp(op=p[1], right=BinaryOp(left=p[2], op=p[3].op, right=p[3]))
-    else:
-        p[0] = None
+    '''expr_tail : expr'''
+    p[0] = p[1]
 
 # atom ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
 def p_atom(p):
