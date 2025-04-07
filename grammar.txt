@@ -40,7 +40,7 @@
 > record_expr     ::= "{" field_assign ("," field_assign)* "}"
 > field_assign    ::= IDENTIFIER "=" expr
 > tuple_expr      ::= "(" expr ("," expr)* ")"
-> field_access    ::= expr "." IDENTIFIER
+> field_access    ::= IDENTIFIER "." IDENTIFIER
 > func_call       ::= IDENTIFIER "(" arg_list? ")"
 > arg_list        ::= expr ("," expr)*
 > bin_op          ::= "+" | "-" | "*" | "/" | "%" | "==" | "!=" | "<" | ">" | "<=" | ">="

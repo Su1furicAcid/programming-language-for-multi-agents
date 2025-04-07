@@ -117,7 +117,7 @@ Rule 107   tuple_elements -> expr tuple_elements_tail
 Rule 108   tuple_elements -> empty
 Rule 109   tuple_elements_tail -> COMMA expr tuple_elements_tail
 Rule 110   tuple_elements_tail -> empty
-Rule 111   field_access -> expr DOT IDENTIFIER
+Rule 111   field_access -> IDENTIFIER DOT IDENTIFIER
 Rule 112   func_call -> IDENTIFIER LPAREN arg_list RPAREN
 Rule 113   arg_list -> expr arg_list_tail
 Rule 114   arg_list -> empty
@@ -157,7 +157,7 @@ FOR                  : 76
 GE                   : 127
 GLOBAL               : 9
 GT                   : 125
-IDENTIFIER           : 12 13 14 15 28 32 45 49 50 51 53 54 71 72 76 91 105 111 112
+IDENTIFIER           : 12 13 14 15 28 32 45 49 50 51 53 54 71 72 76 91 105 111 111 112
 IF                   : 79 80
 IN                   : 76
 INDENT               : 9 32 41 42 43 46 53 54 60
@@ -211,7 +211,7 @@ connection           : 47 48
 connection_list      : 46 47
 continue_stmt        : 69
 empty                : 52 56 58 97 99 102 104 108 110 114 116
-expr                 : 12 14 71 72 73 74 76 79 80 81 90 94 96 98 105 107 109 111 113 115
+expr                 : 12 14 71 72 73 74 76 79 80 81 90 94 96 98 105 107 109 113 115
 expr_head            : 82 83
 expr_stmt            : 67
 expr_tail            : 82
@@ -307,7 +307,7 @@ state 0
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     GLOBAL          shift and go to state 4
@@ -404,7 +404,7 @@ state 2
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     AGENT           shift and go to state 18
@@ -507,7 +507,7 @@ state 5
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     $end            reduce using rule 4 (program_body -> program_body_item .)
@@ -861,6 +861,7 @@ state 19
     (71) assign_stmt -> IDENTIFIER . COLON type EQUALS expr
     (72) assign_stmt -> IDENTIFIER . EQUALS expr
     (91) atom -> IDENTIFIER .
+    (111) field_access -> IDENTIFIER . DOT IDENTIFIER
     (112) func_call -> IDENTIFIER . LPAREN arg_list RPAREN
 
   ! shift/reduce conflict for LPAREN resolved as shift
@@ -877,7 +878,6 @@ state 19
     GT              reduce using rule 91 (atom -> IDENTIFIER .)
     LE              reduce using rule 91 (atom -> IDENTIFIER .)
     GE              reduce using rule 91 (atom -> IDENTIFIER .)
-    DOT             reduce using rule 91 (atom -> IDENTIFIER .)
     AGENT           reduce using rule 91 (atom -> IDENTIFIER .)
     CONNECT         reduce using rule 91 (atom -> IDENTIFIER .)
     DEF             reduce using rule 91 (atom -> IDENTIFIER .)
@@ -898,7 +898,8 @@ state 19
     MODEL           reduce using rule 91 (atom -> IDENTIFIER .)
     CHAT            reduce using rule 91 (atom -> IDENTIFIER .)
     DEDENT          reduce using rule 91 (atom -> IDENTIFIER .)
-    LPAREN          shift and go to state 46
+    DOT             shift and go to state 46
+    LPAREN          shift and go to state 47
 
   ! LPAREN          [ reduce using rule 91 (atom -> IDENTIFIER .) ]
 
@@ -907,7 +908,7 @@ state 20
 
     (46) connect_block -> CONNECT . COLON INDENT connection_list DEDENT
 
-    COLON           shift and go to state 47
+    COLON           shift and go to state 48
 
 
 state 21
@@ -915,7 +916,7 @@ state 21
     (53) func_def -> DEF . IDENTIFIER LPAREN param_list RPAREN COLON type COLON INDENT stmt_block DEDENT
     (54) func_def -> DEF . IDENTIFIER LPAREN param_list RPAREN COLON INDENT stmt_block DEDENT
 
-    IDENTIFIER      shift and go to state 48
+    IDENTIFIER      shift and go to state 49
 
 
 state 22
@@ -940,20 +941,20 @@ state 22
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     RPAREN          reduce using rule 128 (empty -> .)
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    expr                           shift and go to state 49
-    tuple_elements                 shift and go to state 50
+    expr                           shift and go to state 50
+    tuple_elements                 shift and go to state 51
     expr_head                      shift and go to state 30
-    empty                          shift and go to state 51
+    empty                          shift and go to state 52
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
     record_expr                    shift and go to state 33
@@ -965,13 +966,12 @@ state 23
 
     (76) for_stmt -> FOR . IDENTIFIER IN expr COLON stmt_block
 
-    IDENTIFIER      shift and go to state 53
+    IDENTIFIER      shift and go to state 54
 
 
 state 24
 
     (73) expr_stmt -> expr .
-    (111) field_access -> expr . DOT IDENTIFIER
 
     AGENT           reduce using rule 73 (expr_stmt -> expr .)
     CONNECT         reduce using rule 73 (expr_stmt -> expr .)
@@ -994,7 +994,6 @@ state 24
     MODEL           reduce using rule 73 (expr_stmt -> expr .)
     CHAT            reduce using rule 73 (expr_stmt -> expr .)
     DEDENT          reduce using rule 73 (expr_stmt -> expr .)
-    DOT             shift and go to state 54
 
 
 state 25
@@ -1016,10 +1015,10 @@ state 25
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -1052,10 +1051,10 @@ state 26
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -1143,7 +1142,7 @@ state 29
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
   ! shift/reduce conflict for IDENTIFIER resolved as shift
@@ -1167,7 +1166,7 @@ state 29
     MODEL           reduce using rule 75 (return_stmt -> RETURN .)
     CHAT            reduce using rule 75 (return_stmt -> RETURN .)
     DEDENT          reduce using rule 75 (return_stmt -> RETURN .)
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -1204,7 +1203,6 @@ state 30
     (126) bin_op -> . LE
     (127) bin_op -> . GE
 
-    DOT             reduce using rule 83 (expr -> expr_head .)
     AGENT           reduce using rule 83 (expr -> expr_head .)
     CONNECT         reduce using rule 83 (expr -> expr_head .)
     DEF             reduce using rule 83 (expr -> expr_head .)
@@ -1259,7 +1257,6 @@ state 31
     GT              reduce using rule 84 (expr_head -> atom .)
     LE              reduce using rule 84 (expr_head -> atom .)
     GE              reduce using rule 84 (expr_head -> atom .)
-    DOT             reduce using rule 84 (expr_head -> atom .)
     AGENT           reduce using rule 84 (expr_head -> atom .)
     CONNECT         reduce using rule 84 (expr_head -> atom .)
     DEF             reduce using rule 84 (expr_head -> atom .)
@@ -1302,7 +1299,6 @@ state 32
     GT              reduce using rule 85 (expr_head -> list_expr .)
     LE              reduce using rule 85 (expr_head -> list_expr .)
     GE              reduce using rule 85 (expr_head -> list_expr .)
-    DOT             reduce using rule 85 (expr_head -> list_expr .)
     AGENT           reduce using rule 85 (expr_head -> list_expr .)
     CONNECT         reduce using rule 85 (expr_head -> list_expr .)
     DEF             reduce using rule 85 (expr_head -> list_expr .)
@@ -1345,7 +1341,6 @@ state 33
     GT              reduce using rule 86 (expr_head -> record_expr .)
     LE              reduce using rule 86 (expr_head -> record_expr .)
     GE              reduce using rule 86 (expr_head -> record_expr .)
-    DOT             reduce using rule 86 (expr_head -> record_expr .)
     AGENT           reduce using rule 86 (expr_head -> record_expr .)
     CONNECT         reduce using rule 86 (expr_head -> record_expr .)
     DEF             reduce using rule 86 (expr_head -> record_expr .)
@@ -1388,7 +1383,6 @@ state 34
     GT              reduce using rule 87 (expr_head -> tuple_expr .)
     LE              reduce using rule 87 (expr_head -> tuple_expr .)
     GE              reduce using rule 87 (expr_head -> tuple_expr .)
-    DOT             reduce using rule 87 (expr_head -> tuple_expr .)
     AGENT           reduce using rule 87 (expr_head -> tuple_expr .)
     CONNECT         reduce using rule 87 (expr_head -> tuple_expr .)
     DEF             reduce using rule 87 (expr_head -> tuple_expr .)
@@ -1431,7 +1425,6 @@ state 35
     GT              reduce using rule 88 (expr_head -> field_access .)
     LE              reduce using rule 88 (expr_head -> field_access .)
     GE              reduce using rule 88 (expr_head -> field_access .)
-    DOT             reduce using rule 88 (expr_head -> field_access .)
     AGENT           reduce using rule 88 (expr_head -> field_access .)
     CONNECT         reduce using rule 88 (expr_head -> field_access .)
     DEF             reduce using rule 88 (expr_head -> field_access .)
@@ -1474,7 +1467,6 @@ state 36
     GT              reduce using rule 89 (expr_head -> func_call .)
     LE              reduce using rule 89 (expr_head -> func_call .)
     GE              reduce using rule 89 (expr_head -> func_call .)
-    DOT             reduce using rule 89 (expr_head -> func_call .)
     AGENT           reduce using rule 89 (expr_head -> func_call .)
     CONNECT         reduce using rule 89 (expr_head -> func_call .)
     DEF             reduce using rule 89 (expr_head -> func_call .)
@@ -1517,7 +1509,6 @@ state 37
     GT              reduce using rule 92 (atom -> STRING .)
     LE              reduce using rule 92 (atom -> STRING .)
     GE              reduce using rule 92 (atom -> STRING .)
-    DOT             reduce using rule 92 (atom -> STRING .)
     AGENT           reduce using rule 92 (atom -> STRING .)
     CONNECT         reduce using rule 92 (atom -> STRING .)
     DEF             reduce using rule 92 (atom -> STRING .)
@@ -1560,7 +1551,6 @@ state 38
     GT              reduce using rule 93 (atom -> NUMBER .)
     LE              reduce using rule 93 (atom -> NUMBER .)
     GE              reduce using rule 93 (atom -> NUMBER .)
-    DOT             reduce using rule 93 (atom -> NUMBER .)
     AGENT           reduce using rule 93 (atom -> NUMBER .)
     CONNECT         reduce using rule 93 (atom -> NUMBER .)
     DEF             reduce using rule 93 (atom -> NUMBER .)
@@ -1613,7 +1603,7 @@ state 39
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     RBRACE          reduce using rule 128 (empty -> .)
@@ -1711,10 +1701,10 @@ state 45
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -1730,6 +1720,13 @@ state 45
     func_call                      shift and go to state 36
 
 state 46
+
+    (111) field_access -> IDENTIFIER DOT . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 91
+
+
+state 47
 
     (112) func_call -> IDENTIFIER LPAREN . arg_list RPAREN
     (113) arg_list -> . expr arg_list_tail
@@ -1750,19 +1747,19 @@ state 46
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     RPAREN          reduce using rule 128 (empty -> .)
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
     LBRACE          shift and go to state 39
 
-    arg_list                       shift and go to state 91
-    expr                           shift and go to state 92
-    empty                          shift and go to state 93
+    arg_list                       shift and go to state 92
+    expr                           shift and go to state 93
+    empty                          shift and go to state 94
     expr_head                      shift and go to state 30
     atom                           shift and go to state 31
     list_expr                      shift and go to state 32
@@ -1771,57 +1768,56 @@ state 46
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 47
+state 48
 
     (46) connect_block -> CONNECT COLON . INDENT connection_list DEDENT
 
-    INDENT          shift and go to state 94
-
-
-state 48
-
-    (53) func_def -> DEF IDENTIFIER . LPAREN param_list RPAREN COLON type COLON INDENT stmt_block DEDENT
-    (54) func_def -> DEF IDENTIFIER . LPAREN param_list RPAREN COLON INDENT stmt_block DEDENT
-
-    LPAREN          shift and go to state 95
+    INDENT          shift and go to state 95
 
 
 state 49
 
+    (53) func_def -> DEF IDENTIFIER . LPAREN param_list RPAREN COLON type COLON INDENT stmt_block DEDENT
+    (54) func_def -> DEF IDENTIFIER . LPAREN param_list RPAREN COLON INDENT stmt_block DEDENT
+
+    LPAREN          shift and go to state 96
+
+
+state 50
+
     (94) atom -> LPAREN expr . RPAREN
     (107) tuple_elements -> expr . tuple_elements_tail
-    (111) field_access -> expr . DOT IDENTIFIER
     (109) tuple_elements_tail -> . COMMA expr tuple_elements_tail
     (110) tuple_elements_tail -> . empty
     (128) empty -> .
 
   ! shift/reduce conflict for RPAREN resolved as shift
-    RPAREN          shift and go to state 96
-    DOT             shift and go to state 54
-    COMMA           shift and go to state 98
+    RPAREN          shift and go to state 97
+    COMMA           shift and go to state 99
 
   ! RPAREN          [ reduce using rule 128 (empty -> .) ]
 
-    tuple_elements_tail            shift and go to state 97
-    empty                          shift and go to state 99
+    tuple_elements_tail            shift and go to state 98
+    empty                          shift and go to state 100
 
-state 50
+state 51
 
     (106) tuple_expr -> LPAREN tuple_elements . RPAREN
 
-    RPAREN          shift and go to state 100
+    RPAREN          shift and go to state 101
 
 
-state 51
+state 52
 
     (108) tuple_elements -> empty .
 
     RPAREN          reduce using rule 108 (tuple_elements -> empty .)
 
 
-state 52
+state 53
 
     (91) atom -> IDENTIFIER .
+    (111) field_access -> IDENTIFIER . DOT IDENTIFIER
     (112) func_call -> IDENTIFIER . LPAREN arg_list RPAREN
 
   ! shift/reduce conflict for LPAREN resolved as shift
@@ -1837,7 +1833,6 @@ state 52
     LE              reduce using rule 91 (atom -> IDENTIFIER .)
     GE              reduce using rule 91 (atom -> IDENTIFIER .)
     RPAREN          reduce using rule 91 (atom -> IDENTIFIER .)
-    DOT             reduce using rule 91 (atom -> IDENTIFIER .)
     COMMA           reduce using rule 91 (atom -> IDENTIFIER .)
     COLON           reduce using rule 91 (atom -> IDENTIFIER .)
     AGENT           reduce using rule 91 (atom -> IDENTIFIER .)
@@ -1861,48 +1856,37 @@ state 52
     CHAT            reduce using rule 91 (atom -> IDENTIFIER .)
     DEDENT          reduce using rule 91 (atom -> IDENTIFIER .)
     RBRACE          reduce using rule 91 (atom -> IDENTIFIER .)
-    LPAREN          shift and go to state 46
+    DOT             shift and go to state 46
+    LPAREN          shift and go to state 47
 
   ! LPAREN          [ reduce using rule 91 (atom -> IDENTIFIER .) ]
 
 
-state 53
+state 54
 
     (76) for_stmt -> FOR IDENTIFIER . IN expr COLON stmt_block
 
-    IN              shift and go to state 101
-
-
-state 54
-
-    (111) field_access -> expr DOT . IDENTIFIER
-
-    IDENTIFIER      shift and go to state 102
+    IN              shift and go to state 102
 
 
 state 55
 
     (79) if_stmt -> IF expr . COLON stmt_block ELSE COLON stmt_block
     (80) if_stmt -> IF expr . COLON stmt_block
-    (111) field_access -> expr . DOT IDENTIFIER
 
     COLON           shift and go to state 103
-    DOT             shift and go to state 54
 
 
 state 56
 
     (81) while_stmt -> WHILE expr . COLON stmt_block
-    (111) field_access -> expr . DOT IDENTIFIER
 
     COLON           shift and go to state 104
-    DOT             shift and go to state 54
 
 
 state 57
 
     (74) return_stmt -> RETURN expr .
-    (111) field_access -> expr . DOT IDENTIFIER
 
     AGENT           reduce using rule 74 (return_stmt -> RETURN expr .)
     CONNECT         reduce using rule 74 (return_stmt -> RETURN expr .)
@@ -1925,7 +1909,6 @@ state 57
     MODEL           reduce using rule 74 (return_stmt -> RETURN expr .)
     CHAT            reduce using rule 74 (return_stmt -> RETURN expr .)
     DEDENT          reduce using rule 74 (return_stmt -> RETURN expr .)
-    DOT             shift and go to state 54
 
 
 state 58
@@ -1947,10 +1930,10 @@ state 58
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -2104,12 +2087,10 @@ state 71
 state 72
 
     (96) list_elements -> expr . list_elements_tail
-    (111) field_access -> expr . DOT IDENTIFIER
     (98) list_elements_tail -> . COMMA expr list_elements_tail
     (99) list_elements_tail -> . empty
     (128) empty -> .
 
-    DOT             shift and go to state 54
     COMMA           shift and go to state 110
     RBRACE          reduce using rule 128 (empty -> .)
 
@@ -2144,6 +2125,7 @@ state 75
 
     (105) field_assign -> IDENTIFIER . EQUALS expr
     (91) atom -> IDENTIFIER .
+    (111) field_access -> IDENTIFIER . DOT IDENTIFIER
     (112) func_call -> IDENTIFIER . LPAREN arg_list RPAREN
 
     EQUALS          shift and go to state 115
@@ -2158,10 +2140,10 @@ state 75
     GT              reduce using rule 91 (atom -> IDENTIFIER .)
     LE              reduce using rule 91 (atom -> IDENTIFIER .)
     GE              reduce using rule 91 (atom -> IDENTIFIER .)
-    DOT             reduce using rule 91 (atom -> IDENTIFIER .)
     COMMA           reduce using rule 91 (atom -> IDENTIFIER .)
     RBRACE          reduce using rule 91 (atom -> IDENTIFIER .)
-    LPAREN          shift and go to state 46
+    DOT             shift and go to state 46
+    LPAREN          shift and go to state 47
 
 
 state 76
@@ -2321,7 +2303,6 @@ state 89
 state 90
 
     (72) assign_stmt -> IDENTIFIER EQUALS expr .
-    (111) field_access -> expr . DOT IDENTIFIER
 
     AGENT           reduce using rule 72 (assign_stmt -> IDENTIFIER EQUALS expr .)
     CONNECT         reduce using rule 72 (assign_stmt -> IDENTIFIER EQUALS expr .)
@@ -2344,39 +2325,78 @@ state 90
     MODEL           reduce using rule 72 (assign_stmt -> IDENTIFIER EQUALS expr .)
     CHAT            reduce using rule 72 (assign_stmt -> IDENTIFIER EQUALS expr .)
     DEDENT          reduce using rule 72 (assign_stmt -> IDENTIFIER EQUALS expr .)
-    DOT             shift and go to state 54
 
 
 state 91
+
+    (111) field_access -> IDENTIFIER DOT IDENTIFIER .
+
+    PLUS            reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    MINUS           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    TIMES           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    DIVIDE          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    MOD             reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    EQ              reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    NEQ             reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    LT              reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    GT              reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    LE              reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    GE              reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    AGENT           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    CONNECT         reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    DEF             reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    FOR             reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    IF              reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    WHILE           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    IDENTIFIER      reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    BREAK           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    CONTINUE        reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    RETURN          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    STRING          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    NUMBER          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    LPAREN          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    LBRACE          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    $end            reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    RPAREN          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    COMMA           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    COLON           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    INPUT           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    OUTPUT          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    MEMORY          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    MODEL           reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    CHAT            reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    DEDENT          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+    RBRACE          reduce using rule 111 (field_access -> IDENTIFIER DOT IDENTIFIER .)
+
+
+state 92
 
     (112) func_call -> IDENTIFIER LPAREN arg_list . RPAREN
 
     RPAREN          shift and go to state 124
 
 
-state 92
+state 93
 
     (113) arg_list -> expr . arg_list_tail
-    (111) field_access -> expr . DOT IDENTIFIER
     (115) arg_list_tail -> . COMMA expr arg_list_tail
     (116) arg_list_tail -> . empty
     (128) empty -> .
 
-    DOT             shift and go to state 54
     COMMA           shift and go to state 126
     RPAREN          reduce using rule 128 (empty -> .)
 
     arg_list_tail                  shift and go to state 125
     empty                          shift and go to state 127
 
-state 93
+state 94
 
     (114) arg_list -> empty .
 
     RPAREN          reduce using rule 114 (arg_list -> empty .)
 
 
-state 94
+state 95
 
     (46) connect_block -> CONNECT COLON INDENT . connection_list DEDENT
     (47) connection_list -> . connection connection_list
@@ -2388,7 +2408,7 @@ state 94
     connection_list                shift and go to state 128
     connection                     shift and go to state 129
 
-state 95
+state 96
 
     (53) func_def -> DEF IDENTIFIER LPAREN . param_list RPAREN COLON type COLON INDENT stmt_block DEDENT
     (54) func_def -> DEF IDENTIFIER LPAREN . param_list RPAREN COLON INDENT stmt_block DEDENT
@@ -2409,7 +2429,7 @@ state 95
     empty                          shift and go to state 133
     var_decl                       shift and go to state 134
 
-state 96
+state 97
 
     (94) atom -> LPAREN expr RPAREN .
 
@@ -2424,7 +2444,6 @@ state 96
     GT              reduce using rule 94 (atom -> LPAREN expr RPAREN .)
     LE              reduce using rule 94 (atom -> LPAREN expr RPAREN .)
     GE              reduce using rule 94 (atom -> LPAREN expr RPAREN .)
-    DOT             reduce using rule 94 (atom -> LPAREN expr RPAREN .)
     AGENT           reduce using rule 94 (atom -> LPAREN expr RPAREN .)
     CONNECT         reduce using rule 94 (atom -> LPAREN expr RPAREN .)
     DEF             reduce using rule 94 (atom -> LPAREN expr RPAREN .)
@@ -2452,14 +2471,14 @@ state 96
     RBRACE          reduce using rule 94 (atom -> LPAREN expr RPAREN .)
 
 
-state 97
+state 98
 
     (107) tuple_elements -> expr tuple_elements_tail .
 
     RPAREN          reduce using rule 107 (tuple_elements -> expr tuple_elements_tail .)
 
 
-state 98
+state 99
 
     (109) tuple_elements_tail -> COMMA . expr tuple_elements_tail
     (82) expr -> . expr_head bin_op expr_tail
@@ -2477,10 +2496,10 @@ state 98
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -2495,14 +2514,14 @@ state 98
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
 
-state 99
+state 100
 
     (110) tuple_elements_tail -> empty .
 
     RPAREN          reduce using rule 110 (tuple_elements_tail -> empty .)
 
 
-state 100
+state 101
 
     (106) tuple_expr -> LPAREN tuple_elements RPAREN .
 
@@ -2517,7 +2536,6 @@ state 100
     GT              reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
     LE              reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
     GE              reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
-    DOT             reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
     AGENT           reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
     CONNECT         reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
     DEF             reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
@@ -2545,7 +2563,7 @@ state 100
     RBRACE          reduce using rule 106 (tuple_expr -> LPAREN tuple_elements RPAREN .)
 
 
-state 101
+state 102
 
     (76) for_stmt -> FOR IDENTIFIER IN . expr COLON stmt_block
     (82) expr -> . expr_head bin_op expr_tail
@@ -2563,10 +2581,10 @@ state 101
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -2580,49 +2598,6 @@ state 101
     tuple_expr                     shift and go to state 34
     field_access                   shift and go to state 35
     func_call                      shift and go to state 36
-
-state 102
-
-    (111) field_access -> expr DOT IDENTIFIER .
-
-    PLUS            reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    MINUS           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    TIMES           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    DIVIDE          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    MOD             reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    EQ              reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    NEQ             reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    LT              reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    GT              reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    LE              reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    GE              reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    DOT             reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    AGENT           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    CONNECT         reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    DEF             reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    FOR             reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    IF              reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    WHILE           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    IDENTIFIER      reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    BREAK           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    CONTINUE        reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    RETURN          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    STRING          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    NUMBER          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    LPAREN          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    LBRACE          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    $end            reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    RPAREN          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    COMMA           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    COLON           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    INPUT           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    OUTPUT          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    MEMORY          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    MODEL           reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    CHAT            reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    DEDENT          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-    RBRACE          reduce using rule 111 (field_access -> expr DOT IDENTIFIER .)
-
 
 state 103
 
@@ -2647,7 +2622,6 @@ state 105
 
     (82) expr -> expr_head bin_op expr_tail .
 
-    DOT             reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
     AGENT           reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
     CONNECT         reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
     DEF             reduce using rule 82 (expr -> expr_head bin_op expr_tail .)
@@ -2678,9 +2652,7 @@ state 105
 state 106
 
     (90) expr_tail -> expr .
-    (111) field_access -> expr . DOT IDENTIFIER
 
-  ! shift/reduce conflict for DOT resolved as shift
     AGENT           reduce using rule 90 (expr_tail -> expr .)
     CONNECT         reduce using rule 90 (expr_tail -> expr .)
     DEF             reduce using rule 90 (expr_tail -> expr .)
@@ -2706,9 +2678,6 @@ state 106
     CHAT            reduce using rule 90 (expr_tail -> expr .)
     DEDENT          reduce using rule 90 (expr_tail -> expr .)
     RBRACE          reduce using rule 90 (expr_tail -> expr .)
-    DOT             shift and go to state 54
-
-  ! DOT             [ reduce using rule 90 (expr_tail -> expr .) ]
 
 
 state 107
@@ -2726,7 +2695,6 @@ state 107
     GT              reduce using rule 95 (list_expr -> LBRACE list_elements RBRACE .)
     LE              reduce using rule 95 (list_expr -> LBRACE list_elements RBRACE .)
     GE              reduce using rule 95 (list_expr -> LBRACE list_elements RBRACE .)
-    DOT             reduce using rule 95 (list_expr -> LBRACE list_elements RBRACE .)
     AGENT           reduce using rule 95 (list_expr -> LBRACE list_elements RBRACE .)
     CONNECT         reduce using rule 95 (list_expr -> LBRACE list_elements RBRACE .)
     DEF             reduce using rule 95 (list_expr -> LBRACE list_elements RBRACE .)
@@ -2769,7 +2737,6 @@ state 108
     GT              reduce using rule 100 (record_expr -> LBRACE record_elements RBRACE .)
     LE              reduce using rule 100 (record_expr -> LBRACE record_elements RBRACE .)
     GE              reduce using rule 100 (record_expr -> LBRACE record_elements RBRACE .)
-    DOT             reduce using rule 100 (record_expr -> LBRACE record_elements RBRACE .)
     AGENT           reduce using rule 100 (record_expr -> LBRACE record_elements RBRACE .)
     CONNECT         reduce using rule 100 (record_expr -> LBRACE record_elements RBRACE .)
     DEF             reduce using rule 100 (record_expr -> LBRACE record_elements RBRACE .)
@@ -2822,10 +2789,10 @@ state 110
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -2888,10 +2855,10 @@ state 115
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -2995,7 +2962,7 @@ state 119
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     INPUT           shift and go to state 156
@@ -3058,10 +3025,10 @@ state 120
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -3164,7 +3131,6 @@ state 124
     GT              reduce using rule 112 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
     LE              reduce using rule 112 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
     GE              reduce using rule 112 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
-    DOT             reduce using rule 112 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
     AGENT           reduce using rule 112 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
     CONNECT         reduce using rule 112 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
     DEF             reduce using rule 112 (func_call -> IDENTIFIER LPAREN arg_list RPAREN .)
@@ -3217,10 +3183,10 @@ state 126
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -3309,25 +3275,21 @@ state 134
 state 135
 
     (109) tuple_elements_tail -> COMMA expr . tuple_elements_tail
-    (111) field_access -> expr . DOT IDENTIFIER
     (109) tuple_elements_tail -> . COMMA expr tuple_elements_tail
     (110) tuple_elements_tail -> . empty
     (128) empty -> .
 
-    DOT             shift and go to state 54
-    COMMA           shift and go to state 98
+    COMMA           shift and go to state 99
     RPAREN          reduce using rule 128 (empty -> .)
 
     tuple_elements_tail            shift and go to state 176
-    empty                          shift and go to state 99
+    empty                          shift and go to state 100
 
 state 136
 
     (76) for_stmt -> FOR IDENTIFIER IN expr . COLON stmt_block
-    (111) field_access -> expr . DOT IDENTIFIER
 
     COLON           shift and go to state 177
-    DOT             shift and go to state 54
 
 
 state 137
@@ -3398,7 +3360,7 @@ state 138
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     FOR             shift and go to state 23
@@ -3462,12 +3424,10 @@ state 139
 state 140
 
     (98) list_elements_tail -> COMMA expr . list_elements_tail
-    (111) field_access -> expr . DOT IDENTIFIER
     (98) list_elements_tail -> . COMMA expr list_elements_tail
     (99) list_elements_tail -> . empty
     (128) empty -> .
 
-    DOT             shift and go to state 54
     COMMA           shift and go to state 110
     RBRACE          reduce using rule 128 (empty -> .)
 
@@ -3497,11 +3457,9 @@ state 142
 state 143
 
     (105) field_assign -> IDENTIFIER EQUALS expr .
-    (111) field_access -> expr . DOT IDENTIFIER
 
     COMMA           reduce using rule 105 (field_assign -> IDENTIFIER EQUALS expr .)
     RBRACE          reduce using rule 105 (field_assign -> IDENTIFIER EQUALS expr .)
-    DOT             shift and go to state 54
 
 
 state 144
@@ -3579,10 +3537,10 @@ state 147
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -3655,7 +3613,7 @@ state 149
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     DEDENT          reduce using rule 34 (agent_body -> agent_body_item .)
@@ -3877,7 +3835,6 @@ state 160
 state 161
 
     (71) assign_stmt -> IDENTIFIER COLON type EQUALS expr .
-    (111) field_access -> expr . DOT IDENTIFIER
 
     AGENT           reduce using rule 71 (assign_stmt -> IDENTIFIER COLON type EQUALS expr .)
     CONNECT         reduce using rule 71 (assign_stmt -> IDENTIFIER COLON type EQUALS expr .)
@@ -3900,7 +3857,6 @@ state 161
     MODEL           reduce using rule 71 (assign_stmt -> IDENTIFIER COLON type EQUALS expr .)
     CHAT            reduce using rule 71 (assign_stmt -> IDENTIFIER COLON type EQUALS expr .)
     DEDENT          reduce using rule 71 (assign_stmt -> IDENTIFIER COLON type EQUALS expr .)
-    DOT             shift and go to state 54
 
 
 state 162
@@ -3958,12 +3914,10 @@ state 167
 state 168
 
     (115) arg_list_tail -> COMMA expr . arg_list_tail
-    (111) field_access -> expr . DOT IDENTIFIER
     (115) arg_list_tail -> . COMMA expr arg_list_tail
     (116) arg_list_tail -> . empty
     (128) empty -> .
 
-    DOT             shift and go to state 54
     COMMA           shift and go to state 126
     RPAREN          reduce using rule 128 (empty -> .)
 
@@ -4133,7 +4087,7 @@ state 180
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
     DEDENT          reduce using rule 62 (statement_list -> statement .)
@@ -4197,13 +4151,11 @@ state 183
 state 184
 
     (14) var_decl -> IDENTIFIER EQUALS expr .
-    (111) field_access -> expr . DOT IDENTIFIER
 
     IDENTIFIER      reduce using rule 14 (var_decl -> IDENTIFIER EQUALS expr .)
     DEDENT          reduce using rule 14 (var_decl -> IDENTIFIER EQUALS expr .)
     COMMA           reduce using rule 14 (var_decl -> IDENTIFIER EQUALS expr .)
     RPAREN          reduce using rule 14 (var_decl -> IDENTIFIER EQUALS expr .)
-    DOT             shift and go to state 54
 
 
 state 185
@@ -4522,10 +4474,10 @@ state 206
     (95) list_expr -> . LBRACE list_elements RBRACE
     (100) record_expr -> . LBRACE record_elements RBRACE
     (106) tuple_expr -> . LPAREN tuple_elements RPAREN
-    (111) field_access -> . expr DOT IDENTIFIER
+    (111) field_access -> . IDENTIFIER DOT IDENTIFIER
     (112) func_call -> . IDENTIFIER LPAREN arg_list RPAREN
 
-    IDENTIFIER      shift and go to state 52
+    IDENTIFIER      shift and go to state 53
     STRING          shift and go to state 37
     NUMBER          shift and go to state 38
     LPAREN          shift and go to state 22
@@ -4706,13 +4658,11 @@ state 219
 state 220
 
     (12) var_decl -> IDENTIFIER COLON type EQUALS expr .
-    (111) field_access -> expr . DOT IDENTIFIER
 
     IDENTIFIER      reduce using rule 12 (var_decl -> IDENTIFIER COLON type EQUALS expr .)
     DEDENT          reduce using rule 12 (var_decl -> IDENTIFIER COLON type EQUALS expr .)
     COMMA           reduce using rule 12 (var_decl -> IDENTIFIER COLON type EQUALS expr .)
     RPAREN          reduce using rule 12 (var_decl -> IDENTIFIER COLON type EQUALS expr .)
-    DOT             shift and go to state 54
 
 
 state 221
@@ -4974,9 +4924,8 @@ WARNING: shift/reduce conflict for STRING in state 29 resolved as shift
 WARNING: shift/reduce conflict for NUMBER in state 29 resolved as shift
 WARNING: shift/reduce conflict for LPAREN in state 29 resolved as shift
 WARNING: shift/reduce conflict for LBRACE in state 29 resolved as shift
-WARNING: shift/reduce conflict for RPAREN in state 49 resolved as shift
-WARNING: shift/reduce conflict for LPAREN in state 52 resolved as shift
-WARNING: shift/reduce conflict for DOT in state 106 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 50 resolved as shift
+WARNING: shift/reduce conflict for LPAREN in state 53 resolved as shift
 WARNING: reduce/reduce conflict in state 73 resolved using rule (list_elements -> empty)
 WARNING: rejected rule (record_elements -> empty) in state 73
 WARNING: Rule (record_elements -> empty) is never reduced

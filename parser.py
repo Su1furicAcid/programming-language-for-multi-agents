@@ -405,9 +405,9 @@ def p_tuple_elements_tail(p):
     else:
         p[0] = []
 
-# field_access ::= expr "." IDENTIFIER
+# field_access ::= IDENTIFIER "." IDENTIFIER
 def p_field_access(p):
-    '''field_access : expr DOT IDENTIFIER'''
+    '''field_access : IDENTIFIER DOT IDENTIFIER'''
     p[0] = FieldAccess(obj=p[1], field=p[3])
 
 # func_call ::= IDENTIFIER "(" arg_list? ")"
