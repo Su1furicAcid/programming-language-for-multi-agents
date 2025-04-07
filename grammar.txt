@@ -32,7 +32,9 @@
 > continue_stmt   ::= "continue"
 > if_stmt         ::= "if" expr ":" stmt_block "else" ":" stmt_block
 > while_stmt      ::= "while" expr ":" stmt_block
-> expr            ::= atom | expr bin_op expr | list_expr | record_expr | tuple_expr | field_access | func_call
+> expr            ::= expr_head expr_tail*
+> expr_head       ::= atom | list_expr | record_expr | tuple_expr | field_access | func_call
+> expr_tail       ::= bin_op expr_head expr_tail
 > atom            ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
 > list_expr       ::= "[" (expr ("," expr)*)? "]"
 > record_expr     ::= "{" field_assign ("," field_assign)* "}"

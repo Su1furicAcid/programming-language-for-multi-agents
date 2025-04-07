@@ -302,21 +302,32 @@ def p_while_stmt(p):
     '''while_stmt : WHILE expr COLON stmt_block'''
     p[0] = WhileStmt(condition=p[2], body=p[4])
 
-# expr ::= atom | expr bin_op expr | list_expr | record_expr | tuple_expr | field_access | func_call
+# expr ::= expr_head expr_tail
 def p_expr(p):
-    '''expr : atom
-            | expr bin_op expr
-            | list_expr
-            | record_expr
-            | tuple_expr
-            | field_access
-            | func_call'''
-    if len(p) == 2:
-        p[0] = p[1]
-    elif len(p) == 4:
-        p[0] = BinaryOp(left=p[1], operator=p[2], right=p[3])
+    '''expr : expr_head expr_tail'''
+    if len(p) == 3:
+        p[0] = BinaryOp(expr_type='expr', left=p[1], op=p[2].op, right=p[2].left)
     else:
         p[0] = p[1]
+
+# expr_head ::= atom | list_expr | record_expr | tuple_expr | field_access | func_call
+def p_expr_head(p):
+    '''expr_head : atom
+                 | list_expr
+                 | record_expr
+                 | tuple_expr
+                 | field_access
+                 | func_call'''
+    p[0] = p[1]
+
+# expr_tail ::= bin_op expr_head expr_tail
+def p_expr_tail(p):
+    '''expr_tail : bin_op expr_head expr_tail
+                 | empty'''
+    if len(p) == 4:
+        p[0] = BinaryOp(op=p[1], right=BinaryOp(left=p[2], op=p[3].op, right=p[3].left))
+    else:
+        p[0] = []
 
 # atom ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
 def p_atom(p):
