@@ -19,7 +19,6 @@ reserved = {
     "for": "FOR",
     "in": "IN",
     "if": "IF",
-    "elif": "ELIF",
     "else": "ELSE",
     "while": "WHILE",
     "str": "TYPE_STR",

@@ -22,11 +22,6 @@
 > record_type     ::= "record" "{" field_decl ("," field_decl)* "}"
 > field_decl      ::= IDENTIFIER ":" type
 > tuple_type      ::= "tuple" "[" type ("," type)* "]"
-IDENTIFIER      ::= /[a-zA-Z_][a-zA-Z0-9_]*/
-STRING          ::= /"[^"]*"/
-TRIPLE_STRING   ::= /""".*?"""/s
-NUMBER          ::= /\d+(\.\d+)?/
-INDENT, DEDENT  ::= handled by parser (e.g. Lark's PythonIndenter)
 > stmt_block      ::= INDENT statement+ DEDENT
 > statement       ::= for_stmt | if_stmt | while_stmt | assign_stmt | expr_stmt | break_stmt | continue_stmt | return_stmt
 > assign_stmt     ::= IDENTIFIER (":" type)? "=" expr
@@ -35,9 +30,7 @@ INDENT, DEDENT  ::= handled by parser (e.g. Lark's PythonIndenter)
 > for_stmt        ::= "for" IDENTIFIER "in" expr ":" stmt_block
 > break_stmt      ::= "break"
 > continue_stmt   ::= "continue"
-> if_stmt         ::= "if" expr ":" stmt_block
-                    ("elif" expr ":" stmt_block)*
-                    ("else" ":" stmt_block)?
+> if_stmt         ::= "if" expr ":" stmt_block "else" ":" stmt_block
 > while_stmt      ::= "while" expr ":" stmt_block
 > expr            ::= atom | expr bin_op expr | list_expr | record_expr | tuple_expr | field_access | func_call
 > atom            ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
@@ -49,3 +42,9 @@ INDENT, DEDENT  ::= handled by parser (e.g. Lark's PythonIndenter)
 > func_call       ::= IDENTIFIER "(" arg_list? ")"
 > arg_list        ::= expr ("," expr)*
 > bin_op          ::= "+" | "-" | "*" | "/" | "%" | "==" | "!=" | "<" | ">" | "<=" | ">="
+
+IDENTIFIER      ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+STRING          ::= /"[^"]*"/
+TRIPLE_STRING   ::= /""".*?"""/s
+NUMBER          ::= /\d+(\.\d+)?/
+INDENT, DEDENT  ::= handled by parser

@@ -288,31 +288,14 @@ def p_continue_stmt(p):
     '''continue_stmt : CONTINUE'''
     p[0] = ContinueStmt()
 
-# if_stmt ::= "if" expr ":" stmt_block ("elif" expr ":" stmt_block)* ("else" ":" stmt_block)?
+# if_stmt ::= "if" expr ":" stmt_block "else" ":" stmt_block?
 def p_if_stmt(p):
-    '''if_stmt : IF expr COLON stmt_block if_stmt_tail
+    '''if_stmt : IF expr COLON stmt_block ELSE COLON stmt_block
                | IF expr COLON stmt_block'''
-    if len(p) == 6:
-        p[0] = IfStmt(condition=p[2], body=p[4], elifs=p[5])
+    if len(p) == 8:
+        p[0] = IfStmt(condition=p[2], body=p[4], else_block=p[7])
     else:
-        p[0] = IfStmt(condition=p[2], body=p[4], elifs=[])
-
-def p_if_stmt_tail(p):
-    '''if_stmt_tail : elif_stmt if_stmt_tail
-                    | else_stmt if_stmt_tail
-                    | empty'''
-    if len(p) == 3:
-        p[0] = [p[1]] + p[2]
-    else:
-        p[0] = []
-
-def p_elif_stmt(p):
-    '''elif_stmt : ELIF expr COLON stmt_block'''
-    p[0] = ElifStmt(condition=p[2], body=p[4])
-
-def p_else_stmt(p):
-    '''else_stmt : ELSE COLON stmt_block'''
-    p[0] = ElseStmt(body=p[3])
+        p[0] = IfStmt(condition=p[2], body=p[4], else_block=None)
 
 # while_stmt ::= "while" expr ":" stmt_block
 def p_while_stmt(p):
