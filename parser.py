@@ -305,10 +305,7 @@ def p_while_stmt(p):
 # expr ::= expr_head expr_tail
 def p_expr(p):
     '''expr : expr_head expr_tail'''
-    if len(p) == 3:
-        p[0] = BinaryOp(expr_type='expr', left=p[1], op=p[2].op, right=p[2].left)
-    else:
-        p[0] = p[1]
+    p[0] = BinaryOp(expr_type='expr', left=p[1], op=p[2].op, right=p[2])
 
 # expr_head ::= atom | list_expr | record_expr | tuple_expr | field_access | func_call
 def p_expr_head(p):
@@ -325,9 +322,9 @@ def p_expr_tail(p):
     '''expr_tail : bin_op expr_head expr_tail
                  | empty'''
     if len(p) == 4:
-        p[0] = BinaryOp(op=p[1], right=BinaryOp(left=p[2], op=p[3].op, right=p[3].left))
+        p[0] = BinaryOp(op=p[1], right=BinaryOp(left=p[2], op=p[3].op, right=p[3]))
     else:
-        p[0] = []
+        p[0] = None
 
 # atom ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
 def p_atom(p):
