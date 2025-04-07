@@ -64,12 +64,11 @@ def p_var_decl(p):
     else:
         p[0] = VarDecl(name=p[1])
 
-# type ::= base_type | list_type | record_type | tuple_type
+# type ::= base_type | list_type | record_type
 def p_type(p):
     '''type : base_type
             | list_type
-            | record_type
-            | tuple_type'''
+            | record_type'''
     p[0] = p[1]
 
 # base_type ::= "str" | "int" | "float" | "bool" | IDENTIFIER
@@ -101,19 +100,6 @@ def p_field_decl_list(p):
 def p_field_decl(p):
     '''field_decl : IDENTIFIER COLON type'''
     p[0] = FieldDecl(name=p[1], field_type=p[3])
-
-# tuple_type ::= "tuple" "(" type_list ")"
-def p_tuple_type(p):
-    '''tuple_type : TYPE_TUPLE LPAREN type_list_in_tuple RPAREN'''
-    p[0] = TupleType(element_types=p[3])
-
-def p_type_list_in_tuple(p):
-    '''type_list_in_tuple : type_list_in_tuple COMMA type
-                          | type'''
-    if len(p) == 4:
-        p[0] = [p[1]] + [p[3]]
-    else:
-        p[0] = [p[1]]
 
 # agent_def ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
 def p_agent_def(p):
@@ -311,12 +297,11 @@ def p_expr(p):
     else:
         p[0] = p[1]
 
-# expr_head ::= atom | list_expr | record_expr | tuple_expr | field_access | func_call
+# expr_head ::= atom | list_expr | record_expr | field_access | func_call
 def p_expr_head(p):
     '''expr_head : atom
                  | list_expr
                  | record_expr
-                 | tuple_expr
                  | field_access
                  | func_call'''
     p[0] = p[1]
@@ -326,16 +311,12 @@ def p_expr_tail(p):
     '''expr_tail : expr'''
     p[0] = p[1]
 
-# atom ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
+# atom ::= IDENTIFIER | STRING | NUMBER
 def p_atom(p):
     '''atom : IDENTIFIER
             | STRING
-            | NUMBER
-            | LPAREN expr RPAREN'''
-    if len(p) == 2:
-        p[0] = Atom(value=p[1])
-    else:
-        p[0] = p[2]
+            | NUMBER'''
+    p[0] = Atom(value=p[1])
 
 # list_expr ::= "[" (expr ("," expr)*)? "]"
 def p_list_expr(p):
@@ -383,27 +364,6 @@ def p_record_elements_tail(p):
 def p_field_assign(p):
     '''field_assign : IDENTIFIER EQUALS expr'''
     p[0] = FieldAssign(name=p[1], value=p[3])
-
-# tuple_expr ::= "(" expr ("," expr)* ")"
-def p_tuple_expr(p):
-    '''tuple_expr : LPAREN tuple_elements RPAREN'''
-    p[0] = TupleExpr(elements=p[2])
-
-def p_tuple_elements(p):
-    '''tuple_elements : expr tuple_elements_tail
-                      | empty'''
-    if len(p) == 3:
-        p[0] = [p[1]] + p[2]
-    else:
-        p[0] = []
-
-def p_tuple_elements_tail(p):
-    '''tuple_elements_tail : COMMA expr tuple_elements_tail
-                           | empty'''
-    if len(p) == 4:
-        p[0] = [p[2]] + p[3]
-    else:
-        p[0] = []
 
 # field_access ::= IDENTIFIER "." IDENTIFIER
 def p_field_access(p):

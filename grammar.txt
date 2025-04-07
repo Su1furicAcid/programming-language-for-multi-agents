@@ -16,12 +16,11 @@
 > param_decl      ::= var_decl
 > var_decl_list   ::= var_decl+
 > var_decl        ::= IDENTIFIER (":" type)? ("=" expr)?
-> type            ::= base_type | list_type | record_type | tuple_type
+> type            ::= base_type | list_type | record_type
 > base_type       ::= "str" | "int" | "float" | "bool" 
 > list_type       ::= "list[" type "]"
 > record_type     ::= "record" "{" field_decl ("," field_decl)* "}"
 > field_decl      ::= IDENTIFIER ":" type
-> tuple_type      ::= "tuple" "[" type ("," type)* "]"
 > stmt_block      ::= INDENT statement+ DEDENT
 > statement       ::= for_stmt | if_stmt | while_stmt | assign_stmt | expr_stmt | break_stmt | continue_stmt | return_stmt
 > assign_stmt     ::= IDENTIFIER (":" type)? "=" expr
@@ -33,13 +32,12 @@
 > if_stmt         ::= "if" expr ":" stmt_block "else" ":" stmt_block
 > while_stmt      ::= "while" expr ":" stmt_block
 > expr            ::= expr_head expr_tail*
-> expr_head       ::= atom | list_expr | record_expr | tuple_expr | field_access | func_call
+> expr_head       ::= atom | list_expr | record_expr | field_access | func_call
 > expr_tail       ::= bin_op expr_head expr_tail
 > atom            ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
 > list_expr       ::= "[" (expr ("," expr)*)? "]"
 > record_expr     ::= "{" field_assign ("," field_assign)* "}"
 > field_assign    ::= IDENTIFIER "=" expr
-> tuple_expr      ::= "(" expr ("," expr)* ")"
 > field_access    ::= IDENTIFIER "." IDENTIFIER
 > func_call       ::= IDENTIFIER "(" arg_list? ")"
 > arg_list        ::= expr ("," expr)*
