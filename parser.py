@@ -319,19 +319,19 @@ def p_list_expr(p):
 
 def p_list_elements(p):
     '''list_elements : expr list_elements_tail
-                     | empty'''
+                     | expr'''
     if len(p) == 3:
         p[0] = [p[1]] + p[2]
     else:
-        p[0] = []
+        p[0] = [p[1]]
 
 def p_list_elements_tail(p):
     '''list_elements_tail : COMMA expr list_elements_tail
-                          | empty'''
+                          | COMMA expr'''
     if len(p) == 4:
         p[0] = [p[2]] + p[3]
     else:
-        p[0] = []
+        p[0] = [p[2]]
 
 # record_expr ::= "{" field_assign ("," field_assign)* "}"
 def p_record_expr(p):
@@ -340,19 +340,19 @@ def p_record_expr(p):
 
 def p_record_elements(p):
     '''record_elements : field_assign record_elements_tail
-                      | empty'''
+                       | field_assign'''
     if len(p) == 3:
         p[0] = [p[1]] + p[2]
     else:
-        p[0] = []
+        p[0] = [p[1]]
 
 def p_record_elements_tail(p):
     '''record_elements_tail : COMMA field_assign record_elements_tail
-                            | empty'''
+                            | COMMA field_assign'''
     if len(p) == 4:
         p[0] = [p[2]] + p[3]
     else:
-        p[0] = []
+        p[0] = [p[2]]
 
 # field_assign ::= IDENTIFIER "=" expr
 def p_field_assign(p):
