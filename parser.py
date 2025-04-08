@@ -77,17 +77,17 @@ def p_base_type(p):
                  | TYPE_INT
                  | TYPE_FLOAT
                  | TYPE_BOOL'''
-    p[0] = BaseType(name=p[1])
+    p[0] = p[1]
 
 # list_type ::= "list" "[" type "]"
 def p_list_type(p):
     '''list_type : TYPE_LIST LBRACE type RBRACE'''
-    p[0] = ListType(element_type=p[3])
+    p[0] = p[3]
 
 # record_type ::= "record" "{" field_decl_list "}"
 def p_record_type(p):
     '''record_type : TYPE_RECORD LBRACE field_decl_list RBRACE'''
-    p[0] = RecordType(fields=p[3])
+    p[0] = p[3]
 
 def p_field_decl_list(p):
     '''field_decl_list : field_decl field_decl_list

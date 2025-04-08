@@ -78,31 +78,6 @@ class ParamDecl(ASTNode):
     def __init__(self, name, param_type=None, default_value=None):
         super().__init__(name=name, param_type=param_type, default_value=default_value)
 
-class Type(ASTNode):
-    """类型基类"""
-    def __init__(self, name, params=None):
-        super().__init__(name=name, params=params or [])
-
-class BaseType(Type):
-    """基础类型"""
-    def __init__(self, name):
-        super().__init__(name=name)
-
-class ListType(Type):
-    """列表类型"""
-    def __init__(self, element_type):
-        super().__init__(name="list", params=[element_type])
-
-class RecordType(Type):
-    """记录类型"""
-    def __init__(self, fields=None):
-        super().__init__(name="record", params=fields or [])
-
-class TupleType(Type):
-    """元组类型"""
-    def __init__(self, element_types=None):
-        super().__init__(name="tuple", params=element_types or [])
-
 class Stmt(ASTNode):
     """语句基类"""
     def __init__(self, metadata=None, **kwargs):
