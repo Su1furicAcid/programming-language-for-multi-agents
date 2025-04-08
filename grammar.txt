@@ -9,7 +9,7 @@
 > model_block     ::= "model" ":" STRING
 > chat_block      ::= "chat" IDENTIFIER ":" TRIPLE_STRING
 > connect_block   ::= "connect" ":" INDENT connection+ DEDENT
-> connection      ::= IDENTIFIER ":" type agent_ref "->" agent_ref
+> connection      ::= IDENTIFIER ":" type INDENT agent_ref "->" agent_ref DEDENT
 > agent_ref       ::= IDENTIFIER ("." IDENTIFIER)+
 > func_def        ::= "def" IDENTIFIER "(" param_list? ")" (":" type)? ":" stmt_block
 > param_list      ::= param_decl ("," param_decl)*

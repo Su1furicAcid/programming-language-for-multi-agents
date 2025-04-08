@@ -164,7 +164,7 @@ def p_connection_list(p):
 
 # connection ::= IDENTIFIER ":" type agent_ref "->" agent_ref
 def p_connection(p):
-    '''connection : IDENTIFIER COLON type agent_ref ARROW agent_ref'''
+    '''connection : IDENTIFIER COLON type INDENT agent_ref ARROW agent_ref DEDENT'''
     p[0] = Connection(name=p[1], conn_type=p[3], source=p[4], target=p[6])
 
 # agent_ref ::= IDENTIFIER ("." IDENTIFIER)*
@@ -174,6 +174,8 @@ def p_agent_ref(p):
 
 def p_agent_ref_tail(p):
     '''agent_ref_tail : DOT IDENTIFIER agent_ref_tail
+                      | DOT OUTPUT agent_ref_tail
+                      | DOT INPUT agent_ref_tail
                       | empty'''
     if len(p) == 4:
         p[0] = [p[2]] + p[3]
@@ -239,7 +241,7 @@ def p_statement(p):
 def p_assign_stmt(p):
     '''assign_stmt : IDENTIFIER COLON type EQUALS expr
                    | IDENTIFIER EQUALS expr'''
-    if len(p) == 5:
+    if len(p) == 6:
         p[0] = AssignStmt(target=p[1], var_type=p[3], value=p[5])
     else:
         p[0] = AssignStmt(target=p[1], value=p[3])

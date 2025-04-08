@@ -143,8 +143,25 @@ def t_NEWLINE(t):
 def lexer_token():
     if hasattr(lexer, 'dedent_tokens') and lexer.dedent_tokens:
         return lexer.dedent_tokens.pop(0)
-    else:
-        return lexer.token_original()
+    
+    token = lexer.token_original()
+    
+    # 如果到达输入末尾且缩进栈中还有未处理的缩进级别
+    if token is None and len(indent_stack) > 1:
+        dedent_tokens = []
+        while len(indent_stack) > 1:  # 逐一弹出缩进级别
+            indent_stack.pop()
+            tok = lex.LexToken()
+            tok.type = 'DEDENT'
+            tok.value = ''
+            tok.lineno = lexer.lineno
+            tok.lexpos = lexer.lexpos
+            dedent_tokens.append(tok)
+        
+        lexer.dedent_tokens = dedent_tokens  # 将生成的 DEDENT tokens 存入 dedent_tokens
+        return lexer.dedent_tokens.pop(0)
+    
+    return token
 
 # -------------------------------
 # 忽略空格和注释

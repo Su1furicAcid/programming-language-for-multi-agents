@@ -2,32 +2,12 @@ agent Summarizer:
     output:
         summary: str
     model: "gpt-4o"
-
-    text1 = "I love programmming languages."
-    text2 = "I hate bugs in my code."
-    text = text1 + "\n" + text2
-
-    chat make_summary = """
+    text = "syntax error"
+    chat make_summary : """
     Make a summary of the text below.
     Text: {text}
     Summary: ${summary}
     """
-
-agent Analyzer:
-    input:
-        summary: str
-    output:
-        sentiment: str
-        score: float
-    model: "gpt-4o"
-
-    chat analyze_summary = """
-    Analyze the summary below and provide a sentiment and score.
-    Summary: {summary}
-    Sentiment: ${sentiment}
-    Score: ${score}
-    """
-
 connect:
     summary_line : str 
         Summarizer.output.summary -> Analyzer.input.summary
