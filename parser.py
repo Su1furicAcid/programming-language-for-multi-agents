@@ -240,9 +240,9 @@ def p_assign_stmt(p):
     '''assign_stmt : IDENTIFIER COLON type EQUALS expr
                    | IDENTIFIER EQUALS expr'''
     if len(p) == 5:
-        p[0] = AssignStmt(name=p[1], var_type=p[3], value=p[5])
+        p[0] = AssignStmt(target=p[1], var_type=p[3], value=p[5])
     else:
-        p[0] = AssignStmt(name=p[1], value=p[3])
+        p[0] = AssignStmt(target=p[1], value=p[3])
 
 # return_stmt ::= "return" expr
 def p_return_stmt(p):
@@ -282,8 +282,8 @@ def p_while_stmt(p):
 def p_expr(p):
     '''expr : expr_head bin_op expr_tail
             | expr_head'''
-    if p[2] is not None:
-        p[0] = BinaryOp(left=p[1], op=p[2].op, right=p[2])
+    if len(p) == 4:
+        p[0] = BinaryOp(left=p[1], op=p[2], right=p[3])
     else:
         p[0] = p[1]
 
@@ -408,3 +408,8 @@ def p_error(p):
 
 # 构建解析器
 parser = yacc.yacc(debug=True, debugfile='parser.out')
+
+with open('example_code.txt', 'r') as f:
+    data = f.read()
+    result = parser.parse(data, lexer=lexer)
+    print(result)
