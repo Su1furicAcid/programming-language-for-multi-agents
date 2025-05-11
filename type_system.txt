@@ -1,7 +1,6 @@
 Type Representation:
     Basic types: int, float, bool, str, void
     Extension: list[T], record{f1: T1, f2: T2, ...}
-    Interface: func(T1, T2, ...) -> Tn, agent(T1, T2, ...) -> Tn
     Dynamic: any
 
 Compatibility Rule:
@@ -27,11 +26,13 @@ Check Rule:
             Well(Env_{empty}, program_body) => Well(Env_{empty}, program)
 
             program_body    ::= (statement | agent_def | connect_block | func_def)+
-            Env_0 = Env_{empty}
+            Env_{current} = Env_{empty}
+            Env_0 = Env_{current}
             forall i, Well(Env_i, stmt_i) && Gen(Env_i, stmt_i) = Env_{i+1} => Well(Env_empty, program_body)
 
             agent_def       ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
-            Well(Env_i, agent_body) => Well(Env_i, agent_def)
+            Well(Env_{current}, agent_body) => Well(Env_{current}, agent_def)
+            Gen(Env_{current}, agent_def) = Gen(Env_{current}, agent_body)
 
             agent_body      ::= (input_block | output_block | memory_block | model_block | statement | chat_block)+
             Pass 1 Port Checking:
@@ -39,7 +40,9 @@ Check Rule:
                 Env_{output} = Env_{i}
                 forall i, Gen(Env_{input}, input_block_i) = Env_{input}, Gen(Env_{output}, output_block_i) = Env_{output}
             Pass 2 Internal Checking:
+                Env_0 = Env_{current}
                 forall i, Well(Env_{input}, stmt_i) && Well(Env_{output}, stmt_i) && Well(Env_i, stmt_i) && Gen(Env_i, stmt_i) = Env_{i+1} => Well(Env_i, agent_body)
+                Gen(Env_{current}, agent_body) = Env_n   
 
             input_block     ::= "input" ":" INDENT var_decl_list DEDENT
             Gen(Env_{input}, var_decl_list) = Env_{input}
