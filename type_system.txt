@@ -51,14 +51,31 @@ Check Rule:
             var_decl        ::= IDENTIFIER (":" type)? ("=" expr)?
             Case 1:
                 IDENTIFIER : type = expr
-                if Type(expr) <: type then Gen(Env, var_decl) = Env, Well(Env, var_decl) (substitute)
+                if Type(expr) <: type then Gen(Env, var_decl) = Env union IDENTIFIER : type, Well(Env, var_decl)
             Case 2:
                 IDENTIFIER : type 
-                if not IDENTIFIER : type in Env then Gen(Env, var_decl) (add)
+                Gen(Env, var_decl) = Env union IDENTIFIER : type, Well(Env, var_decl)
             Case 3: 
                 IDENTIFIER = expr 
-                Gen(Env, var_decl) = Env, Well(Env, var_decl) (substitute)
+                Gen(Env, var_decl) = Env union IDENTIFIER : any, Well(Env, var_decl)
+            (Don't need to consider old type of identifier, because syntax doesn't allow duplicate identifier name, which is different from assignment)
 
-            ...TODO
+            assign_stmt     ::= IDENTIFIER (":" type)? "=" expr
+            Case 1:
+                IDENTIFIER : type = expr
+                if type <: old_type
+                    if IDENTIFIER : old_type in Env
+                        if Type(expr) <: type Well(Env, assign_stmt), Gen(Env, assign_stmt) = Env[IDENTIFIER : old_type -> IDENTIFIER : type] (substitute)
+                    Well(Env, assign_stmt), Gen(Env, assign_stmt) = Env union IDENTIFIER : type
+            Case 2:
+                IDENTIFIER = expr
+                if IDENTIFIER : old_type in Env and Type(expr) <: old_type
+                    Well(Env, assign_stmt)
+                if Type(expr) <: old_type
+                    Well(Env, assign_stmt), Gen(Env, assign_stmt) = Env union IDENTIFIER : any
+
+            connection      ::= IDENTIFIER ":" type INDENT agent_ref "->" agent_ref DEDENT
+            <:
+
         Rules for expr:
-            
+            TBD
