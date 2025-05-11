@@ -1,6 +1,5 @@
-> program         ::= global_block? program_body
+> program         ::= program_body
 > program_body    ::= (statement | agent_def | connect_block | func_def)+
-> global_block    ::= "global" ":" INDENT var_decl_list DEDENT
 > agent_def       ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
 > agent_body      ::= (input_block | output_block | memory_block | model_block | statement | chat_block)+
 > input_block     ::= "input" ":" INDENT var_decl_list DEDENT

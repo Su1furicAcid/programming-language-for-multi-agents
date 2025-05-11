@@ -9,14 +9,13 @@ precedence = (
     ('left', 'EQ', 'NEQ', 'GT', 'LT', 'LE', 'GE'),
 )
 
-# program ::= global_block? program_body
+# program ::= program_body
 def p_program(p):
-    '''program : global_block program_body
-               | program_body'''
+    '''program : program_body'''
     if len(p) == 3:
-        p[0] = Program(global_block=p[1], body=p[2])
+        p[0] = Program(body=p[2])
     else:
-        p[0] = Program(global_block=None, body=p[1])
+        p[0] = Program(body=p[1])
 
 # program_body ::= (statement | agent_def | connect_block | func_def)+
 def p_program_body(p):
@@ -33,11 +32,6 @@ def p_program_body_item(p):
                          | connect_block
                          | func_def'''
     p[0] = p[1]
-
-# global_block ::= "global" ":" INDENT var_decl_list DEDENT
-def p_global_block(p):
-    '''global_block : GLOBAL COLON INDENT var_decl_list DEDENT'''
-    p[0] = GlobalBlock(variables=p[4])
 
 # var_decl_list ::= var_decl+
 def p_var_decl_list(p):

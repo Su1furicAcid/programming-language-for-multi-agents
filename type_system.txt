@@ -1,0 +1,64 @@
+Type Representation:
+    Basic types: int, float, bool, str, void
+    Extension: list[T], record{f1: T1, f2: T2, ...}
+    Interface: func(T1, T2, ...) -> Tn, agent(T1, T2, ...) -> Tn
+    Dynamic: any
+
+Compatibility Rule:
+    T <: any
+    any <: T 
+    int <: float
+    list[T1] <: list[T2] iff T1 <: T2
+    record{f1: T1} <: record{f2: T2} iff T1 <: T2
+
+Check Rule:
+    Definition: 
+        1. Perform type checking on the AST.
+        2. 'Env' represents type environment, a mapping from identifiers to their types.
+        3. 'Env(e) = T' means in environment 'Env', expression 'e' has type 'T'.
+        4. 'Well(Env, stmt)' means in environment 'Env', statement 'stmt' is well-typed.
+        5. 'Gen(Env_i, stmt) = Env_j' means in environment 'Env_i', stmt is well-typed and produces a new environment 'Env_j'.
+        6. 'Join(T1, T2)' means lub of 'T1' and 'T2'.
+        7. '=>' means 'leads to'.
+        8. 'Type(e) = T' means type of expression 'e' is 'T'
+    Rules:
+        Rules for stmt:
+            program         ::= program_body
+            Well(Env_{empty}, program_body) => Well(Env_{empty}, program)
+
+            program_body    ::= (statement | agent_def | connect_block | func_def)+
+            Env_0 = Env_{empty}
+            forall i, Well(Env_i, stmt_i) && Gen(Env_i, stmt_i) = Env_{i+1} => Well(Env_empty, program_body)
+
+            agent_def       ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
+            Well(Env_i, agent_body) => Well(Env_i, agent_def)
+
+            agent_body      ::= (input_block | output_block | memory_block | model_block | statement | chat_block)+
+            Pass 1 Port Checking:
+                Env_{input} = Env_{i}
+                Env_{output} = Env_{i}
+                forall i, Gen(Env_{input}, input_block_i) = Env_{input}, Gen(Env_{output}, output_block_i) = Env_{output}
+            Pass 2 Internal Checking:
+                forall i, Well(Env_{input}, stmt_i) && Well(Env_{output}, stmt_i) && Well(Env_i, stmt_i) && Gen(Env_i, stmt_i) = Env_{i+1} => Well(Env_i, agent_body)
+
+            input_block     ::= "input" ":" INDENT var_decl_list DEDENT
+            Gen(Env_{input}, var_decl_list) = Env_{input}
+            Well(Env_{input}, var_decl_list) => Well(Env_{input}, input_block)
+
+            var_decl_list   ::= var_decl+
+            forall i, Well(Env_i, var_decl_i) && Gen(Env_i, var_decl_i) = Env_{i+1} => Well(Env, var_decl_list)
+
+            var_decl        ::= IDENTIFIER (":" type)? ("=" expr)?
+            Case 1:
+                IDENTIFIER : type = expr
+                if Type(expr) <: type then Gen(Env, var_decl) = Env, Well(Env, var_decl) (substitute)
+            Case 2:
+                IDENTIFIER : type 
+                if not IDENTIFIER : type in Env then Gen(Env, var_decl) (add)
+            Case 3: 
+                IDENTIFIER = expr 
+                Gen(Env, var_decl) = Env, Well(Env, var_decl) (substitute)
+
+            ...TODO
+        Rules for expr:
+            
