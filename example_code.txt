@@ -8,6 +8,16 @@ agent Summarizer:
     Text: {text}
     Summary: ${summary}
     """
+
+agent Analyzer:
+    input:
+        summary: str
+    model: "gpt-4o"
+    chat : """
+    Analyze the text.
+    Text: {summary}
+    """
+
 connect:
     summary_line : str 
         Summarizer.output.summary -> Analyzer.input.summary

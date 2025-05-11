@@ -146,8 +146,13 @@ def p_model_block(p):
 
 # chat_block ::= "chat" IDENTIFIER ":" TRIPLE_STRING
 def p_chat_block(p):
-    '''chat_block : CHAT IDENTIFIER COLON TRIPLE_STRING'''
-    p[0] = ChatBlock(name=p[2], template=p[4])
+    '''chat_block : CHAT IDENTIFIER COLON TRIPLE_STRING
+                  | CHAT COLON TRIPLE_STRING
+    '''
+    if len(p) == 5:
+        p[0] = ChatBlock(name=p[2], template=p[4])
+    else:
+        p[0] = ChatBlock(name="", template=p[3])
 
 # connect_block ::= "connect" ":" INDENT connection+ DEDENT
 def p_connect_block(p):
