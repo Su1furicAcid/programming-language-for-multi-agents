@@ -110,8 +110,8 @@ class ContinueStmt(Stmt):
 
 class Expr(ASTNode):
     """表达式基类"""
-    def __init__(self, expr_type=None, **kwargs):
-        super().__init__(expr_type=expr_type, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 class BinaryOp(Expr):
     """二元操作表达式"""

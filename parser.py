@@ -1,6 +1,7 @@
 import ply.yacc as yacc
 from pllm_ast import *
 from lexer import lexer, tokens
+from type_checker import TypeChecker
 
 # 优先级规则
 precedence = (
@@ -403,8 +404,10 @@ def p_error(p):
 
 # 构建解析器
 parser = yacc.yacc(debug=True, debugfile='parser.out')
+type_checker = TypeChecker()
 
 with open('example_code.txt', 'r') as f:
     data = f.read()
     result = parser.parse(data, lexer=lexer)
     print(result)
+    type_checker.checkProgram(result)

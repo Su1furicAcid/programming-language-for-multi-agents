@@ -13,6 +13,8 @@ agent Analyzer:
     input:
         summary
     model: "gpt-4o"
+    x = 1
+    x : float = 2.0
     chat : """
     Analyze the text.
     Text: {summary}
