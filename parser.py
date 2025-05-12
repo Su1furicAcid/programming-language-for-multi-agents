@@ -81,7 +81,7 @@ def p_list_type(p):
 # record_type ::= "record" "{" field_decl_list "}"
 def p_record_type(p):
     '''record_type : TYPE_RECORD LBRACE field_decl_list RBRACE'''
-    p[0] = f"record\{{{p[3]}\}}"
+    p[0] = "record{" + p[3] + "}"
 
 def p_field_decl_list(p):
     '''field_decl_list : field_decl field_decl_list
