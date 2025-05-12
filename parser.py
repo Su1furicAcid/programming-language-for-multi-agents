@@ -85,10 +85,10 @@ def p_record_type(p):
     p[0] = "record{" + p[3] + "}"
 
 def p_field_decl_list(p):
-    '''field_decl_list : field_decl field_decl_list
+    '''field_decl_list : field_decl COMMA field_decl_list
                        | field_decl'''
-    if len(p) == 3:
-        p[0] = f"{p[1]}, {p[2]}"
+    if len(p) == 4:
+        p[0] = f"{p[1]}, {p[3]}"
     else:
         p[0] = p[1]
 
@@ -325,31 +325,30 @@ def p_list_elements_tail(p):
     else:
         p[0] = [p[2]]
 
-# record_expr ::= "{" field_assign ("," field_assign)* "}"
+# record_expr ::= "{" instance_assign ("," isntance_assign)* "}"
 def p_record_expr(p):
     '''record_expr : LBRACE record_elements RBRACE'''
     p[0] = RecordExpr(fields=p[2])
 
 def p_record_elements(p):
-    '''record_elements : field_assign record_elements_tail
-                       | field_assign'''
+    '''record_elements : instance_assign record_elements_tail
+                       | instance_assign'''
     if len(p) == 3:
         p[0] = [p[1]] + p[2]
     else:
         p[0] = [p[1]]
 
 def p_record_elements_tail(p):
-    '''record_elements_tail : COMMA field_assign record_elements_tail
-                            | COMMA field_assign'''
+    '''record_elements_tail : COMMA instance_assign record_elements_tail
+                            | COMMA instance_assign'''
     if len(p) == 4:
         p[0] = [p[2]] + p[3]
     else:
         p[0] = [p[2]]
 
-# field_assign
-def p_field_assign(p):
-    '''field_assign : IDENTIFIER DOT IDENTIFIER EQUALS expr'''
-    p[0] = FieldAssign(obj=p[1], field=p[3], value=p[5])
+def p_instance_assign(p):
+    '''instance_assign : IDENTIFIER EQUALS expr'''
+    p[0] = InstanceAssign(field=p[1], value=p[3])
 
 # field_access ::= IDENTIFIER "." IDENTIFIER
 def p_field_access(p):

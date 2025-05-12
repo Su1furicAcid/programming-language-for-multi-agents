@@ -138,6 +138,10 @@ class RecordExpr(Expr):
     def __init__(self, fields=None):
         super().__init__(fields=fields or [])
 
+class InstanceAssign(Expr):
+    def __init__(self, field, value=None):
+        super().__init__(field=field, value=value)
+
 class TupleExpr(Expr):
     """元组表达式"""
     def __init__(self, elements=None):
@@ -147,8 +151,3 @@ class FieldAccess(Expr):
     """字段访问"""
     def __init__(self, obj, field):
         super().__init__(obj=obj, field=field)
-
-class FieldAssign(Stmt):
-    """字段赋值"""
-    def __init__(self, obj, field, value):
-        super().__init__(obj=obj, field=field, value=value)

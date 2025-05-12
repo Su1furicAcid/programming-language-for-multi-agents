@@ -233,19 +233,6 @@ class TypeChecker:
                     return
             self.type_env.define(decl_var_name, decl_var_type)
             return
-            
-    # FieldAssign
-    def visitFieldAssign(self, node: FieldAssign) -> None:
-        obj = node.obj
-        obj_type = self.type_env.lookup(obj)
-        if not isinstance(obj_type, RecordType):
-            self.err_handler.report(node=node)
-        if node.field not in obj_type.fields:
-            self.err_handler.report(node=node)
-        field_type = obj_type.fields[node.field]
-        value_type = self.visit(node.value)
-        if not value_type.isSubtypeOf(field_type):
-            self.err_handler.report(node=node)
 
     # ReturnStmt
     # TODO: Assign a type to function
@@ -348,24 +335,33 @@ class TypeChecker:
             self.err_handler.report(node=node)
         return ListType(element_types[0]) if element_types else ListType(Any)
     
-    # FieldAccess
-    def visitFieldAccess(self, node: FieldAccess) -> Type:
-        obj_type = self.type_env.lookup(node.obj)
-        if obj_type is None:
-            raise ValueError(f"Undefined object: {node.obj}")
-        if not isinstance(obj_type, RecordType):
-            raise TypeError(f"Field access requires a record type, but got {obj_type}")
+    # RecordExpr
+    def visitRecordExpr(self, node: RecordExpr) -> Type:
+        fields = {}
+        for inst_assign in node.fields:
+            if not isinstance(inst_assign, InstanceAssign):
+                self.error_handler.report(
+                    f"Expected InstanceAssign in RecordExpr, but got {type(inst_assign).__name__}",
+                    node
+                )
+                continue
+            field_type = self.visit(inst_assign)
+            fields[inst_assign.field] = field_type
+        return RecordType(fields)
 
-        fields = obj_type.fields
-        if node.field not in fields:
-            raise ValueError(f"Field '{node.field}' does not exist in record {obj_type}")
+    # InstanceAssign
+    def visitInstanceAssign(self, node: InstanceAssign) -> Type:
+        field_name = node.field
+        field_value_type = self.visit(node.value)  # 检查字段值的类型
         
-        return fields[node.field]
-
-    # FuncCall
-    # TODO
-    def visitFuncCall(self, node: FuncCall) -> Type:
-        return Any
+        if not field_value_type:
+            self.error_handler.report(
+                f"Cannot determine type of value assigned to field '{field_name}'",
+                node
+            )
+            return Any
+        
+        return field_value_type
     
     # FieldAccess
     def visitFieldAccess(self, node: FieldAccess) -> Type:
@@ -376,3 +372,8 @@ class TypeChecker:
         if node.field not in obj_type.fields:
             self.err_handler.report(node=node)
         return obj_type.fields[node.field]
+
+    # FuncCall
+    # TODO
+    def visitFuncCall(self, node: FuncCall) -> Type:
+        return Any
