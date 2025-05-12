@@ -11,7 +11,7 @@ agent Summarizer:
 
 agent Analyzer:
     input:
-        summary: str
+        summary
     model: "gpt-4o"
     chat : """
     Analyze the text.

@@ -65,7 +65,7 @@ def p_type(p):
             | record_type'''
     p[0] = p[1]
 
-# base_type ::= "str" | "int" | "float" | "bool" | IDENTIFIER
+# base_type ::= "str" | "int" | "float" | "bool"
 def p_base_type(p):
     '''base_type : TYPE_STR
                  | TYPE_INT
@@ -76,31 +76,31 @@ def p_base_type(p):
 # list_type ::= "list" "[" type "]"
 def p_list_type(p):
     '''list_type : TYPE_LIST LBRACE type RBRACE'''
-    p[0] = p[3]
+    p[0] = f"list[{p[3]}]"
 
 # record_type ::= "record" "{" field_decl_list "}"
 def p_record_type(p):
     '''record_type : TYPE_RECORD LBRACE field_decl_list RBRACE'''
-    p[0] = p[3]
+    p[0] = f"record\{{{p[3]}\}}"
 
 def p_field_decl_list(p):
     '''field_decl_list : field_decl field_decl_list
                        | field_decl'''
     if len(p) == 3:
-        p[0] = [p[1]] + p[2]
+        p[0] = f"{p[1]}, {p[2]}"
     else:
-        p[0] = [p[1]]
+        p[0] = p[1]
 
 def p_field_decl(p):
     '''field_decl : IDENTIFIER COLON type'''
-    p[0] = FieldDecl(name=p[1], field_type=p[3])
+    p[0] = f"{p[1]}: {p[3]}"
 
 # agent_def ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
 def p_agent_def(p):
     '''agent_def : AGENT IDENTIFIER COLON INDENT agent_body DEDENT'''
     p[0] = AgentDef(name=p[2], body=p[5])
 
-# agent_body ::= (input_block | output_block | memory_block | model_block | statement | chat_block)+
+# agent_body ::= (input_block | output_block | model_block | statement | chat_block)+
 def p_agent_body(p):
     '''agent_body : agent_body_item agent_body
                   | agent_body_item'''
@@ -112,7 +112,6 @@ def p_agent_body(p):
 def p_agent_body_item(p):
     '''agent_body_item : input_block
                        | output_block
-                       | memory_block
                        | model_block
                        | statement
                        | chat_block'''
@@ -127,11 +126,6 @@ def p_input_block(p):
 def p_output_block(p):
     '''output_block : OUTPUT COLON INDENT var_decl_list DEDENT'''
     p[0] = OutputBlock(variables=p[4])
-
-# memory_block ::= "memory" ":" INDENT var_decl_list DEDENT
-def p_memory_block(p):
-    '''memory_block : MEMORY COLON INDENT var_decl_list DEDENT'''
-    p[0] = MemoryBlock(variables=p[4])
 
 # model_block ::= "model" ":" STRING
 def p_model_block(p):
@@ -164,7 +158,7 @@ def p_connection_list(p):
 # connection ::= IDENTIFIER ":" type agent_ref "->" agent_ref
 def p_connection(p):
     '''connection : IDENTIFIER COLON type INDENT agent_ref ARROW agent_ref DEDENT'''
-    p[0] = Connection(name=p[1], conn_type=p[3], source=p[4], target=p[6])
+    p[0] = Connection(name=p[1], conn_type=p[3], source=p[5], target=p[7])
 
 # agent_ref ::= IDENTIFIER ("." IDENTIFIER)*
 def p_agent_ref(p):
@@ -351,10 +345,10 @@ def p_record_elements_tail(p):
     else:
         p[0] = [p[2]]
 
-# field_assign ::= IDENTIFIER "=" expr
+# field_assign
 def p_field_assign(p):
-    '''field_assign : IDENTIFIER EQUALS expr'''
-    p[0] = FieldAssign(name=p[1], value=p[3])
+    '''field_assign : IDENTIFIER DOT IDENTIFIER EQUALS expr'''
+    p[0] = FieldAssign(obj=p[1], field=p[3], value=p[5])
 
 # field_access ::= IDENTIFIER "." IDENTIFIER
 def p_field_access(p):

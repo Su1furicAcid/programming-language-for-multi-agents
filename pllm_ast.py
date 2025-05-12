@@ -9,13 +9,8 @@ class ASTNode:
 
 class Program(ASTNode):
     """程序节点，包含全局块和多个语句/定义"""
-    def __init__(self, global_block=None, body=None):
-        super().__init__(global_block=global_block, body=body or [])
-
-class GlobalBlock(ASTNode):
-    """全局变量块"""
-    def __init__(self, variables=None):
-        super().__init__(variables=variables or []) 
+    def __init__(self, body=None):
+        super().__init__(body=body or [])
 
 class VarDecl(ASTNode):
     """变量声明节点"""
@@ -34,11 +29,6 @@ class InputBlock(ASTNode):
 
 class OutputBlock(ASTNode):
     """输出块"""
-    def __init__(self, variables=None):
-        super().__init__(variables=variables or [])
-
-class MemoryBlock(ASTNode):
-    """内存块"""
     def __init__(self, variables=None):
         super().__init__(variables=variables or [])
 
@@ -69,9 +59,9 @@ class AgentRef(ASTNode):
 
 class FuncDef(ASTNode):
     """函数定义节点"""
-    def __init__(self, name, params=None, return_type=None, stmt_body=None, expr_body=None):
+    def __init__(self, name, params=None, return_type=None, stmt_body=None):
         super().__init__(name=name, params=params or [], return_type=return_type, 
-                         stmt_body=stmt_body, expr_body=expr_body)
+                         stmt_body=stmt_body)
 
 class ParamDecl(ASTNode):
     """参数声明"""
@@ -87,11 +77,6 @@ class AssignStmt(Stmt):
     """赋值语句"""
     def __init__(self, target, var_type=None, value=None):
         super().__init__(target=target, var_type=var_type, value=value)
-
-class ExprStmt(Stmt):
-    """表达式语句"""
-    def __init__(self, expr):
-        super().__init__(expr=expr)
 
 class ReturnStmt(Stmt):
     """返回语句"""
@@ -157,11 +142,6 @@ class TupleExpr(Expr):
     """元组表达式"""
     def __init__(self, elements=None):
         super().__init__(elements=elements or [])
-
-class FieldDecl(ASTNode):
-    """字段声明"""
-    def __init__(self, name, field_type):
-        super().__init__(name=name, field_type=field_type)
 
 class FieldAccess(Expr):
     """字段访问"""

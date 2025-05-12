@@ -1,10 +1,9 @@
 > program         ::= program_body
 > program_body    ::= (statement | agent_def | connect_block | func_def)+
 > agent_def       ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
-> agent_body      ::= (input_block | output_block | memory_block | model_block | statement | chat_block)+
+> agent_body      ::= (input_block | output_block | model_block | statement | chat_block)+
 > input_block     ::= "input" ":" INDENT var_decl_list DEDENT
 > output_block    ::= "output" ":" INDENT var_decl_list DEDENT
-> memory_block    ::= "memory" ":" INDENT var_decl_list DEDENT
 > model_block     ::= "model" ":" STRING
 > chat_block      ::= "chat" IDENTIFIER? ":" TRIPLE_STRING
 > connect_block   ::= "connect" ":" INDENT connection+ DEDENT

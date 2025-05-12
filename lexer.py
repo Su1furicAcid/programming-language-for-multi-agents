@@ -10,7 +10,6 @@ reserved = {
     "model": "MODEL",
     "chat": "CHAT",
     "connect": "CONNECT",
-    "memory": "MEMORY",
     "record": "TYPE_RECORD",
     "tuple": "TYPE_TUPLE",
     "list": "TYPE_LIST",
