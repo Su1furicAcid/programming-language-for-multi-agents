@@ -44,6 +44,7 @@ tokens = [
     "ARROW",        # ->
     "LPAREN", "RPAREN",
     "LBRACE", "RBRACE",
+    "LBRACKET", "RBRACKET",
     "DOT",
     "PLUS", "MINUS", "TIMES", "DIVIDE", "MOD",
     "EQ", "NEQ", "LT", "GT", "LE", "GE",
@@ -73,6 +74,8 @@ t_GT = r">"
 t_LE = r"<="
 t_GE = r">="
 t_COMMA = r","
+t_LBRACKET = r"\["
+t_RBRACKET = r"\]"
 
 # -------------------------------
 # 字面值

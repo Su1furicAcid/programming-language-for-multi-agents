@@ -76,7 +76,7 @@ def p_base_type(p):
 
 # list_type ::= "list" "[" type "]"
 def p_list_type(p):
-    '''list_type : TYPE_LIST LBRACE type RBRACE'''
+    '''list_type : TYPE_LIST LBRACKET type RBRACKET'''
     p[0] = f"list[{p[3]}]"
 
 # record_type ::= "record" "{" field_decl_list "}"
@@ -306,7 +306,7 @@ def p_atom(p):
 
 # list_expr ::= "[" (expr ("," expr)*)? "]"
 def p_list_expr(p):
-    '''list_expr : LBRACE list_elements RBRACE'''
+    '''list_expr : LBRACKET list_elements RBRACKET'''
     p[0] = ListExpr(elements=p[2])
 
 def p_list_elements(p):

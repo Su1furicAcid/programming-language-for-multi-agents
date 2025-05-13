@@ -15,7 +15,8 @@ agent Analyzer:
     model: "gpt-4o"
     x = 1
     x : float = 2.0
-    y : record{ a : int, b : int } = { a = 3 }
+    y : record{ a : int, b : int } = { a = 3, b = 3 }
+    z : list[int] = [1.0, 2.0, 3.0]
     chat : """
     Analyze the text.
     Text: {summary}
