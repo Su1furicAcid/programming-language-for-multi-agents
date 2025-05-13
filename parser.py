@@ -43,12 +43,12 @@ def p_var_decl_list(p):
     else:
         p[0] = [p[1]]
 
-# var_decl ::= IDENTIFIER (":" type)? ("=" expr)?
+# var_decl ::= identifier (":" type)? ("=" expr)?
 def p_var_decl(p):
-    '''var_decl : IDENTIFIER COLON type EQUALS expr
-                | IDENTIFIER COLON type
-                | IDENTIFIER EQUALS expr
-                | IDENTIFIER'''
+    '''var_decl : identifier COLON type EQUALS expr
+                | identifier COLON type
+                | identifier EQUALS expr
+                | identifier'''
     if len(p) == 6:
         p[0] = VarDecl(name=p[1], var_type=p[3], value=p[5])
     elif len(p) == 4:
@@ -93,12 +93,12 @@ def p_field_decl_list(p):
         p[0] = p[1]
 
 def p_field_decl(p):
-    '''field_decl : IDENTIFIER COLON type'''
-    p[0] = f"{p[1]}: {p[3]}"
+    '''field_decl : identifier COLON type'''
+    p[0] = f"{p[1].name}: {p[3]}"
 
-# agent_def ::= "agent" IDENTIFIER ":" INDENT agent_body DEDENT
+# agent_def ::= "agent" identifier ":" INDENT agent_body DEDENT
 def p_agent_def(p):
-    '''agent_def : AGENT IDENTIFIER COLON INDENT agent_body DEDENT'''
+    '''agent_def : AGENT identifier COLON INDENT agent_body DEDENT'''
     p[0] = AgentDef(name=p[2], body=p[5])
 
 # agent_body ::= (input_block | output_block | model_block | statement | chat_block)+
@@ -128,14 +128,14 @@ def p_output_block(p):
     '''output_block : OUTPUT COLON INDENT var_decl_list DEDENT'''
     p[0] = OutputBlock(variables=p[4])
 
-# model_block ::= "model" ":" STRING
+# model_block ::= "model" ":" constant
 def p_model_block(p):
-    '''model_block : MODEL COLON STRING'''
+    '''model_block : MODEL COLON constant'''
     p[0] = ModelBlock(model_name=p[3])
 
-# chat_block ::= "chat" IDENTIFIER ":" TRIPLE_STRING
+# chat_block ::= "chat" identifier ":" TRIPLE_STRING
 def p_chat_block(p):
-    '''chat_block : CHAT IDENTIFIER COLON TRIPLE_STRING
+    '''chat_block : CHAT identifier COLON TRIPLE_STRING
                   | CHAT COLON TRIPLE_STRING
     '''
     if len(p) == 5:
@@ -156,18 +156,18 @@ def p_connection_list(p):
     else:
         p[0] = [p[1]]
 
-# connection ::= IDENTIFIER ":" type agent_ref "->" agent_ref
+# connection ::= identifier ":" type agent_ref "->" agent_ref
 def p_connection(p):
-    '''connection : IDENTIFIER COLON type INDENT agent_ref ARROW agent_ref DEDENT'''
+    '''connection : identifier COLON type INDENT agent_ref ARROW agent_ref DEDENT'''
     p[0] = Connection(name=p[1], conn_type=p[3], source=p[5], target=p[7])
 
-# agent_ref ::= IDENTIFIER ("." IDENTIFIER)*
+# agent_ref ::= identifier ("." identifier)*
 def p_agent_ref(p):
-    '''agent_ref : IDENTIFIER agent_ref_tail'''
+    '''agent_ref : identifier agent_ref_tail'''
     p[0] = AgentRef(parts=[p[1]] + p[2])
 
 def p_agent_ref_tail(p):
-    '''agent_ref_tail : DOT IDENTIFIER agent_ref_tail
+    '''agent_ref_tail : DOT identifier agent_ref_tail
                       | DOT OUTPUT agent_ref_tail
                       | DOT INPUT agent_ref_tail
                       | empty'''
@@ -176,10 +176,10 @@ def p_agent_ref_tail(p):
     else:
         p[0] = []
 
-# func_def ::= "def" IDENTIFIER "(" param_list? ")" (":" type)? ":" INDENT stmt_block DEDENT
+# func_def ::= "def" identifier "(" param_list? ")" (":" type)? ":" INDENT stmt_block DEDENT
 def p_func_def(p):
-    '''func_def : DEF IDENTIFIER LPAREN param_list RPAREN COLON type COLON stmt_block
-                | DEF IDENTIFIER LPAREN param_list RPAREN COLON stmt_block'''
+    '''func_def : DEF identifier LPAREN param_list RPAREN COLON type COLON stmt_block
+                | DEF identifier LPAREN param_list RPAREN COLON stmt_block'''
     if len(p) == 11:
         p[0] = FuncDef(name=p[2], params=p[4], return_type=p[7], stmt_body=p[9])
     else:
@@ -231,23 +231,30 @@ def p_statement(p):
                  | return_stmt'''
     p[0] = p[1]
 
-# assign_stmt ::= IDENTIFIER (":" type)? "=" expr
+# assign_stmt ::= assign_target (":" type)? "=" expr
 def p_assign_stmt(p):
-    '''assign_stmt : IDENTIFIER COLON type EQUALS expr
-                   | IDENTIFIER EQUALS expr'''
+    '''assign_stmt : assign_target COLON type EQUALS expr
+                   | assign_target EQUALS expr'''
     if len(p) == 6:
         p[0] = AssignStmt(target=p[1], var_type=p[3], value=p[5])
     else:
         p[0] = AssignStmt(target=p[1], value=p[3])
+
+# assign_target ::= identifier | field_access | index_access
+def p_assign_target(p):
+    '''assign_target : identifier 
+                     | field_access
+                     | index_access'''
+    p[0] = p[1]
 
 # return_stmt ::= "return" expr
 def p_return_stmt(p):
     '''return_stmt : RETURN expr'''
     p[0] = ReturnStmt(value=p[2])
 
-# for_stmt ::= "for" IDENTIFIER "in" expr ":" stmt_block
+# for_stmt ::= "for" identifier "in" expr ":" stmt_block
 def p_for_stmt(p):
-    '''for_stmt : FOR IDENTIFIER IN expr COLON stmt_block'''
+    '''for_stmt : FOR identifier IN expr COLON stmt_block'''
     p[0] = ForStmt(var_name=p[2], iterable=p[4], body=p[6])
 
 # break_stmt ::= "break"
@@ -297,12 +304,22 @@ def p_expr_tail(p):
     '''expr_tail : expr'''
     p[0] = p[1]
 
-# atom ::= IDENTIFIER | STRING | NUMBER
+# atom ::= identifier | STRING | NUMBER
 def p_atom(p):
-    '''atom : IDENTIFIER
-            | STRING
-            | NUMBER'''
-    p[0] = Atom(value=p[1])
+    '''atom : identifier
+            | constant'''
+    p[0] = p[1]
+
+# identifier ::= IDENTIFIER
+def p_identifier(p):
+    '''identifier : IDENTIFIER'''
+    p[0] = Identifier(name=p[1])
+
+# constant ::= STRING | NUMBER
+def p_constant(p):
+    '''constant : STRING 
+                | NUMBER'''
+    p[0] = Constant(value=p[1])
 
 # list_expr ::= "[" (expr ("," expr)*)? "]"
 def p_list_expr(p):
@@ -347,17 +364,22 @@ def p_record_elements_tail(p):
         p[0] = [p[2]]
 
 def p_instance_assign(p):
-    '''instance_assign : IDENTIFIER EQUALS expr'''
+    '''instance_assign : identifier EQUALS expr'''
     p[0] = InstanceAssign(field=p[1], value=p[3])
 
-# field_access ::= IDENTIFIER "." IDENTIFIER
+# index_access ::= identifier "[" expr "]"
+def p_index_access(p):
+    '''index_access : identifier LBRACKET expr RBRACKET'''
+    p[0] = IndexAccess(obj=p[1], index=p[3])
+
+# field_access ::= identifier "." identifier
 def p_field_access(p):
-    '''field_access : IDENTIFIER DOT IDENTIFIER'''
+    '''field_access : identifier DOT identifier'''
     p[0] = FieldAccess(obj=p[1], field=p[3])
 
-# func_call ::= IDENTIFIER "(" arg_list? ")"
+# func_call ::= identifier "(" arg_list? ")"
 def p_func_call(p):
-    '''func_call : IDENTIFIER LPAREN arg_list RPAREN'''
+    '''func_call : identifier LPAREN arg_list RPAREN'''
     p[0] = FuncCall(func_name=p[1], args=p[3])
 
 # arg_list ::= expr ("," expr)*

@@ -142,7 +142,7 @@ class RecordType(Type):
         for name, field_type in fields.items():
             if not isinstance(field_type, Type):
                 raise TypeError(f"Field '{name}' type must be a Type instance, got {type(field_type)}")
-        self._fields = dict(sorted(fields.items()))
+        self._fields = dict(sorted(fields.items(), key=lambda item: str(item[0])))
 
     @property
     def fields(self) -> Dict[str, Type]:
@@ -154,7 +154,7 @@ class RecordType(Type):
         field_strs = [f"{name}: {str(ftype)}" for name, ftype in self._fields.items()]
         return f"record{{{', '.join(field_strs)}}}"
 
-    def isSubtypeOf(self, other: 'Type') -> bool:
+    def isSubtypeOf(self, other: Type) -> bool:
         if isinstance(other, AnyType):
             return True
         if isinstance(other, RecordType):

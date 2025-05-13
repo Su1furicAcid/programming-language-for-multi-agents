@@ -93,6 +93,11 @@ def t_NUMBER(t):
     t.value = float(t.value) if '.' in t.value else int(t.value)
     return t
 
+def t_BOOL(t):
+    r'(True|False)'
+    t.value = True if t.value == 'True' else False
+    return t
+
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     t.type = reserved.get(t.value, 'IDENTIFIER')

@@ -21,7 +21,7 @@
 > field_decl      ::= IDENTIFIER ":" type
 > stmt_block      ::= INDENT statement+ DEDENT
 > statement       ::= for_stmt | if_stmt | while_stmt | assign_stmt | break_stmt | continue_stmt | return_stmt
-> assign_stmt     ::= IDENTIFIER (":" type)? "=" expr
+> assign_stmt     ::= assign_target (":" type)? "=" expr
 > return_stmt     ::= "return" expr
 > for_stmt        ::= "for" IDENTIFIER "in" expr ":" stmt_block
 > break_stmt      ::= "break"
@@ -31,10 +31,12 @@
 > expr            ::= expr_head expr_tail*
 > expr_head       ::= atom | list_expr | record_expr | field_access | func_call
 > expr_tail       ::= bin_op expr_head expr_tail
+> assign_target   ::= IDENTIFIER | field_access | index_access
 > atom            ::= IDENTIFIER | STRING | NUMBER | "(" expr ")"
 > list_expr       ::= "[" (expr ("," expr)*)? "]"
 > record_expr     ::= "{" instance_assign ("," instance_assign)* "}"
 > instance_assign ::= IDENTIFIER "=" expr
+> index_access    ::= IDENTIFIER "[" expr "]"
 > field_access    ::= IDENTIFIER "." IDENTIFIER
 > func_call       ::= IDENTIFIER "(" arg_list? ")"
 > arg_list        ::= expr ("," expr)*

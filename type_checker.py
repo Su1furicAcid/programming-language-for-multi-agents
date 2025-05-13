@@ -203,36 +203,62 @@ class TypeChecker:
         decl_var_name = node.target
         decl_var_type = string_to_type(node.var_type)
         decl_var_expr = node.value
-        env_var_type = self.type_env.lookup(decl_var_name)
         exp_var_type = self.visit(decl_var_expr)
-
-        # Case 1 id : type = expr
-        if decl_var_type is not None:
-            # type(expr) <: type
-            if not exp_var_type.isSubtypeOf(decl_var_type):
-                self.err_handler.report(node=node)
-                return
-            # Handle gradual typing: Allow Any in the environment
+        # type(expr) <: type
+        if not exp_var_type.isSubtypeOf(decl_var_type):
+            self.err_handler.report(node=node)
+            return
+        # Handle gradual typing: Allow Any in the environment
+        if isinstance(decl_var_name, Identifier):
+            env_var_type = self.type_env.lookup(decl_var_name.name)
             if env_var_type is not None and env_var_type is not Any:
                 # type == history_type
                 if not decl_var_type.isEquivalentTo(env_var_type):
                     self.err_handler.report(node=node)
                     return
-                # type(expr) == history_type
-                if not exp_var_type.isEquivalentTo(env_var_type):
+                # type(expr) <: history_type
+                if not exp_var_type.isSubtypeOf(env_var_type):
                     self.err_handler.report(node=node)
                     return
             # Update the type environment
-            self.type_env.define(decl_var_name, decl_var_type)
-            return
-        else:
-        # Case 2 id = expr
-            if env_var_type is not None and env_var_type is not Any:
-                if not exp_var_type.isEquivalentTo(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
-            self.type_env.define(decl_var_name, decl_var_type)
-            return
+            self.type_env.define(decl_var_name.name, decl_var_type)
+        elif isinstance(decl_var_name, FieldAccess):
+            # FieldAccess: x.a
+            obj_type = self.type_env.lookup(decl_var_name.obj.name)
+            if obj_type is None or not isinstance(obj_type, RecordType):
+                self.err_handler.report(node=node)
+                return
+            if decl_var_name.field.name not in obj_type.fields:
+                self.err_handler.report(node=node)
+                return
+            field_type = obj_type.fields[decl_var_name.field.name]
+            # type == field_type
+            if not decl_var_type.isEquivalentTo(field_type):
+                self.err_handler.report(node=node)
+                return
+            # type(expr) <: field_type
+            if not exp_var_type.isSubtypeOf(field_type):
+                self.err_handler.report(node=node)
+                return
+        elif isinstance(decl_var_name, IndexAccess):
+            # IndexAccess: x[a]
+            obj_type = self.type_env.lookup(decl_var_name.obj.name)
+            if obj_type is None or not isinstance(obj_type, ListType):
+                self.err_handler.report(node=node)
+                return
+            index_type = self.visit(decl_var_name.index)
+            if index_type is not Int:
+                self.err_handler.report(node=node)
+                return
+            element_type = obj_type.element_type
+            # type == element_type
+            if not decl_var_type.isEquivalentTo(element_type):
+                self.err_handler.report(node=node)
+                return
+            # type(expr) <: element_type
+            if not exp_var_type.isSubtypeOf(element_type):
+                self.err_handler.report(node=node)
+                return
 
     # ReturnStmt
     # TODO: Assign a type to function
@@ -312,8 +338,13 @@ class TypeChecker:
         else:
             self.err_handler.report(node=node)
 
-    # Atom
-    def visitAtom(self, node: Atom) -> Type:
+    # Identifier
+    def visitIdentifier(self, node: Identifier) -> Type:
+        var_type = self.type_env.lookup(node.name)
+        return var_type
+        
+    # Constant
+    def visitConstant(self, node: Constant) -> Type:
         value = node.value
         if isinstance(value, int):
             return Int
@@ -323,9 +354,6 @@ class TypeChecker:
             return Str
         elif isinstance(value, bool):
             return Bool
-        else:
-            var_type = self.type_env.lookup(value)
-            return var_type
         
     # ListExpr
     def visitListExpr(self, node: ListExpr) -> Type:
@@ -346,19 +374,15 @@ class TypeChecker:
                 )
                 continue
             field_type = self.visit(inst_assign)
-            fields[inst_assign.field] = field_type
+            fields[inst_assign.field.name] = field_type
         return RecordType(fields)
 
     # InstanceAssign
     def visitInstanceAssign(self, node: InstanceAssign) -> Type:
-        field_name = node.field
-        field_value_type = self.visit(node.value)  # 检查字段值的类型
+        field_value_type = self.visit(node.value)
         
         if not field_value_type:
-            self.error_handler.report(
-                f"Cannot determine type of value assigned to field '{field_name}'",
-                node
-            )
+            self.error_handler.report(node)
             return Any
         
         return field_value_type

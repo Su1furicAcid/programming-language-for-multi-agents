@@ -123,8 +123,13 @@ class FuncCall(Expr):
     def __init__(self, func_name, args=None):
         super().__init__(func_name=func_name, args=args or [])
 
-class Atom(Expr):
-    """原子表达式"""
+class Identifier(Expr):
+    """标识符"""
+    def __init__(self, name):
+        super().__init__(name=name)
+
+class Constant(Expr):
+    """字面值"""
     def __init__(self, value):
         super().__init__(value=value)
 
@@ -151,3 +156,8 @@ class FieldAccess(Expr):
     """字段访问"""
     def __init__(self, obj, field):
         super().__init__(obj=obj, field=field)
+
+class IndexAccess(Expr):
+    """列表访问"""
+    def __init__(self, obj, index):
+        super().__init__(obj=obj, index=index)
