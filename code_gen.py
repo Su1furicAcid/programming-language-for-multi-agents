@@ -2,7 +2,7 @@
 from typing import Optional
 from contextlib import contextmanager
 from pllm_ast import *
-from type_pre import Type, Any, Int, Float, Bool, Str, Void, ListType, RecordType, string_to_type, type_to_pycode
+from type_pre import Type, string_to_type, type_to_pycode
 
 class IndentManager:
     def __init__(self, indent_str="    "):
@@ -61,7 +61,7 @@ class CodeGenerator:
     def visit(self, ast_node: ASTNode) -> Optional[str]:
         method_name: str = f"visit{type(ast_node).__name__}"
         visitor = getattr(self, method_name, self._defaultVisitor)
-        visitor(ast_node)
+        return visitor(ast_node)
 
     def _defaultVisitor(self) -> None:
         # TODO: 抛出一个错误
@@ -77,6 +77,7 @@ class CodeGenerator:
         self.add_line("import json")
         self.add_line("import asyncio")
         self.add_line("import concurrent.future")
+        self.add_line("from typing import *")
         for child in node.body:
             self.visit(child)
 
@@ -153,15 +154,18 @@ class CodeGenerator:
     def visitAssignStmt(self, node: AssignStmt) -> None:
         if isinstance(node.target, Identifier):
             target_code = self.visit(node.target)
+            target_type = type_to_pycode(string_to_type(node.var_type))
         elif isinstance(node.target, FieldAccess):
             target_code = f"{self.visit(node.target.obj)}.{node.target.field.name}"
+            target_type = type_to_pycode(string_to_type(node.var_type))
         elif isinstance(node.target, IndexAccess):
             obj_code = self.visit(node.target.obj)
             index_code = self.visit(node.target.index) 
             target_code = f"{obj_code}[{index_code}]"
+            target_type = type_to_pycode(string_to_type(node.var_type))
 
         expr_code = self.visit(node.value)
-        assign_code = f"{target_code} = {expr_code}"
+        assign_code = f"{target_code}: {target_type} = {expr_code}"
         self.add_line(assign_code)
 
     def visitReturnStmt(self, node: ReturnStmt) -> None:
@@ -208,7 +212,7 @@ class CodeGenerator:
         return f"({left_code} {op} {right_code})"
 
     def visitIdentifier(self, node: Identifier) -> str:
-        return node.name
+        return str(node.name)
     
     def visitConstant(self, node: Constant) -> str:
         value = node.value
