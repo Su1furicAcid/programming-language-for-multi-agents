@@ -225,3 +225,36 @@ def string_to_type(type_name: str) -> Type:
 
     # 未知类型
     raise ValueError(f"Unknown type name: '{type_name}'")
+
+def type_to_pycode(type_obj: Type) -> str:
+    """
+    将自定义的 Type 对象转换为 Python 类型注释字符串。
+    :param type_obj: 自定义 Type 对象
+    :return: Python 类型注释字符串
+    :raises ValueError: 如果类型无法转换为 Python 类型注释
+    """
+    if isinstance(type_obj, AnyType):
+        return "Any"
+    elif isinstance(type_obj, BasicType):
+        # 基本类型直接映射
+        basic_type_mapping = {
+            "int": "int",
+            "float": "float",
+            "str": "str",
+            "bool": "bool",
+            "void": "None",
+        }
+        return basic_type_mapping.get(type_obj.name, "Any")
+    elif isinstance(type_obj, ListType):
+        # ListType 映射为 List[元素类型]
+        element_type_code = type_to_pycode(type_obj.element_type)
+        return f"List[{element_type_code}]"
+    elif isinstance(type_obj, RecordType):
+        # RecordType 映射为 TypedDict
+        fields_code = ", ".join(
+            f"{field_name}: {type_to_pycode(field_type)}"
+            for field_name, field_type in type_obj.fields.items()
+        )
+        return f"TypedDict('{{{fields_code}}}')"
+    else:
+        raise ValueError(f"Unsupported type: {type_obj}")
