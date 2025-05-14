@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from pllm_ast import *
 from type_pre import Type, string_to_type, type_to_pycode
 from triplestring_parser import process_string
+from topo_manager import TopoManager
 
 class IndentManager:
     def __init__(self, indent_str="    "):
@@ -47,7 +48,21 @@ class CodeGenerator:
 
     def _initCodeGenerator(self):
         # TODO: Prepare for generating
+        self.add_line("import openai")
+        self.add_line("import numpy")
+        self.add_line("import pandas")
+        self.add_line("import os")
+        self.add_line("import json")
+        self.add_line("import asyncio")
+        self.add_line("import concurrent.future")
+        self.add_line("from typing import *")
+        self._include_built_in_functions("built_in.py")
         return
+    
+    def _include_built_in_functions(self, built_in_path: str) -> None:
+        with open(built_in_path, 'r') as f:
+            built_in_code = f.read()
+            self.add_line(built_in_code)
     
     def show(self):
         # TODO: Write to file and compile
@@ -70,15 +85,6 @@ class CodeGenerator:
         return
 
     def visitProgram(self, node: Program) -> None:
-        # import xxx
-        self.add_line("import openai")
-        self.add_line("import numpy")
-        self.add_line("import pandas")
-        self.add_line("import os")
-        self.add_line("import json")
-        self.add_line("import asyncio")
-        self.add_line("import concurrent.future")
-        self.add_line("from typing import *")
         for child in node.body:
             self.visit(child)
 
@@ -136,13 +142,11 @@ class CodeGenerator:
             self.add_line(f'prompt = {processed_string}.format({input_formatting})')
         else:
             self.add_line(f'prompt = {processed_string}')
-        self.add_line("")
         self.add_line('response = openai.ChatCompletion.create(')
         with self.indent():
             self.add_line('model="gpt-4",')
             self.add_line('messages=[{"role": "user", "content": prompt}]')
         self.add_line(')')
-        self.add_line("")
         if output_vars:
             self.add_line("# Extract output variables")
             for var in output_vars:
@@ -151,18 +155,19 @@ class CodeGenerator:
                 )
         else:
             self.add_line("# No output variables to extract")
-    
+
+    def _extract_agent_name(self, agent_ref: AgentRef) -> str:
+        parts = [self.visit(part) if isinstance(part, Identifier) else part for part in agent_ref.parts]
+        if len(parts) >= 1:
+            return parts[0]
+                
     def visitConnectBlock(self, node: ConnectBlock) -> None:
-        # TODO: implement scheduling agents
-        return
-    
-    def visitConnection(self, node: Connection) -> None:
-        # TODO: implement scheduling agents
-        return 
-    
-    def visitAgentRef(self, node: AgentRef) -> None:
-        # TODO: implement scheduling agents
-        return 
+        topo_manager = TopoManager()
+        topo_manager.build_graph(node.connections, self._extract_agent_name)
+        graph_code = f"graph = {topo_manager.graph}"
+        self.add_line(graph_code)
+        execute_call = """asyncio.run(execute(graph))"""
+        self.add_line(execute_call)
     
     def visitFuncDef(self, node: FuncDef) -> None:
         # TODO: add function into syntax
