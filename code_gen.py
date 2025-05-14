@@ -3,6 +3,7 @@ from typing import Optional
 from contextlib import contextmanager
 from pllm_ast import *
 from type_pre import Type, string_to_type, type_to_pycode
+from triplestring_parser import process_string
 
 class IndentManager:
     def __init__(self, indent_str="    "):
@@ -89,7 +90,7 @@ class CodeGenerator:
             decl_var_expr_str = self.visit(decl_var_expr)
             return f"{decl_var_name_str}: {decl_var_type_str} = {decl_var_expr_str}"
         else:
-            return f"{decl_var_name_str}: {decl_var_type_str}"
+            return f"{decl_var_name_str}: {decl_var_type_str} = None"
 
     def visitAgentDef(self, node: AgentDef) -> None:
         agent_name_str = self.visit(node.name)
@@ -121,15 +122,35 @@ class CodeGenerator:
         return
     
     def visitOutputBlock(self, node: OutputBlock) -> None:
+        # Implemented in AgentDef
         return
     
     def visitModelBlock(self, node: ModelBlock) -> None:
         model_name = self.visit(node.model_name)
         self.add_line(f"model_name={model_name}")
 
-    def visitChatBlock(self, node: ChatBlock) -> None:
-        # TODO: implement chatting with llm
-        return
+    def visitChatBlock(self, node):
+        input_vars, output_vars, processed_string = process_string(node.template)
+        if input_vars:
+            input_formatting = ", ".join([f"{var}={var}" for var in input_vars])
+            self.add_line(f'prompt = {processed_string}.format({input_formatting})')
+        else:
+            self.add_line(f'prompt = {processed_string}')
+        self.add_line("")
+        self.add_line('response = openai.ChatCompletion.create(')
+        with self.indent():
+            self.add_line('model="gpt-4",')
+            self.add_line('messages=[{"role": "user", "content": prompt}]')
+        self.add_line(')')
+        self.add_line("")
+        if output_vars:
+            self.add_line("# Extract output variables")
+            for var in output_vars:
+                self.add_line(
+                    f'{var} = json.loads(response["choices"][0]["message"]["content"]).get("{var}", None)'
+                )
+        else:
+            self.add_line("# No output variables to extract")
     
     def visitConnectBlock(self, node: ConnectBlock) -> None:
         # TODO: implement scheduling agents
