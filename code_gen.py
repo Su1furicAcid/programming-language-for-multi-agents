@@ -164,9 +164,11 @@ class CodeGenerator:
     def visitConnectBlock(self, node: ConnectBlock) -> None:
         topo_manager = TopoManager()
         topo_manager.build_graph(node.connections, self._extract_agent_name)
-        graph_code = f"graph = {topo_manager.graph}"
+        graph_code = f"graph = {repr(topo_manager.graph)}"
         self.add_line(graph_code)
-        execute_call = """asyncio.run(execute(graph))"""
+        param_mapping_code = f"param_mapping = {repr(topo_manager.param_mapping)}"
+        self.add_line(param_mapping_code)
+        execute_call = """asyncio.run(execute(graph, param_mapping))"""
         self.add_line(execute_call)
     
     def visitFuncDef(self, node: FuncDef) -> None:

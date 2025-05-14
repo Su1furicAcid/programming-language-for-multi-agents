@@ -1,18 +1,21 @@
 class TopoManager:
     def __init__(self):
         """
-        Initialize the TopoManager with an empty graph and in-degree map.
+        Initialize the TopoManager with an empty graph and parameter mapping.
         """
         self.graph = {}  # Directed graph: {node: [list of dependent nodes]}
         self.in_degree = {}  # In-degree map: {node: in-degree count}
+        self.param_mapping = {}  # Parameter mapping: {target_node: {param_name: (source_node, output_name)}}
 
-    def add_edge(self, source: str, target: str) -> None:
+    def add_edge(self, source: str, source_output: str, target: str, target_param: str) -> None:
         """
-        Add a directed edge from `source` to `target` in the graph.
+        Add a directed edge from `source` to `target` in the graph and record parameter mapping.
 
         Args:
             source (str): The source node.
+            source_output (str): The specific output of the source node.
             target (str): The target node.
+            target_param (str): The specific input parameter name of the target node.
         """
         if source not in self.graph:
             self.graph[source] = []
@@ -28,9 +31,14 @@ class TopoManager:
             self.in_degree[source] = 0
         self.in_degree[target] += 1
 
+        # Record parameter mapping
+        if target not in self.param_mapping:
+            self.param_mapping[target] = {}
+        self.param_mapping[target][target_param] = (source, source_output)
+
     def build_graph(self, connections, extract_agent_name) -> None:
         """
-        Build the graph and in-degree map from DSL connections.
+        Build the graph and parameter mapping from DSL connections.
 
         Args:
             connections (list): A list of Connection objects from the DSL.
@@ -38,8 +46,10 @@ class TopoManager:
         """
         for connection in connections:
             source_agent = extract_agent_name(connection.source)
+            source_output = connection.source.parts[2].name  # Assume third part is the output name
             target_agent = extract_agent_name(connection.target)
-            self.add_edge(source_agent, target_agent)
+            target_param = connection.target.parts[2].name  # Assume third part is the input name
+            self.add_edge(source_agent, source_output, target_agent, target_param)
 
     def topological_sort(self) -> list:
         """
