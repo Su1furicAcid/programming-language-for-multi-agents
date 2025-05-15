@@ -1,5 +1,7 @@
-fun add(a, b) -> int:
+fun add(a: float, b: float) -> float:
     return a + b
+
+ans = add(1.0, 1.0)
 
 agent Summarizer:
     output:

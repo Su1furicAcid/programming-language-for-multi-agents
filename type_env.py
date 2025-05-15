@@ -10,10 +10,10 @@ class TypeEnvironment:
     def __init__(self):
         self._scopes: List[Dict[str, Type]] = [{}]
 
-    def define(self, name: str, type_: Type) -> None:
+    def define(self, name: str, type_: Type, level: int = 1) -> None:
         if not self._scopes:
             raise RuntimeError("No active scope found.")
-        self._scopes[-1][name] = type_
+        self._scopes[-level][name] = type_
 
     def lookup(self, name: str) -> Optional[Type]:
         for scope in reversed(self._scopes):

@@ -1,7 +1,7 @@
 from typing import Optional
 from pllm_ast import *
 from type_env import TypeEnvironment
-from type_pre import Type, Any, Int, Float, Bool, Str, Void, ListType, RecordType, string_to_type
+from type_pre import Type, Any, Int, Float, Bool, Str, Void, ListType, RecordType, string_to_type, FunctionType
 
 class TypeErrorHandler:
     def __init__(self):
@@ -62,7 +62,7 @@ class TypeChecker:
 
     # VarDecl
     def visitVarDecl(self, node: VarDecl) -> None:
-        decl_var_name = node.name
+        decl_var_name = node.name.name
         decl_var_type = string_to_type(node.var_type)
         decl_var_expr = node.value
         env_var_type = self.type_env.lookup(decl_var_name)
@@ -107,10 +107,10 @@ class TypeChecker:
                 self.visit(child)
                 if isinstance(child, InputBlock):
                     for var in child.variables:
-                        self.agent_io.define(f"{node.name}.input.{var.name}", self.type_env.lookup(var.name));
+                        self.agent_io.define(f"{node.name.name}.input.{var.name.name}", self.type_env.lookup(var.name.name));
                 if isinstance(child, OutputBlock):
                     for var in child.variables:
-                        self.agent_io.define(f"{node.name}.output.{var.name}", self.type_env.lookup(var.name));
+                        self.agent_io.define(f"{node.name.name}.output.{var.name.name}", self.type_env.lookup(var.name.name));
 
     # InputBlock
     def visitInputBlock(self, node: InputBlock) -> None:
@@ -137,8 +137,8 @@ class TypeChecker:
 
     # Connection
     def visitConnection(self, node: Connection) -> None:
-        source = f"{node.source.parts[0]}.{node.source.parts[1]}.{node.source.parts[2]}"
-        target = f"{node.target.parts[0]}.{node.target.parts[1]}.{node.target.parts[2]}"
+        source = f"{node.source.parts[0].name}.{node.source.parts[1]}.{node.source.parts[2].name}"
+        target = f"{node.target.parts[0].name}.{node.target.parts[1]}.{node.target.parts[2].name}"
         source_type = self.agent_io.lookup(source)
         target_type = self.agent_io.lookup(target)
         if not source_type.is_subtype_of(target_type):
@@ -151,17 +151,38 @@ class TypeChecker:
         return
     
     # FuncDef
-    # TODO: Assign a type to function
     def visitFuncDef(self, node: FuncDef) -> None:
-        with self.type_env.scoped():
+        func_name = node.name.name
+        func_return_type = string_to_type(node.return_type)
+        param_types = []
+        with self.type_env.scoped(): 
             for param in node.params:
                 self.visit(param)
+                param_type = self.type_env.lookup(param.name.name)
+                if param_type is None:
+                    self.err_handler.report(f"Parameter '{param.name.name}' has no type.", node=param)
+                    param_types.append(Any)
+                else:
+                    param_types.append(param_type)
+            func_type = FunctionType(param_types, [func_return_type])
+            self.type_env.define(func_name, func_type, 2)
+            return_types = []
             for stmt in node.stmt_body:
-                self.visit(stmt)
+                if isinstance(stmt, ReturnStmt):
+                    stmt_type = self.visit(stmt.value)
+                    return_types.append(stmt_type)
+                    continue
+                stmt_type = self.visit(stmt)
+            for ret_type in return_types:
+                if ret_type is not None and not ret_type.is_subtype_of(func_return_type):
+                    self.err_handler.report(
+                        f"Return type '{ret_type}' does not match declared return type '{func_return_type}' in function '{func_name}'.",
+                        node=node
+                    )
 
     # ParamDecl
     def visitParamDecl(self, node: ParamDecl) -> None:
-        decl_var_name = node.name
+        decl_var_name = node.name.name
         decl_var_type = node.param_type
         decl_var_expr = node.default_value
         env_var_type = self.type_env.lookup(decl_var_name)
@@ -259,11 +280,6 @@ class TypeChecker:
             if not exp_var_type.is_subtype_of(element_type):
                 self.err_handler.report(node=node)
                 return
-
-    # ReturnStmt
-    # TODO: Assign a type to function
-    def visitReturnStmt(self, node: ReturnStmt) -> None:
-        return
     
     # IfStmt
     def visitIfStmt(self, node: IfStmt) -> None:
@@ -398,6 +414,31 @@ class TypeChecker:
         return obj_type.fields[node.field]
 
     # FuncCall
-    # TODO
     def visitFuncCall(self, node: FuncCall) -> Type:
-        return Any
+        func_name = node.func_name.name
+        func_type = self.type_env.lookup(func_name)
+        if not isinstance(func_type, FunctionType):
+            self.err_handler.report(
+                f"'{func_name}' is not a callable function.",
+                node=node
+            )
+            return Any
+        if len(node.args) != len(func_type.param_types):
+            self.err_handler.report(
+                f"Function '{func_name}' expects {len(func_type.param_types)} arguments, but {len(node.args)} were provided.",
+                node=node
+            )
+            return func_type.return_types[0] if func_type.return_types else Void
+        for arg, param_type in zip(node.args, func_type.param_types):
+            arg_type = self.visit(arg)
+            if not arg_type.is_subtype_of(param_type):
+                self.err_handler.report(
+                    f"Argument type '{arg_type}' does not match parameter type '{param_type}' in function '{func_name}'.",
+                    node=node
+                )
+        if len(func_type.return_types) == 1:
+            return func_type.return_types[0]
+        elif len(func_type.return_types) > 1:
+            return RecordType({f"ret{i}": t for i, t in enumerate(func_type.return_types)})
+        else:
+            return Void
