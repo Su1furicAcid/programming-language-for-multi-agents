@@ -172,12 +172,28 @@ class CodeGenerator:
         self.add_line(execute_call)
     
     def visitFuncDef(self, node: FuncDef) -> None:
-        # TODO: add function into syntax
-        return
+        func_name = self.visit(node.name)
+        param_codes = []
+        for param in node.params:
+            param_code = self.visitParamDecl(param)
+            param_codes.append(param_code)
+        return_type = type_to_pycode(string_to_type(node.return_type))
+        self.add_line(f"def {func_name}({', '.join(param_codes)}) -> {return_type}:")
+        with self.indent():
+            for stmt in node.stmt_body:
+                self.visit(stmt)
     
-    def visitParamDecl(self, node: ParamDecl) -> None:
-        # TODO: add function into syntax
-        return 
+    def visitParamDecl(self, node: VarDecl) -> str:
+        param_name = self.visit(node.name)
+        param_type = type_to_pycode(string_to_type(node.var_type))
+        return f"{param_name}: {param_type}"
+    
+    def visitReturnStmt(self, node: ReturnStmt) -> None:
+        if node.value is not None:
+            return_value_code = self.visit(node.value)
+            self.add_line(f"return {return_value_code}")
+        else:
+            self.add_line("return")
     
     def visitAssignStmt(self, node: AssignStmt) -> None:
         if isinstance(node.target, Identifier):
@@ -195,10 +211,6 @@ class CodeGenerator:
         expr_code = self.visit(node.value)
         assign_code = f"{target_code}: {target_type} = {expr_code}"
         self.add_line(assign_code)
-
-    def visitReturnStmt(self, node: ReturnStmt) -> None:
-        # TODO: add function into syntax
-        return 
     
     def visitIfStmt(self, node: IfStmt) -> None:
         cond_code = self.visit(node.condition)
@@ -271,6 +283,7 @@ class CodeGenerator:
         field_name = node.field
         return f"{obj_code}['{field_name}']"
 
-    def visitFuncCall(self, node: FuncCall) -> Type:
-        # TODO
-        return ""
+    def visitFuncCall(self, node: FuncCall) -> str:
+        func_name = self.visit(node.func_name)
+        arg_codes = [self.visit(arg) for arg in node.args]
+        return f"{func_name}({', '.join(arg_codes)})"
