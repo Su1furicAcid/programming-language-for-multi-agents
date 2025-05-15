@@ -2,7 +2,7 @@
 from typing import Optional
 from contextlib import contextmanager
 from pllm_ast import *
-from type_pre import Type, string_to_type, type_to_pycode
+from type_pre import Type, string_to_type, type_to_pycode, RecordType, ListType, FunctionType
 from triplestring_parser import process_string
 from topo_manager import TopoManager
 
@@ -32,14 +32,14 @@ class CodeGenerator:
         加入一行代码
         """
         indent = self.indent_manager.get_indent()
-        self.code.append(f"{indent}{line}")
+        self.code.append(f"{indent}{line}\n")
 
     def get_pos(self):
         return len(self.code)
     
     def insert_line(self, line, pos):
         indent = self.indent_manager.get_indent()
-        self.code.insert(pos, f"{indent}{line}")
+        self.code.insert(pos, f"{indent}{line}\n")
 
     @contextmanager
     def indent(self):
@@ -67,8 +67,9 @@ class CodeGenerator:
     
     def show(self):
         # TODO: Write to file and compile
-        for line in self.code:
-            print(line)
+        with open('test.py', 'w') as f:
+            for line in self.code:
+                f.write(line)
 
     def generate(self, program_node: Program):
         self._initCodeGenerator()
@@ -147,7 +148,7 @@ class CodeGenerator:
         with self.indent():
             self.add_line('model=model_name,')
             self.add_line('messages=[')
-            self.add_line('    {"role": "system", "content": SYS_PROMPT}')
+            self.add_line('    {"role": "system", "content": SYS_PROMPT},')
             self.add_line('    {"role": "user", "content": prompt}')
             self.add_line(']')
         self.add_line(')')
@@ -197,19 +198,26 @@ class CodeGenerator:
     def visitAssignStmt(self, node: AssignStmt) -> None:
         if isinstance(node.target, Identifier):
             target_code = self.visit(node.target)
-            target_type = type_to_pycode(string_to_type(node.var_type))
+            target_type = string_to_type(node.var_type)
+            expr_code = self.visit(node.value)
+            if isinstance(target_type, RecordType) or isinstance(target_type, ListType) or isinstance(target_type, FunctionType):
+                assign_code = f"{target_code} = {expr_code}"
+                self.add_line(assign_code)
+            else:
+                target_type = type_to_pycode(target_type)
+                assign_code = f"{target_code}: {target_type} = {expr_code}"
+                self.add_line(assign_code)
         elif isinstance(node.target, FieldAccess):
             target_code = f"{self.visit(node.target.obj)}.{node.target.field.name}"
-            target_type = type_to_pycode(string_to_type(node.var_type))
+            expr_code = self.visit(node.value)
+            assign_code = f"{target_code} = {expr_code}"
+            self.add_line(assign_code)
         elif isinstance(node.target, IndexAccess):
             obj_code = self.visit(node.target.obj)
-            index_code = self.visit(node.target.index) 
-            target_code = f"{obj_code}[{index_code}]"
-            target_type = type_to_pycode(string_to_type(node.var_type))
-
-        expr_code = self.visit(node.value)
-        assign_code = f"{target_code}: {target_type} = {expr_code}"
-        self.add_line(assign_code)
+            index_code = self.visit(node.target.index)
+            expr_code = self.visit(node.value)
+            assign_code = f"{obj_code}[{index_code}] = {expr_code}"
+            self.add_line(assign_code)
     
     def visitIfStmt(self, node: IfStmt) -> None:
         cond_code = self.visit(node.condition)
@@ -256,7 +264,7 @@ class CodeGenerator:
     def visitConstant(self, node: Constant) -> str:
         value = node.value
         if isinstance(value, str):
-            return f'"{value}"'
+            return f'{value}'
         elif isinstance(value, bool):
             return "True" if value else "False"
         else:
