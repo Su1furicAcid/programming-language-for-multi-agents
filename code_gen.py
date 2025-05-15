@@ -56,6 +56,7 @@ class CodeGenerator:
         self.add_line("import asyncio")
         self.add_line("import concurrent.future")
         self.add_line("from typing import *")
+        self.add_line("from sys_prompt import SYS_PROMPT")
         self._include_built_in_functions("built_in.py")
         return
     
@@ -117,8 +118,8 @@ class CodeGenerator:
         self.insert_line(agent_def_str, agent_def_pos)
 
         with self.indent():
-            for ret_var_str in agent_returns:
-                self.add_line(f"{ret_var_str}")
+            # for ret_var_str in agent_returns:
+            #     self.add_line(f"{ret_var_str}")
             if agent_returns:
                 return_values = ", ".join(var.split(":")[0] for var in agent_returns)
                 self.add_line(f"return {return_values}")
@@ -135,7 +136,7 @@ class CodeGenerator:
         model_name = self.visit(node.model_name)
         self.add_line(f"model_name={model_name}")
 
-    def visitChatBlock(self, node):
+    def visitChatBlock(self, node: ChatBlock) -> None:
         input_vars, output_vars, processed_string = process_string(node.template)
         if input_vars:
             input_formatting = ", ".join([f"{var}={var}" for var in input_vars])
@@ -144,17 +145,15 @@ class CodeGenerator:
             self.add_line(f'prompt = {processed_string}')
         self.add_line('response = openai.ChatCompletion.create(')
         with self.indent():
-            self.add_line('model="gpt-4",')
-            self.add_line('messages=[{"role": "user", "content": prompt}]')
+            self.add_line('model=model_name,')
+            self.add_line('messages=[')
+            self.add_line('    {"role": "system", "content": SYS_PROMPT}')
+            self.add_line('    {"role": "user", "content": prompt}')
+            self.add_line(']')
         self.add_line(')')
         if output_vars:
-            self.add_line("# Extract output variables")
-            for var in output_vars:
-                self.add_line(
-                    f'{var} = json.loads(response["choices"][0]["message"]["content"]).get("{var}", None)'
-                )
-        else:
-            self.add_line("# No output variables to extract")
+            for i, var in enumerate(output_vars):
+                self.add_line(f'{var} = response["choices"][0]["message"]["content"].split("<completion{i}>")[1].split("</completion{i}>")[0].strip()')
 
     def _extract_agent_name(self, agent_ref: AgentRef) -> str:
         parts = [self.visit(part) if isinstance(part, Identifier) else part for part in agent_ref.parts]

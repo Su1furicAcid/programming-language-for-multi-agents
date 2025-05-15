@@ -12,7 +12,7 @@ def process_string(input_string):
     
     for var in output_vars:
         if var not in variables:
-            variables[var] = f"<completion{index}></completion{index}>"
+            variables[var] = f"<completion{index}>{var}</completion{index}>"
             index += 1
     
     processed_string = input_string
