@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Union, Tuple, Set, Optional
+from typing import Dict, List, Set, Optional
 import re
 from collections import defaultdict, deque
 
@@ -198,6 +198,58 @@ class RecordType(Type):
         return hash(("record", tuple(self._fields.items())))
 
 
+# --- FunctionType ---
+class FunctionType(Type):
+    def __init__(self, param_types: List[Type], return_types: List[Type]):
+        """
+        Initialize a FunctionType with a list of parameter types and a list of return types.
+        :param param_types: List of parameter types.
+        :param return_types: List of return types (supporting multiple returns).
+        """
+        self._param_types = param_types
+        self._return_types = return_types
+
+    def __str__(self) -> str:
+        param_str = ", ".join(str(p) for p in self._param_types)
+        return_str = ", ".join(str(r) for r in self._return_types)
+        return f"({param_str}) -> ({return_str})"
+
+    @property
+    def param_types(self) -> List[Type]:
+        """Get the list of parameter types."""
+        return self._param_types
+
+    @property
+    def return_types(self) -> List[Type]:
+        """Get the list of return types."""
+        return self._return_types
+
+    def is_subtype_of(self, other: 'Type') -> bool:
+        if isinstance(other, AnyType):
+            return True
+        if isinstance(other, FunctionType):
+            if len(self._param_types) != len(other._param_types):
+                return False
+            for self_param, other_param in zip(self._param_types, other._param_types):
+                if not other_param.is_subtype_of(self_param): 
+                    return False
+            if len(self._return_types) != len(other._return_types):
+                return False
+            for self_return, other_return in zip(self._return_types, other._return_types):
+                if not self_return.is_subtype_of(other_return):
+                    return False
+            return True
+        return False
+
+    def __eq__(self, other) -> bool:
+        return (isinstance(other, FunctionType) and
+                self._param_types == other._param_types and
+                self._return_types == other._return_types)
+
+    def __hash__(self) -> int:
+        return hash(("function", tuple(self._param_types), tuple(self._return_types)))
+
+
 # --- Utilities ---
 def string_to_type(type_str: str) -> Type:
     """Convert a type string to a Type instance."""
@@ -207,10 +259,12 @@ def string_to_type(type_str: str) -> Type:
     if type_str in STRING_TO_TYPE:
         return STRING_TO_TYPE[type_str]
 
+    # List type
     list_match = re.fullmatch(r'list\[(.+)\]', type_str)
     if list_match:
         return ListType(string_to_type(list_match.group(1)))
 
+    # Record type
     record_match = re.fullmatch(r'record\{(.*)\}', type_str)
     if record_match:
         fields = {}
@@ -220,6 +274,15 @@ def string_to_type(type_str: str) -> Type:
                 name, typeval = map(str.strip, field.split(":"))
                 fields[name] = string_to_type(typeval)
         return RecordType(fields)
+
+    # Function type
+    func_match = re.fullmatch(r'\((.*)\)\s*->\s*\((.*)\)', type_str)
+    if func_match:
+        param_strs = func_match.group(1).strip()
+        return_strs = func_match.group(2).strip()
+        param_types = [string_to_type(p.strip()) for p in param_strs.split(",") if p.strip()]
+        return_types = [string_to_type(r.strip()) for r in return_strs.split(",") if r.strip()]
+        return FunctionType(param_types, return_types)
 
     raise ValueError(f"Unknown type string: {type_str}")
 
@@ -241,16 +304,25 @@ def type_to_pycode(t: Type) -> str:
     if isinstance(t, RecordType):
         items = ", ".join(f'"{k}": {type_to_pycode(v)}' for k, v in t.fields.items())
         return f"TypedDict('Rec', {{{items}}})"
+    if isinstance(t, FunctionType):
+        param_types = ", ".join(type_to_pycode(p) for p in t.param_types)
+        return_types = ", ".join(type_to_pycode(r) for r in t.return_types)
+        return f"Callable[[{param_types}], Tuple[{return_types}]]"
     raise ValueError(f"Unknown type object: {t}")
 
-
 # --- Built-in Type Instances ---
+Int = BasicType("int")
+Float = BasicType("float")
+Str = BasicType("str")
+Bool = BasicType("bool")
+Void = BasicType("void")
+
 STRING_TO_TYPE = {
-    "int": BasicType("int"),
-    "float": BasicType("float"),
-    "str": BasicType("str"),
-    "bool": BasicType("bool"),
-    "void": BasicType("void"),
+    "int": Int,
+    "float": Float,
+    "str": Str,
+    "bool": Bool,
+    "void": Void,
     "any": Any,
 }
 

@@ -64,7 +64,8 @@ def p_var_decl(p):
 def p_type(p):
     '''type : base_type
             | list_type
-            | record_type'''
+            | record_type
+            | func_ret_type'''
     p[0] = p[1]
 
 # base_type ::= "str" | "int" | "float" | "bool"
@@ -72,8 +73,21 @@ def p_base_type(p):
     '''base_type : TYPE_STR
                  | TYPE_INT
                  | TYPE_FLOAT
-                 | TYPE_BOOL'''
+                 | TYPE_BOOL
+                 | TYPE_VOID'''
     p[0] = p[1]
+
+def p_func_ret_type(p):
+    '''func_ret_type : LPAREN type_list RPAREN'''
+    p[0] = p[2]
+
+def p_type_list(p):
+    '''type_list : type
+                 | type COMMA type_list'''
+    if len(p) == 4:
+        p[0] = p[1] + ", " + p[3]
+    else:
+        p[0] = p[1]
 
 # list_type ::= "list" "[" type "]"
 def p_list_type(p):
@@ -177,11 +191,11 @@ def p_agent_ref_tail(p):
     else:
         p[0] = []
 
-# func_def ::= "def" identifier "(" param_list? ")" (":" type)? ":" INDENT stmt_block DEDENT
+# func_def ::= "fun" identifier "(" param_list? ")" ("->" type)? ":" INDENT stmt_block DEDENT
 def p_func_def(p):
-    '''func_def : DEF identifier LPAREN param_list RPAREN COLON type COLON stmt_block
-                | DEF identifier LPAREN param_list RPAREN COLON stmt_block'''
-    if len(p) == 11:
+    '''func_def : FUN identifier LPAREN param_list RPAREN ARROW type COLON stmt_block
+                | FUN identifier LPAREN param_list RPAREN COLON stmt_block'''
+    if len(p) == 10:
         p[0] = FuncDef(name=p[2], params=p[4], return_type=p[7], stmt_body=p[9])
     else:
         p[0] = FuncDef(name=p[2], params=p[4], stmt_body=p[7])

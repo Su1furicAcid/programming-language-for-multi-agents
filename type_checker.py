@@ -311,11 +311,11 @@ class TypeChecker:
 
     # BreakStmt
     def visitBreakStmt(self, node: BreakStmt) -> None:
-        pass
+        return
 
     # ContinueStmt
     def visitContinueStmt(self, node: ContinueStmt) -> None:
-        pass
+        return
 
     # BinaryOp
     def visitBinaryOp(self, node: BinaryOp) -> Type:

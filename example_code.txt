@@ -1,8 +1,12 @@
+fun add(a, b) -> int:
+    return a + b
+
 agent Summarizer:
     output:
         summary: str
     model: "gpt-4o"
     text = "syntax error"
+    
     chat make_summary : """
     Make a summary of the text below.
     Text: {text}
