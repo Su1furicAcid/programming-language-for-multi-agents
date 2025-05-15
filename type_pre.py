@@ -1,64 +1,93 @@
+# --- Type System with TypeGraph for Subtyping ---
+
 from abc import ABC, abstractmethod
-from typing import List, Dict, Union, TypeVar, Tuple, Sequence
+from typing import Dict, List, Union, Tuple
 import re
+from collections import defaultdict, deque
 
-_T = TypeVar('_T', bound='Type')
+# --- TypeGraph ---
+class TypeGraph:
+    def __init__(self):
+        self._graph: Dict[str, set] = defaultdict(set)
+        self._all_types: set = set()
 
+    def register_type(self, name: str):
+        self._all_types.add(name)
+
+    def add_subtype(self, subtype: str, supertype: str):
+        self.register_type(subtype)
+        self.register_type(supertype)
+        self._graph[subtype].add(supertype)
+
+    def is_subtype(self, a: str, b: str) -> bool:
+        if a == b:
+            return True
+        if b == "any":
+            return True
+        visited = set()
+        queue = deque([a])
+        while queue:
+            current = queue.popleft()
+            if current == b:
+                return True
+            for parent in self._graph[current]:
+                if parent not in visited:
+                    visited.add(parent)
+                    queue.append(parent)
+        return False
+
+    def get_supertypes(self, typename: str) -> set:
+        result = set()
+        queue = deque([typename])
+        while queue:
+            current = queue.popleft()
+            for parent in self._graph[current]:
+                if parent not in result:
+                    result.add(parent)
+                    queue.append(parent)
+        return result
+
+    def all_types(self) -> set:
+        return set(self._all_types)
+
+
+# Initialize the global type graph
+TYPE_GRAPH = TypeGraph()
+
+# --- Abstract Base Class ---
 class Type(ABC):
-    """
-    类型的抽象基类
-    """
-
     @abstractmethod
-    def __str__(self) -> str:
-        """返回类型的字符串表示"""
-        pass
+    def __str__(self) -> str: ...
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__}: {str(self)}>"
+        return f"<{self.__class__.__name__}: {self}>"
 
     @abstractmethod
-    def isSubtypeOf(self, other: 'Type') -> bool:
-        """
-        检查当前类型是否是 other 类型的子类型
-        """
-        pass
+    def is_subtype_of(self, other: 'Type') -> bool: ...
 
-    def isEquivalentTo(self, other: 'Type') -> bool:
-        """
-        检查当前类型是否与 other 类型等价
-        """
-        if not isinstance(other, Type):
-            return False
-        return self.isSubtypeOf(other) and other.isSubtypeOf(self)
+    def is_equivalent_to(self, other: 'Type') -> bool:
+        return self.is_subtype_of(other) and other.is_subtype_of(self)
 
     @abstractmethod
-    def __eq__(self, other) -> bool:
-        """
-        类型相等性比较。对于复合类型，它要求结构完全相同
-        """
-        pass
+    def __eq__(self, other) -> bool: ...
 
     @abstractmethod
-    def __hash__(self) -> int:
-        """
-        与 __eq__ 一致的哈希码，以便类型对象可以用作字典键或集合元素
-        """
-        pass
+    def __hash__(self) -> int: ...
 
-# Dynamic
+
+# --- Singleton AnyType ---
 class AnyType(Type):
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(AnyType, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
         return cls._instance
 
     def __str__(self) -> str:
         return "any"
 
-    def isSubtypeOf(self, other: 'Type') -> bool:
+    def is_subtype_of(self, other: 'Type') -> bool:
         return True
 
     def __eq__(self, other) -> bool:
@@ -67,14 +96,17 @@ class AnyType(Type):
     def __hash__(self) -> int:
         return hash("any")
 
+
 Any = AnyType()
 
-# Basic types
+
+# --- BasicType ---
 class BasicType(Type):
     def __init__(self, name: str):
         if not name:
             raise ValueError("BasicType name cannot be empty")
         self._name = name
+        TYPE_GRAPH.register_type(name)
 
     def __str__(self) -> str:
         return self._name
@@ -83,100 +115,100 @@ class BasicType(Type):
     def name(self) -> str:
         return self._name
 
-    def isSubtypeOf(self, other: 'Type') -> bool:
+    def is_subtype_of(self, other: 'Type') -> bool:
         if isinstance(other, AnyType):
             return True
         if isinstance(other, BasicType):
-            if self._name == "int" and other._name == "float":
-                return True
-            return self._name == other._name
+            return TYPE_GRAPH.is_subtype(self.name, other.name)
         return False
 
     def __eq__(self, other) -> bool:
-        return isinstance(other, BasicType) and self._name == other._name
+        return isinstance(other, BasicType) and self.name == other.name
 
     def __hash__(self) -> int:
-        return hash(self._name)
+        return hash(self.name)
 
+
+# --- ListType ---
+class ListType(Type):
+    def __init__(self, element_type: Type):
+        self._element_type = element_type
+
+    def __str__(self) -> str:
+        return f"list[{self._element_type}]"
+
+    @property
+    def element_type(self) -> Type:
+        return self._element_type
+
+    def is_subtype_of(self, other: 'Type') -> bool:
+        if isinstance(other, AnyType):
+            return True
+        if isinstance(other, ListType):
+            return self.element_type.is_subtype_of(other.element_type)
+        return False
+
+    def __eq__(self, other) -> bool:
+        return isinstance(other, ListType) and self.element_type == other.element_type
+
+    def __hash__(self) -> int:
+        return hash(("list", self._element_type))
+
+
+# --- RecordType ---
+class RecordType(Type):
+    def __init__(self, fields: Dict[str, Type]):
+        self._fields = dict(sorted(fields.items()))
+
+    def __str__(self) -> str:
+        if not self._fields:
+            return "record{}"
+        field_strs = [f"{name}: {str(t)}" for name, t in self._fields.items()]
+        return f"record{{{', '.join(field_strs)}}}"
+
+    @property
+    def fields(self) -> Dict[str, Type]:
+        return self._fields.copy()
+
+    def is_subtype_of(self, other: 'Type') -> bool:
+        if isinstance(other, AnyType):
+            return True
+        if isinstance(other, RecordType):
+            for field, o_type in other._fields.items():
+                if field not in self._fields:
+                    return False
+                if not self._fields[field].is_subtype_of(o_type):
+                    return False
+            return True
+        return False
+
+    def __eq__(self, other) -> bool:
+        return isinstance(other, RecordType) and self._fields == other._fields
+
+    def __hash__(self) -> int:
+        return hash(("record", tuple(self._fields.items())))
+
+
+# --- Register and Relate Built-in Types ---
+for t in ["int", "float", "str", "bool", "void", "any"]:
+    TYPE_GRAPH.register_type(t)
+
+TYPE_GRAPH.add_subtype("bool", "int")
+TYPE_GRAPH.add_subtype("int", "float")
+TYPE_GRAPH.add_subtype("float", "any")
+TYPE_GRAPH.add_subtype("str", "any")
+TYPE_GRAPH.add_subtype("void", "any")
+
+
+# --- Built-in Type Instances ---
 Int = BasicType("int")
 Float = BasicType("float")
 Str = BasicType("str")
 Bool = BasicType("bool")
 Void = BasicType("void")
 
-# Extension
-class ListType(Type):
-    def __init__(self, element_type: Type):
-        if not isinstance(element_type, Type):
-            raise TypeError("ListType element_type must be a Type instance.")
-        self._element_type = element_type
 
-    @property
-    def element_type(self) -> Type:
-        return self._element_type
-
-    def __str__(self) -> str:
-        return f"list[{str(self._element_type)}]"
-
-    def isSubtypeOf(self, other: 'Type') -> bool:
-        if isinstance(other, AnyType):
-            return True
-        if isinstance(other, ListType):
-            if self._element_type is Any and other._element_type is Any:
-                return True
-            if self._element_type is Any:
-                return self._element_type.isSubtypeOf(other._element_type)
-            if other._element_type is Any:
-                return self._element_type.isSubtypeOf(other._element_type)
-            return self._element_type.isSubtypeOf(other._element_type)
-        return False
-
-    def __eq__(self, other) -> bool:
-        return isinstance(other, ListType) and self._element_type == other._element_type
-
-    def __hash__(self) -> int:
-        return hash(("list", self._element_type))
-
-class RecordType(Type):
-    def __init__(self, fields: Dict[str, Type]):
-        for name, field_type in fields.items():
-            if not isinstance(field_type, Type):
-                raise TypeError(f"Field '{name}' type must be a Type instance, got {type(field_type)}")
-        self._fields = dict(sorted(fields.items(), key=lambda item: str(item[0])))
-
-    @property
-    def fields(self) -> Dict[str, Type]:
-        return self._fields.copy()
-
-    def __str__(self) -> str:
-        if not self._fields:
-            return "record{}"
-        field_strs = [f"{name}: {str(ftype)}" for name, ftype in self._fields.items()]
-        return f"record{{{', '.join(field_strs)}}}"
-
-    def isSubtypeOf(self, other: Type) -> bool:
-        if isinstance(other, AnyType):
-            return True
-        if isinstance(other, RecordType):
-            for other_field_name, other_field_type in other._fields.items():
-                if other_field_name not in self._fields:
-                    return False
-                if not self._fields[other_field_name].isSubtypeOf(other_field_type):
-                    return False
-            return True
-        return False
-
-    def __eq__(self, other) -> bool:
-        if not isinstance(other, RecordType):
-            return False
-        if len(self._fields) != len(other._fields):
-            return False
-        other_sorted_fields = dict(sorted(other._fields.items()))
-        return self._fields == other_sorted_fields
-
-    def __hash__(self) -> int:
-        return hash(("record", tuple(self._fields.items())))
-    
+# --- Utilities ---
 STRING_TO_TYPE = {
     "int": Int,
     "float": Float,
@@ -186,75 +218,44 @@ STRING_TO_TYPE = {
     "any": Any,
 }
 
-def string_to_type(type_name: str) -> Type:
-    """
-    将字符串类型名称转换为 Type 对象。
-    :param type_name: 类型名称字符串
-    :return: 对应的 Type 对象
-    :raises ValueError: 如果类型名称无效
-    """
-    if not type_name:
+
+def string_to_type(type_str: str) -> Type:
+    if not type_str:
         return Any
 
-    # 基本类型和 AnyType
-    if type_name in STRING_TO_TYPE:
-        return STRING_TO_TYPE[type_name]
+    if type_str in STRING_TO_TYPE:
+        return STRING_TO_TYPE[type_str]
 
-    # 处理 ListType，例如 "list[int]"
-    list_match = re.match(r'^list\[(.+)\]$', type_name)
+    list_match = re.fullmatch(r'list\[(.+)\]', type_str)
     if list_match:
-        element_type_str = list_match.group(1)
-        element_type = string_to_type(element_type_str)  # 递归解析元素类型
-        return ListType(element_type)
+        return ListType(string_to_type(list_match.group(1)))
 
-    # 处理 RecordType，例如 "record{name: str, age: int}"
-    record_match = re.match(r'^record\{(.+)\}$', type_name)
+    record_match = re.fullmatch(r'record\{(.*)\}', type_str)
     if record_match:
-        fields_str = record_match.group(1)
         fields = {}
-        # 解析字段，例如 "name: str, age: int"
-        for field in fields_str.split(","):
-            field = field.strip()
-            if ":" not in field:
-                raise ValueError(f"Invalid record field definition: '{field}'")
-            field_name, field_type_str = field.split(":", 1)
-            field_name = field_name.strip()
-            field_type = string_to_type(field_type_str.strip())  # 递归解析字段类型
-            fields[field_name] = field_type
+        content = record_match.group(1).strip()
+        if content:
+            for field in content.split(','):
+                name, typeval = map(str.strip, field.split(":"))
+                fields[name] = string_to_type(typeval)
         return RecordType(fields)
 
-    # 未知类型
-    raise ValueError(f"Unknown type name: '{type_name}'")
+    raise ValueError(f"Unknown type string: {type_str}")
 
-def type_to_pycode(type_obj: Type) -> str:
-    """
-    将自定义的 Type 对象转换为 Python 类型注释字符串。
-    :param type_obj: 自定义 Type 对象
-    :return: Python 类型注释字符串
-    :raises ValueError: 如果类型无法转换为 Python 类型注释
-    """
-    if isinstance(type_obj, AnyType):
+def type_to_pycode(t: Type) -> str:
+    if isinstance(t, AnyType):
         return "Any"
-    elif isinstance(type_obj, BasicType):
-        # 基本类型直接映射
-        basic_type_mapping = {
+    elif isinstance(t, BasicType):
+        return {
             "int": "int",
             "float": "float",
             "str": "str",
             "bool": "bool",
-            "void": "None",
-        }
-        return basic_type_mapping.get(type_obj.name, "Any")
-    elif isinstance(type_obj, ListType):
-        # ListType 映射为 List[元素类型]
-        element_type_code = type_to_pycode(type_obj.element_type)
-        return f"List[{element_type_code}]"
-    elif isinstance(type_obj, RecordType):
-        # RecordType 映射为 TypedDict
-        fields_code = ", ".join(
-            f"{field_name}: {type_to_pycode(field_type)}"
-            for field_name, field_type in type_obj.fields.items()
-        )
-        return f"TypedDict('{{{fields_code}}}')"
-    else:
-        raise ValueError(f"Unsupported type: {type_obj}")
+            "void": "None"
+        }.get(t.name, "Any")
+    elif isinstance(t, ListType):
+        return f"List[{type_to_pycode(t.element_type)}]"
+    elif isinstance(t, RecordType):
+        items = ", ".join(f'"{k}": {type_to_pycode(v)}' for k, v in t.fields.items())
+        return f"TypedDict('Rec', {{{items}}})"
+    raise ValueError(f"Unknown type object: {t}")
