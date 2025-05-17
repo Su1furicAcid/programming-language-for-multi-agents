@@ -60,5 +60,6 @@ ans: int = 0
 lst = [1, 2, 3, 4]
 i: int = 0
 for i in lst:
-    ans: Any = (ans + lst[i])
+    ans: Any = (ans + i)
 str_ans: str = int_to_str(ans)
+_: Any = write_file("example_1_output.txt", str_ans)

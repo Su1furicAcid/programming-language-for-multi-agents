@@ -38,11 +38,11 @@ class TypeChecker:
         with open(built_in_path) as f:
             data = json.load(f)
             for key, val in data.items():
-                self.type_env.define(key, string_to_type(val)
-        )
+                self.type_env.define(key, string_to_type(val))
 
     def _initTypeEnvironment(self) -> None:
         self._addBuiltInFuncs("built_in_sig.json")
+        self.type_env.define("_", Any)
         return
     
     def _show(self) -> None:
