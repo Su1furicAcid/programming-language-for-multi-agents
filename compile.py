@@ -3,6 +3,7 @@ from lexer import lexer
 from parser import parser
 from type_checker import TypeChecker
 from code_gen import CodeGenerator
+from ast_visual import ASTVisualizer
 
 def main():
     # 命令行参数解析
@@ -28,14 +29,15 @@ def main():
     # 初始化类型检查器和代码生成器
     type_checker = TypeChecker()
     code_generator = CodeGenerator()
+    ast_visualizer = ASTVisualizer()
 
     try:
         # 解析源代码
         print("Parsing source code...")
         result = parser.parse(data, lexer=lexer)
         print("Parsing completed.")
-        print("Parsed AST:")
-        print(result)
+        ast_visualizer.visualize(result)
+        ast_visualizer.render()
 
         # 类型检查
         print("Performing type checking...")

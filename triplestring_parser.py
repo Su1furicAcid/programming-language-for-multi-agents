@@ -20,9 +20,3 @@ def process_string(input_string):
         processed_string = re.sub(r'\$\{'+re.escape(var)+r'\}', placeholder, processed_string)
     
     return input_vars, output_vars, processed_string
-
-tstr = """Make a summary of the text below.
-    Text: {text}
-    Summary: ${summary}"""
-
-print(process_string(tstr))

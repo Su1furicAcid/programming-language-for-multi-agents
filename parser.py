@@ -441,12 +441,3 @@ def p_error(p):
 
 # 构建解析器
 parser = yacc.yacc(debug=True, debugfile='parser.out')
-type_checker = TypeChecker()
-code_generator = CodeGenerator()
-
-with open('example_code_1.txt', 'r') as f:
-    data = f.read()
-    result = parser.parse(data, lexer=lexer)
-    print(result)
-    type_checker.checkProgram(result)
-    code_generator.generate(result)

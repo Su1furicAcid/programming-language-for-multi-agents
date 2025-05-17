@@ -59,7 +59,7 @@ class AgentRef(ASTNode):
 
 class FuncDef(ASTNode):
     """函数定义节点"""
-    def __init__(self, name, params=[], return_type="", stmt_body=""):
+    def __init__(self, name, params=[], return_type="", stmt_body=[]):
         super().__init__(name=name, params=params, return_type=return_type, 
                          stmt_body=stmt_body)
 
@@ -85,7 +85,7 @@ class ReturnStmt(Stmt):
 
 class IfStmt(Stmt):
     """条件语句"""
-    def __init__(self, condition, body, else_block=""):
+    def __init__(self, condition, body, else_block):
         super().__init__(condition=condition, body=body, else_block=else_block)
 
 class WhileStmt(Stmt):
