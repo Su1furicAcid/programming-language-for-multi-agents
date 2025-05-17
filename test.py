@@ -28,55 +28,8 @@ async def execute(graph, param_mapping):
                     queue.append(neighbor)
         await asyncio.gather(*tasks)
     return agent_outputs
-def add(a: float, b: float) -> float:
-    return (a + b)
-ans: Any = add(1.0, 1.0)
-async def Summarizer():
-    model_name="gpt-3.5-turbo"
-    text: Any = "syntax error"
-    prompt = """
-    Make a summary of the text below.
-    Text: {text}
-    Summary: <completion0>summary</completion0>
-    """.format(text=text)
-    client = AsyncOpenAI(
-        base_url=BASE_URL,
-        api_key=API_KEY
-    )
-    response = await client.chat.completions.create(
-        model=model_name,
-        messages=[
-            {"role": "system", "content": SYS_PROMPT},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    print(prompt)
-    print(response)
-    summary = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
-    return {'summary': summary}
-async def Analyzer(summary: Any = None):
-    model_name="gpt-3.5-turbo"
-    y = {"a": 3, "b": 3}
-    y['b'] = 4
-    z = [5, 6]
-    z[0] = 1
-    prompt = """
-    Analyze the text.
-    Text: {summary}
-    """.format(summary=summary)
-    client = AsyncOpenAI(
-        base_url=BASE_URL,
-        api_key=API_KEY
-    )
-    response = await client.chat.completions.create(
-        model=model_name,
-        messages=[
-            {"role": "system", "content": SYS_PROMPT},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    print(prompt)
-    print(response)
-graph = {'Summarizer': ['Analyzer'], 'Analyzer': []}
-param_mapping = {'Analyzer': {'summary': ('Summarizer', 'summary')}}
-asyncio.run(execute(graph, param_mapping))
+ans: int = 0
+lst = [1, 2, 3, 4]
+i: int = 0
+for i in lst:
+    ans: Any = (ans + lst[i])

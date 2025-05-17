@@ -8,4 +8,5 @@ Please respond as follows:
 <completion1>value for message</completion1>
 Do not include any additional explanation or text outside the `<completion>` tags.
 Ensure all `<completion>` tags are present, even if the values are empty or null. Missing values should be represented by an empty string within the `<completion>` tags.
+If you don't have <completion> tags, you don't need to generate anything.
 Follow this sequence strictly and do not deviate from the provided instructions."""

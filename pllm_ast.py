@@ -9,28 +9,28 @@ class ASTNode:
 
 class Program(ASTNode):
     """程序节点，包含全局块和多个语句/定义"""
-    def __init__(self, body=None):
-        super().__init__(body=body or [])
+    def __init__(self, body=[]):
+        super().__init__(body=body)
 
 class VarDecl(ASTNode):
     """变量声明节点"""
-    def __init__(self, name, var_type=None, value=None):
+    def __init__(self, name, var_type="", value=""):
         super().__init__(name=name, var_type=var_type, value=value)
 
 class AgentDef(ASTNode):
     """代理定义"""
-    def __init__(self, name, body=None):
-        super().__init__(name=name, body=body or [])
+    def __init__(self, name, body=[]):
+        super().__init__(name=name, body=body)
 
 class InputBlock(ASTNode):
     """输入块"""
-    def __init__(self, variables=None):
-        super().__init__(variables=variables or [])
+    def __init__(self, variables=[]):
+        super().__init__(variables=variables)
 
 class OutputBlock(ASTNode):
     """输出块"""
-    def __init__(self, variables=None):
-        super().__init__(variables=variables or [])
+    def __init__(self, variables=[]):
+        super().__init__(variables=variables)
 
 class ModelBlock(ASTNode):
     """模型块"""
@@ -44,8 +44,8 @@ class ChatBlock(ASTNode):
 
 class ConnectBlock(ASTNode):
     """连接块"""
-    def __init__(self, connections=None):
-        super().__init__(connections=connections or [])
+    def __init__(self, connections=[]):
+        super().__init__(connections=connections)
 
 class Connection(ASTNode):
     """连接定义"""
@@ -59,33 +59,33 @@ class AgentRef(ASTNode):
 
 class FuncDef(ASTNode):
     """函数定义节点"""
-    def __init__(self, name, params=None, return_type=None, stmt_body=None):
-        super().__init__(name=name, params=params or [], return_type=return_type, 
+    def __init__(self, name, params=[], return_type="", stmt_body=""):
+        super().__init__(name=name, params=params, return_type=return_type, 
                          stmt_body=stmt_body)
 
 class ParamDecl(ASTNode):
     """参数声明"""
-    def __init__(self, name, param_type=None, default_value=None):
+    def __init__(self, name, param_type="", default_value=""):
         super().__init__(name=name, param_type=param_type, default_value=default_value)
 
 class Stmt(ASTNode):
     """语句基类"""
-    def __init__(self, metadata=None, **kwargs):
-        super().__init__(metadata=metadata, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 class AssignStmt(Stmt):
     """赋值语句"""
-    def __init__(self, target, var_type=None, value=None):
+    def __init__(self, target, var_type="", value=""):
         super().__init__(target=target, var_type=var_type, value=value)
 
 class ReturnStmt(Stmt):
     """返回语句"""
-    def __init__(self, value=None):
+    def __init__(self, value=""):
         super().__init__(value=value)
 
 class IfStmt(Stmt):
     """条件语句"""
-    def __init__(self, condition, body, else_block=None):
+    def __init__(self, condition, body, else_block=""):
         super().__init__(condition=condition, body=body, else_block=else_block)
 
 class WhileStmt(Stmt):
@@ -120,8 +120,8 @@ class BinaryOp(Expr):
 
 class FuncCall(Expr):
     """函数调用表达式"""
-    def __init__(self, func_name, args=None):
-        super().__init__(func_name=func_name, args=args or [])
+    def __init__(self, func_name, args=[]):
+        super().__init__(func_name=func_name, args=args)
 
 class Identifier(Expr):
     """标识符"""
@@ -135,22 +135,22 @@ class Constant(Expr):
 
 class ListExpr(Expr):
     """列表表达式"""
-    def __init__(self, elements=None):
-        super().__init__(elements=elements or [])
+    def __init__(self, elements=[]):
+        super().__init__(elements=elements)
 
 class RecordExpr(Expr):
     """记录表达式"""
-    def __init__(self, fields=None):
-        super().__init__(fields=fields or [])
+    def __init__(self, fields=[]):
+        super().__init__(fields=fields)
 
 class InstanceAssign(Expr):
-    def __init__(self, field, value=None):
+    def __init__(self, field, value=""):
         super().__init__(field=field, value=value)
 
 class TupleExpr(Expr):
     """元组表达式"""
-    def __init__(self, elements=None):
-        super().__init__(elements=elements or [])
+    def __init__(self, elements=[]):
+        super().__init__(elements=elements)
 
 class FieldAccess(Expr):
     """字段访问"""

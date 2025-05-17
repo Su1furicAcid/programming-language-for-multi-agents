@@ -1,7 +1,7 @@
 from typing import Optional
 from pllm_ast import *
 from type_env import TypeEnvironment
-from type_pre import Type, Any, Int, Float, Bool, Str, Void, ListType, RecordType, string_to_type, FunctionType
+from type_pre import *
 
 class TypeErrorHandler:
     def __init__(self):
@@ -50,7 +50,7 @@ class TypeChecker:
         visitor = getattr(self, method_name, self._defaultVisitor)
         return visitor(ast_node)
     
-    def _defaultVisitor(self) -> None:
+    def _defaultVisitor(self, node: ASTNode) -> None:
         # TODO: 抛出一个错误
         print("Not implemented yet.")
 
@@ -68,22 +68,17 @@ class TypeChecker:
         env_var_type = self.type_env.lookup(decl_var_name)
 
         # Case 1: id : type = expr
-        if decl_var_expr is not None:
+        if decl_var_expr is not "":
             exp_var_type = self.visit(decl_var_expr)
             # type(expr) <: type
             if not exp_var_type.is_subtype_of(decl_var_type):
                 self.err_handler.report(node=node)
-                return
-            # Handle gradual typing: Allow Any in the environment
-            if env_var_type is not None and env_var_type is not Any:
-                # type == history_type
-                if not decl_var_type.is_equivalent_to(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
-                # type(expr) == history_type
-                if not exp_var_type.is_equivalent_to(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
+            # type == history_type
+            if not decl_var_type.is_equivalent_to(env_var_type):
+                self.err_handler.report(node=node)
+            # type(expr) <: history_type
+            if not exp_var_type.is_subtype_of(env_var_type):
+                self.err_handler.report(node=node)
             # Update the type environment
             self.type_env.define(decl_var_name, decl_var_type)
             return
@@ -91,10 +86,8 @@ class TypeChecker:
         # Case 2: id : type
         else:
             # Handle gradual typing: Allow Any in the environment
-            if env_var_type is not None and env_var_type is not Any:
-                if not decl_var_type.is_equivalent_to(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
+            if not decl_var_type.is_equivalent_to(env_var_type):
+                self.err_handler.report(node=node)
             # Update the type environment
             self.type_env.define(decl_var_name, decl_var_type)
             return
@@ -159,11 +152,7 @@ class TypeChecker:
             for param in node.params:
                 self.visit(param)
                 param_type = self.type_env.lookup(param.name.name)
-                if param_type is None:
-                    self.err_handler.report(f"Parameter '{param.name.name}' has no type.", node=param)
-                    param_types.append(Any)
-                else:
-                    param_types.append(param_type)
+                param_types.append(param_type)
             func_type = FunctionType(param_types, [func_return_type])
             self.type_env.define(func_name, func_type, 2)
             return_types = []
@@ -174,7 +163,7 @@ class TypeChecker:
                     continue
                 stmt_type = self.visit(stmt)
             for ret_type in return_types:
-                if ret_type is not None and not ret_type.is_subtype_of(func_return_type):
+                if not ret_type.is_subtype_of(func_return_type):
                     self.err_handler.report(
                         f"Return type '{ret_type}' does not match declared return type '{func_return_type}' in function '{func_name}'.",
                         node=node
@@ -188,22 +177,17 @@ class TypeChecker:
         env_var_type = self.type_env.lookup(decl_var_name)
 
         # Case 1: id : type = expr
-        if decl_var_expr is not None:
+        if decl_var_expr is not "":
             exp_var_type = self.visit(decl_var_expr)
             # type(expr) <: type
             if not exp_var_type.is_subtype_of(decl_var_type):
                 self.err_handler.report(node=node)
-                return
-            # Handle gradual typing: Allow Any in the environment
-            if env_var_type is not None and env_var_type is not Any:
-                # type == history_type
-                if not decl_var_type.is_equivalent_to(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
-                # type(expr) == history_type
-                if not exp_var_type.is_equivalent_to(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
+            # type == history_type
+            if not decl_var_type.is_equivalent_to(env_var_type):
+                self.err_handler.report(node=node)
+            # type(expr) <: history_type
+            if not exp_var_type.is_subtype_of(env_var_type):
+                self.err_handler.report(node=node)
             # Update the type environment
             self.type_env.define(decl_var_name, decl_var_type)
             return
@@ -211,10 +195,8 @@ class TypeChecker:
         # Case 2: id : type
         else:
             # Handle gradual typing: Allow Any in the environment
-            if env_var_type is not None and env_var_type is not Any:
-                if not decl_var_type.is_equivalent_to(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
+            if not decl_var_type.is_equivalent_to(env_var_type):
+                self.err_handler.report(node=node)
             # Update the type environment
             self.type_env.define(decl_var_name, decl_var_type)
             return
@@ -228,58 +210,47 @@ class TypeChecker:
         # type(expr) <: type
         if not exp_var_type.is_subtype_of(decl_var_type):
             self.err_handler.report(node=node)
-            return
         # Handle gradual typing: Allow Any in the environment
         if isinstance(decl_var_name, Identifier):
             env_var_type = self.type_env.lookup(decl_var_name.name)
-            if env_var_type is not None and env_var_type is not Any:
-                # type == history_type
-                if not decl_var_type.is_equivalent_to(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
-                # type(expr) <: history_type
-                if not exp_var_type.is_subtype_of(env_var_type):
-                    self.err_handler.report(node=node)
-                    return
+            # type == history_type
+            if not decl_var_type.is_equivalent_to(env_var_type):
+                self.err_handler.report(node=node)
+            # type(expr) <: history_type
+            if not exp_var_type.is_subtype_of(env_var_type):
+                self.err_handler.report(node=node)
             # Update the type environment
             self.type_env.define(decl_var_name.name, decl_var_type)
         elif isinstance(decl_var_name, FieldAccess):
             # FieldAccess: x.a
             obj_type = self.type_env.lookup(decl_var_name.obj.name)
-            if obj_type is None or not isinstance(obj_type, RecordType):
+            if not isinstance(obj_type, RecordType):
                 self.err_handler.report(node=node)
-                return
             if decl_var_name.field.name not in obj_type.fields:
                 self.err_handler.report(node=node)
-                return
             field_type = obj_type.fields[decl_var_name.field.name]
             # type == field_type
             if not decl_var_type.is_equivalent_to(field_type):
                 self.err_handler.report(node=node)
-                return
             # type(expr) <: field_type
             if not exp_var_type.is_subtype_of(field_type):
                 self.err_handler.report(node=node)
-                return
         elif isinstance(decl_var_name, IndexAccess):
             # IndexAccess: x[a]
             obj_type = self.type_env.lookup(decl_var_name.obj.name)
-            if obj_type is None or not isinstance(obj_type, ListType):
+            if not isinstance(obj_type, ListType):
                 self.err_handler.report(node=node)
-                return
             index_type = self.visit(decl_var_name.index)
             if index_type is not Int:
                 self.err_handler.report(node=node)
-                return
             element_type = obj_type.element_type
             # type == element_type
             if not decl_var_type.is_equivalent_to(element_type):
                 self.err_handler.report(node=node)
-                return
             # type(expr) <: element_type
             if not exp_var_type.is_subtype_of(element_type):
                 self.err_handler.report(node=node)
-                return
+        return
     
     # IfStmt
     def visitIfStmt(self, node: IfStmt) -> None:
@@ -308,20 +279,15 @@ class TypeChecker:
     
     # ForStmt
     def visitForStmt(self, node: ForStmt) -> None:
-        iterator = node.iterator
-        iterable = node.iterable
+        iterator = node.iterator.name
+        iterable = node.iterable.name
         iterator_type = self.type_env.lookup(iterator)
-        if iterator_type is None:
-            print("TypeError")
-
-        iterable_type = self.visit(iterable)
+        iterable_type = self.type_env.lookup(iterable)
         if not isinstance(iterable_type, ListType):
             print("TypeError")
-
         element_type = iterable_type.element_type
         if not iterator_type.is_subtype_of(element_type):
             print("TypeError")
-
         for stmt in node.body:
             self.visit(stmt)
 
@@ -338,13 +304,12 @@ class TypeChecker:
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
 
-        # 检查操作符类型约束
         if node.op in {"+", "-", "*", "/", "%"}:
             if not (left_type.is_subtype_of(Int) or left_type.is_subtype_of(Float)):
                 self.err_handler.report(node=node)
             if not (right_type.is_subtype_of(Int) or right_type.is_subtype_of(Float)):
                 self.err_handler.report(node=node)
-            if left_type.is_subtype_of(Float) or right_type.is_subtype_of(Float):
+            if left_type.is_equivalent_to(Float) or right_type.is_equivalent_to(Float):
                 return Float
             return Int
         elif node.op in {"==", "!=", "<", ">", "<=", ">="}:
@@ -405,13 +370,21 @@ class TypeChecker:
     
     # FieldAccess
     def visitFieldAccess(self, node: FieldAccess) -> Type:
-        obj = node.obj
+        obj = node.obj.name
         obj_type = self.type_env.lookup(obj)
         if not isinstance(obj_type, RecordType):
             self.err_handler.report(node=node)
         if node.field not in obj_type.fields:
             self.err_handler.report(node=node)
         return obj_type.fields[node.field]
+    
+    # IndexAccess
+    def visitIndexAccess(self, node: IndexAccess) -> Type:
+        obj = node.obj.name
+        obj_type = self.type_env.lookup(obj)
+        if not isinstance(obj_type, ListType):
+            self.err_handler.report(node=node)
+        return obj_type.element_type
 
     # FuncCall
     def visitFuncCall(self, node: FuncCall) -> Type:

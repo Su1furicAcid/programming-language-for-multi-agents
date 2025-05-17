@@ -289,6 +289,11 @@ class CodeGenerator:
         obj_code = self.visit(node.obj)
         field_name = node.field
         return f"{obj_code}['{field_name}']"
+    
+    def visitIndexAccess(self, node: IndexAccess) -> str:
+        obj_code = self.visit(node.obj)
+        index = self.visit(node.index)
+        return f"{obj_code}[{index}]"
 
     def visitFuncCall(self, node: FuncCall) -> str:
         func_name = self.visit(node.func_name)

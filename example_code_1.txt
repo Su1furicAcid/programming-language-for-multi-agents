@@ -1,0 +1,5 @@
+ans : int = 0
+lst : list[int] = [1, 2, 3, 4]
+i : int = 0
+for i in lst:
+    ans = ans + lst[i]

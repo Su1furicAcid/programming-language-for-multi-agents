@@ -1,6 +1,6 @@
 from typing import Dict, Optional, List
 from contextlib import contextmanager
-from type_pre import Type
+from type_pre import Type, Any
 
 class TypeEnvironment:
     """
@@ -15,11 +15,11 @@ class TypeEnvironment:
             raise RuntimeError("No active scope found.")
         self._scopes[-level][name] = type_
 
-    def lookup(self, name: str) -> Optional[Type]:
+    def lookup(self, name: str) -> Type:
         for scope in reversed(self._scopes):
             if name in scope:
                 return scope[name]
-        return None
+        return Any
 
     def enterScope(self) -> None:
         self._scopes.append({})

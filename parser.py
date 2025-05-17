@@ -270,7 +270,7 @@ def p_return_stmt(p):
 # for_stmt ::= "for" identifier "in" expr ":" stmt_block
 def p_for_stmt(p):
     '''for_stmt : FOR identifier IN expr COLON stmt_block'''
-    p[0] = ForStmt(var_name=p[2], iterable=p[4], body=p[6])
+    p[0] = ForStmt(iterator=p[2], iterable=p[4], body=p[6])
 
 # break_stmt ::= "break"
 def p_break_stmt(p):
@@ -311,6 +311,7 @@ def p_expr_head(p):
                  | list_expr
                  | record_expr
                  | field_access
+                 | index_access
                  | func_call'''
     p[0] = p[1]
 
@@ -443,7 +444,7 @@ parser = yacc.yacc(debug=True, debugfile='parser.out')
 type_checker = TypeChecker()
 code_generator = CodeGenerator()
 
-with open('example_code.txt', 'r') as f:
+with open('example_code_1.txt', 'r') as f:
     data = f.read()
     result = parser.parse(data, lexer=lexer)
     print(result)
