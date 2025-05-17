@@ -67,10 +67,10 @@ class CodeGenerator:
             for line in self.code:
                 f.write(line)
 
-    def generate(self, program_node: Program):
+    def generate(self, program_node: Program) -> str:
         self._initCodeGenerator()
         self.visit(program_node)
-        self.show()
+        return ''.join(self.code)
 
     def visit(self, ast_node: ASTNode) -> Optional[str]:
         method_name: str = f"visit{type(ast_node).__name__}"

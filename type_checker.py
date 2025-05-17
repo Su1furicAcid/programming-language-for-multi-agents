@@ -22,9 +22,7 @@ class TypeErrorHandler:
         self.errors.append(error_message)
 
     def show(self) -> None:
-        if len(self.errors) == 0:
-            print("Type checking successfully.")
-        else:
+        if len(self.errors) > 0:
             for err in self.errors:
                 print(err)
 
