@@ -1,12 +1,8 @@
-import openai
-import numpy
-import pandas
-import os
-import json
+from openai import AsyncOpenAI
 import asyncio
-import concurrent.future
 from typing import *
 from sys_prompt import SYS_PROMPT
+from config import API_KEY, BASE_URL
 async def execute(graph, param_mapping):
     agent_outputs = {}
     in_degree = {node: 0 for node in graph}
@@ -35,40 +31,52 @@ async def execute(graph, param_mapping):
 def add(a: float, b: float) -> float:
     return (a + b)
 ans: Any = add(1.0, 1.0)
-def Summarizer():
-    model_name="gpt-4o"
+async def Summarizer():
+    model_name="gpt-3.5-turbo"
     text: Any = "syntax error"
     prompt = """
     Make a summary of the text below.
     Text: {text}
     Summary: <completion0>summary</completion0>
     """.format(text=text)
-    response = openai.ChatCompletion.create(
+    client = AsyncOpenAI(
+        base_url=BASE_URL,
+        api_key=API_KEY
+    )
+    response = await client.chat.completions.create(
         model=model_name,
         messages=[
             {"role": "system", "content": SYS_PROMPT},
             {"role": "user", "content": prompt}
         ]
     )
-    summary = response["choices"][0]["message"]["content"].split("<completion0>")[1].split("</completion0>")[0].strip()
-    return summary
-def Analyzer(summary: Any = None):
-    model_name="gpt-4o"
+    print(prompt)
+    print(response)
+    summary = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
+    return {'summary': summary}
+async def Analyzer(summary: Any = None):
+    model_name="gpt-3.5-turbo"
     y = {"a": 3, "b": 3}
-    y.b = 4
+    y['b'] = 4
     z = [5, 6]
     z[0] = 1
     prompt = """
     Analyze the text.
     Text: {summary}
     """.format(summary=summary)
-    response = openai.ChatCompletion.create(
+    client = AsyncOpenAI(
+        base_url=BASE_URL,
+        api_key=API_KEY
+    )
+    response = await client.chat.completions.create(
         model=model_name,
         messages=[
             {"role": "system", "content": SYS_PROMPT},
             {"role": "user", "content": prompt}
         ]
     )
+    print(prompt)
+    print(response)
 graph = {'Summarizer': ['Analyzer'], 'Analyzer': []}
 param_mapping = {'Analyzer': {'summary': ('Summarizer', 'summary')}}
 asyncio.run(execute(graph, param_mapping))

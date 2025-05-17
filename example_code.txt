@@ -6,7 +6,7 @@ ans = add(1.0, 1.0)
 agent Summarizer:
     output:
         summary: str
-    model: "gpt-4o"
+    model: "gpt-3.5-turbo"
     text = "syntax error"
     
     chat make_summary : """
@@ -18,7 +18,7 @@ agent Summarizer:
 agent Analyzer:
     input:
         summary
-    model: "gpt-4o"
+    model: "gpt-3.5-turbo"
     y : record{ b : int, a : int } = { a = 3, b = 3 }
     y.b = 4
     z : list[int] = [5, 6]

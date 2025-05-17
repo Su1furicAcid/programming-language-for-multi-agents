@@ -48,15 +48,11 @@ class CodeGenerator:
 
     def _initCodeGenerator(self):
         # TODO: Prepare for generating
-        self.add_line("import openai")
-        self.add_line("import numpy")
-        self.add_line("import pandas")
-        self.add_line("import os")
-        self.add_line("import json")
+        self.add_line("from openai import AsyncOpenAI")
         self.add_line("import asyncio")
-        self.add_line("import concurrent.future")
         self.add_line("from typing import *")
         self.add_line("from sys_prompt import SYS_PROMPT")
+        self.add_line("from config import API_KEY, BASE_URL")
         self._include_built_in_functions("built_in.py")
         return
     
@@ -103,7 +99,7 @@ class CodeGenerator:
     def visitAgentDef(self, node: AgentDef) -> None:
         agent_name_str = self.visit(node.name)
         agent_def_pos = self.get_pos()
-        agent_params = [] 
+        agent_params = []
         agent_returns = []
         with self.indent():
             for child in node.body:
@@ -115,15 +111,15 @@ class CodeGenerator:
                         agent_returns.append(self.visit(var_decl))
                 else:
                     self.visit(child)
-        agent_def_str = f"def {agent_name_str}({', '.join(agent_params)}):"
+        agent_def_str = f"async def {agent_name_str}({', '.join(agent_params)}):"
         self.insert_line(agent_def_str, agent_def_pos)
-
         with self.indent():
-            # for ret_var_str in agent_returns:
-            #     self.add_line(f"{ret_var_str}")
             if agent_returns:
-                return_values = ", ".join(var.split(":")[0] for var in agent_returns)
-                self.add_line(f"return {return_values}")
+                return_dict = ", ".join(f"'{var.split(':')[0]}': {var.split(':')[0]}" for var in agent_returns)
+                self.add_line(f"return {{{return_dict}}}")
+            else:
+                pass
+        return
 
     def visitInputBlock(self, node: InputBlock) -> None:
         # Implemented in AgentDef
@@ -144,7 +140,11 @@ class CodeGenerator:
             self.add_line(f'prompt = {processed_string}.format({input_formatting})')
         else:
             self.add_line(f'prompt = {processed_string}')
-        self.add_line('response = openai.ChatCompletion.create(')
+        self.add_line('client = AsyncOpenAI(')
+        self.add_line('    base_url=BASE_URL,')
+        self.add_line('    api_key=API_KEY')
+        self.add_line(')')
+        self.add_line('response = await client.chat.completions.create(')
         with self.indent():
             self.add_line('model=model_name,')
             self.add_line('messages=[')
@@ -154,7 +154,7 @@ class CodeGenerator:
         self.add_line(')')
         if output_vars:
             for i, var in enumerate(output_vars):
-                self.add_line(f'{var} = response["choices"][0]["message"]["content"].split("<completion{i}>")[1].split("</completion{i}>")[0].strip()')
+                self.add_line(f'{var} = response.choices[0].message.content.split("<completion{i}>")[1].split("</completion{i}>")[0].strip()')
 
     def _extract_agent_name(self, agent_ref: AgentRef) -> str:
         parts = [self.visit(part) if isinstance(part, Identifier) else part for part in agent_ref.parts]
@@ -208,7 +208,7 @@ class CodeGenerator:
                 assign_code = f"{target_code}: {target_type} = {expr_code}"
                 self.add_line(assign_code)
         elif isinstance(node.target, FieldAccess):
-            target_code = f"{self.visit(node.target.obj)}.{node.target.field.name}"
+            target_code = f"{self.visit(node.target.obj)}['{node.target.field.name}']"
             expr_code = self.visit(node.value)
             assign_code = f"{target_code} = {expr_code}"
             self.add_line(assign_code)
