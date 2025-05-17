@@ -1,0 +1,9 @@
+{
+    "read_file": "(str) -> (str)",
+    "write_file": "(str, str) -> (unit)",
+    "append_file": "(str, str) -> (unit)",
+    "read_lines": "(str) -> (list[str])",
+    "write_lines": "(str, list[str]) -> (unit)",
+    "str_to_int": "(str) -> (int)",
+    "int_to_str": "(int) -> (str)"
+}

@@ -29,7 +29,7 @@ Rule 18    base_type -> TYPE_STR
 Rule 19    base_type -> TYPE_INT
 Rule 20    base_type -> TYPE_FLOAT
 Rule 21    base_type -> TYPE_BOOL
-Rule 22    base_type -> TYPE_VOID
+Rule 22    base_type -> TYPE_UNIT
 Rule 23    func_ret_type -> LPAREN type_list RPAREN
 Rule 24    type_list -> type
 Rule 25    type_list -> type COMMA type_list
@@ -186,7 +186,7 @@ TYPE_LIST            : 26
 TYPE_RECORD          : 27
 TYPE_STR             : 18
 TYPE_TUPLE           : 
-TYPE_VOID            : 22
+TYPE_UNIT            : 22
 WHILE                : 81
 error                : 
 
@@ -1504,7 +1504,7 @@ state 51
     (19) base_type -> . TYPE_INT
     (20) base_type -> . TYPE_FLOAT
     (21) base_type -> . TYPE_BOOL
-    (22) base_type -> . TYPE_VOID
+    (22) base_type -> . TYPE_UNIT
     (26) list_type -> . TYPE_LIST LBRACKET type RBRACKET
     (27) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (23) func_ret_type -> . LPAREN type_list RPAREN
@@ -1513,7 +1513,7 @@ state 51
     TYPE_INT        shift and go to state 86
     TYPE_FLOAT      shift and go to state 87
     TYPE_BOOL       shift and go to state 88
-    TYPE_VOID       shift and go to state 89
+    TYPE_UNIT       shift and go to state 89
     TYPE_LIST       shift and go to state 90
     TYPE_RECORD     shift and go to state 91
     LPAREN          shift and go to state 92
@@ -2114,17 +2114,17 @@ state 88
 
 state 89
 
-    (22) base_type -> TYPE_VOID .
+    (22) base_type -> TYPE_UNIT .
 
-    EQUALS          reduce using rule 22 (base_type -> TYPE_VOID .)
-    COMMA           reduce using rule 22 (base_type -> TYPE_VOID .)
-    RPAREN          reduce using rule 22 (base_type -> TYPE_VOID .)
-    RBRACKET        reduce using rule 22 (base_type -> TYPE_VOID .)
-    INDENT          reduce using rule 22 (base_type -> TYPE_VOID .)
-    IDENTIFIER      reduce using rule 22 (base_type -> TYPE_VOID .)
-    DEDENT          reduce using rule 22 (base_type -> TYPE_VOID .)
-    COLON           reduce using rule 22 (base_type -> TYPE_VOID .)
-    RBRACE          reduce using rule 22 (base_type -> TYPE_VOID .)
+    EQUALS          reduce using rule 22 (base_type -> TYPE_UNIT .)
+    COMMA           reduce using rule 22 (base_type -> TYPE_UNIT .)
+    RPAREN          reduce using rule 22 (base_type -> TYPE_UNIT .)
+    RBRACKET        reduce using rule 22 (base_type -> TYPE_UNIT .)
+    INDENT          reduce using rule 22 (base_type -> TYPE_UNIT .)
+    IDENTIFIER      reduce using rule 22 (base_type -> TYPE_UNIT .)
+    DEDENT          reduce using rule 22 (base_type -> TYPE_UNIT .)
+    COLON           reduce using rule 22 (base_type -> TYPE_UNIT .)
+    RBRACE          reduce using rule 22 (base_type -> TYPE_UNIT .)
 
 
 state 90
@@ -2154,7 +2154,7 @@ state 92
     (19) base_type -> . TYPE_INT
     (20) base_type -> . TYPE_FLOAT
     (21) base_type -> . TYPE_BOOL
-    (22) base_type -> . TYPE_VOID
+    (22) base_type -> . TYPE_UNIT
     (26) list_type -> . TYPE_LIST LBRACKET type RBRACKET
     (27) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (23) func_ret_type -> . LPAREN type_list RPAREN
@@ -2163,7 +2163,7 @@ state 92
     TYPE_INT        shift and go to state 86
     TYPE_FLOAT      shift and go to state 87
     TYPE_BOOL       shift and go to state 88
-    TYPE_VOID       shift and go to state 89
+    TYPE_UNIT       shift and go to state 89
     TYPE_LIST       shift and go to state 90
     TYPE_RECORD     shift and go to state 91
     LPAREN          shift and go to state 92
@@ -2801,7 +2801,7 @@ state 121
     (19) base_type -> . TYPE_INT
     (20) base_type -> . TYPE_FLOAT
     (21) base_type -> . TYPE_BOOL
-    (22) base_type -> . TYPE_VOID
+    (22) base_type -> . TYPE_UNIT
     (26) list_type -> . TYPE_LIST LBRACKET type RBRACKET
     (27) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (23) func_ret_type -> . LPAREN type_list RPAREN
@@ -2810,7 +2810,7 @@ state 121
     TYPE_INT        shift and go to state 86
     TYPE_FLOAT      shift and go to state 87
     TYPE_BOOL       shift and go to state 88
-    TYPE_VOID       shift and go to state 89
+    TYPE_UNIT       shift and go to state 89
     TYPE_LIST       shift and go to state 90
     TYPE_RECORD     shift and go to state 91
     LPAREN          shift and go to state 92
@@ -3086,7 +3086,7 @@ state 138
     (19) base_type -> . TYPE_INT
     (20) base_type -> . TYPE_FLOAT
     (21) base_type -> . TYPE_BOOL
-    (22) base_type -> . TYPE_VOID
+    (22) base_type -> . TYPE_UNIT
     (26) list_type -> . TYPE_LIST LBRACKET type RBRACKET
     (27) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (23) func_ret_type -> . LPAREN type_list RPAREN
@@ -3095,7 +3095,7 @@ state 138
     TYPE_INT        shift and go to state 86
     TYPE_FLOAT      shift and go to state 87
     TYPE_BOOL       shift and go to state 88
-    TYPE_VOID       shift and go to state 89
+    TYPE_UNIT       shift and go to state 89
     TYPE_LIST       shift and go to state 90
     TYPE_RECORD     shift and go to state 91
     LPAREN          shift and go to state 92
@@ -3118,7 +3118,7 @@ state 139
     (19) base_type -> . TYPE_INT
     (20) base_type -> . TYPE_FLOAT
     (21) base_type -> . TYPE_BOOL
-    (22) base_type -> . TYPE_VOID
+    (22) base_type -> . TYPE_UNIT
     (26) list_type -> . TYPE_LIST LBRACKET type RBRACKET
     (27) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (23) func_ret_type -> . LPAREN type_list RPAREN
@@ -3127,7 +3127,7 @@ state 139
     TYPE_INT        shift and go to state 86
     TYPE_FLOAT      shift and go to state 87
     TYPE_BOOL       shift and go to state 88
-    TYPE_VOID       shift and go to state 89
+    TYPE_UNIT       shift and go to state 89
     TYPE_LIST       shift and go to state 90
     TYPE_RECORD     shift and go to state 91
     LPAREN          shift and go to state 92
@@ -3494,7 +3494,7 @@ state 162
     (19) base_type -> . TYPE_INT
     (20) base_type -> . TYPE_FLOAT
     (21) base_type -> . TYPE_BOOL
-    (22) base_type -> . TYPE_VOID
+    (22) base_type -> . TYPE_UNIT
     (26) list_type -> . TYPE_LIST LBRACKET type RBRACKET
     (27) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (23) func_ret_type -> . LPAREN type_list RPAREN
@@ -3503,7 +3503,7 @@ state 162
     TYPE_INT        shift and go to state 86
     TYPE_FLOAT      shift and go to state 87
     TYPE_BOOL       shift and go to state 88
-    TYPE_VOID       shift and go to state 89
+    TYPE_UNIT       shift and go to state 89
     TYPE_LIST       shift and go to state 90
     TYPE_RECORD     shift and go to state 91
     LPAREN          shift and go to state 92
@@ -3618,7 +3618,7 @@ state 173
     (19) base_type -> . TYPE_INT
     (20) base_type -> . TYPE_FLOAT
     (21) base_type -> . TYPE_BOOL
-    (22) base_type -> . TYPE_VOID
+    (22) base_type -> . TYPE_UNIT
     (26) list_type -> . TYPE_LIST LBRACKET type RBRACKET
     (27) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (23) func_ret_type -> . LPAREN type_list RPAREN
@@ -3627,7 +3627,7 @@ state 173
     TYPE_INT        shift and go to state 86
     TYPE_FLOAT      shift and go to state 87
     TYPE_BOOL       shift and go to state 88
-    TYPE_VOID       shift and go to state 89
+    TYPE_UNIT       shift and go to state 89
     TYPE_LIST       shift and go to state 90
     TYPE_RECORD     shift and go to state 91
     LPAREN          shift and go to state 92
@@ -3803,7 +3803,7 @@ state 186
     (19) base_type -> . TYPE_INT
     (20) base_type -> . TYPE_FLOAT
     (21) base_type -> . TYPE_BOOL
-    (22) base_type -> . TYPE_VOID
+    (22) base_type -> . TYPE_UNIT
     (26) list_type -> . TYPE_LIST LBRACKET type RBRACKET
     (27) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (23) func_ret_type -> . LPAREN type_list RPAREN
@@ -3812,7 +3812,7 @@ state 186
     TYPE_INT        shift and go to state 86
     TYPE_FLOAT      shift and go to state 87
     TYPE_BOOL       shift and go to state 88
-    TYPE_VOID       shift and go to state 89
+    TYPE_UNIT       shift and go to state 89
     TYPE_LIST       shift and go to state 90
     TYPE_RECORD     shift and go to state 91
     LPAREN          shift and go to state 92

@@ -3,6 +3,7 @@ import asyncio
 from typing import *
 from sys_prompt import SYS_PROMPT
 from config import API_KEY, BASE_URL
+# private
 async def execute(graph, param_mapping):
     agent_outputs = {}
     in_degree = {node: 0 for node in graph}
@@ -28,8 +29,36 @@ async def execute(graph, param_mapping):
                     queue.append(neighbor)
         await asyncio.gather(*tasks)
     return agent_outputs
+
+# public
+def read_file(file_path: str) -> str:
+    with open(file_path, "r", encoding="utf-8") as file:
+        return file.read()
+
+def write_file(file_path: str, content: str) -> None:
+    with open(file_path, "w", encoding="utf-8") as file:
+        file.write(content)
+
+def append_file(file_path: str, content: str) -> None:
+    with open(file_path, "a", encoding="utf-8") as file:
+        file.write(content)
+
+def read_lines(file_path: str) -> list[str]:
+    with open(file_path, "r", encoding="utf-8") as file:
+        return file.readlines()
+
+def write_lines(file_path: str, lines: list[str]) -> None:
+    with open(file_path, "w", encoding="utf-8") as file:
+        file.writelines(lines)
+
+def int_to_str(input: int) -> str:
+    return str(input)
+
+def str_to_int(input: str) -> int:
+    return int(input)
 ans: int = 0
 lst = [1, 2, 3, 4]
 i: int = 0
 for i in lst:
     ans: Any = (ans + lst[i])
+str_ans: str = int_to_str(ans)

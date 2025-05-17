@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 from pllm_ast import *
 from type_env import TypeEnvironment
@@ -33,8 +34,15 @@ class TypeChecker:
         self.agent_io = TypeEnvironment()
         self.err_handler = TypeErrorHandler()
 
+    def _addBuiltInFuncs(self, built_in_path: str) -> None:
+        with open(built_in_path) as f:
+            data = json.load(f)
+            for key, val in data.items():
+                self.type_env.define(key, string_to_type(val)
+        )
+
     def _initTypeEnvironment(self) -> None:
-        # TODO: 初始化库函数或者一些其他的东西，但是暂时还没有实现库函数
+        self._addBuiltInFuncs("built_in_sig.json")
         return
     
     def _show(self) -> None:
@@ -68,7 +76,7 @@ class TypeChecker:
         env_var_type = self.type_env.lookup(decl_var_name)
 
         # Case 1: id : type = expr
-        if decl_var_expr is not "":
+        if decl_var_expr != "":
             exp_var_type = self.visit(decl_var_expr)
             # type(expr) <: type
             if not exp_var_type.is_subtype_of(decl_var_type):
@@ -177,7 +185,7 @@ class TypeChecker:
         env_var_type = self.type_env.lookup(decl_var_name)
 
         # Case 1: id : type = expr
-        if decl_var_expr is not "":
+        if decl_var_expr != "":
             exp_var_type = self.visit(decl_var_expr)
             # type(expr) <: type
             if not exp_var_type.is_subtype_of(decl_var_type):
@@ -401,7 +409,7 @@ class TypeChecker:
                 f"Function '{func_name}' expects {len(func_type.param_types)} arguments, but {len(node.args)} were provided.",
                 node=node
             )
-            return func_type.return_types[0] if func_type.return_types else Void
+            return func_type.return_types[0] if func_type.return_types else Unit
         for arg, param_type in zip(node.args, func_type.param_types):
             arg_type = self.visit(arg)
             if not arg_type.is_subtype_of(param_type):
@@ -414,4 +422,4 @@ class TypeChecker:
         elif len(func_type.return_types) > 1:
             return RecordType({f"ret{i}": t for i, t in enumerate(func_type.return_types)})
         else:
-            return Void
+            return Unit

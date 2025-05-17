@@ -74,7 +74,7 @@ def p_base_type(p):
                  | TYPE_INT
                  | TYPE_FLOAT
                  | TYPE_BOOL
-                 | TYPE_VOID'''
+                 | TYPE_UNIT'''
     p[0] = p[1]
 
 def p_func_ret_type(p):

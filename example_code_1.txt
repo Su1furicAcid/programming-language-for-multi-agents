@@ -3,3 +3,4 @@ lst : list[int] = [1, 2, 3, 4]
 i : int = 0
 for i in lst:
     ans = ans + lst[i]
+str_ans: str = int_to_str(ans)

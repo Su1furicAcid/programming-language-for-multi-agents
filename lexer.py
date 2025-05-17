@@ -13,7 +13,7 @@ reserved = {
     "record": "TYPE_RECORD",
     "tuple": "TYPE_TUPLE",
     "list": "TYPE_LIST",
-    "void": "TYPE_VOID",
+    "unit": "TYPE_UNIT",
     "fun": "FUN",
     "for": "FOR",
     "in": "IN",

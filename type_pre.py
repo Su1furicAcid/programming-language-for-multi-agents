@@ -297,7 +297,7 @@ def type_to_pycode(t: Type) -> str:
             "float": "float",
             "str": "str",
             "bool": "bool",
-            "void": "None",
+            "unit": "unit",
         }.get(t.name, "Any")
     if isinstance(t, ListType):
         return f"List[{type_to_pycode(t.element_type)}]"
@@ -315,14 +315,14 @@ Int = BasicType("int")
 Float = BasicType("float")
 Str = BasicType("str")
 Bool = BasicType("bool")
-Void = BasicType("void")
+Unit = BasicType("unit")
 
 STRING_TO_TYPE = {
     "int": Int,
     "float": Float,
     "str": Str,
     "bool": Bool,
-    "void": Void,
+    "unit": Unit,
     "any": Any,
 }
 
@@ -331,4 +331,4 @@ TYPE_GRAPH.add_subtype("bool", "int")
 TYPE_GRAPH.add_subtype("int", "float")
 TYPE_GRAPH.add_subtype("float", "any")
 TYPE_GRAPH.add_subtype("str", "any")
-TYPE_GRAPH.add_subtype("void", "any")
+TYPE_GRAPH.add_subtype("unit", "any")
