@@ -14,10 +14,11 @@
 > param_decl      ::= var_decl
 > var_decl_list   ::= var_decl+
 > var_decl        ::= IDENTIFIER (":" type)? ("=" expr)?
-> type            ::= base_type | list_type | record_type
+> type            ::= base_type | list_type | record_type | union_type
 > base_type       ::= "str" | "int" | "float" | "bool" 
 > list_type       ::= "list[" type "]"
 > record_type     ::= "record" "{" field_decl ("," field_decl)* "}"
+> union_type      ::= "union[" type_list "]
 > field_decl      ::= IDENTIFIER ":" type
 > stmt_block      ::= INDENT statement+ DEDENT
 > statement       ::= for_stmt | if_stmt | while_stmt | assign_stmt | break_stmt | continue_stmt | return_stmt

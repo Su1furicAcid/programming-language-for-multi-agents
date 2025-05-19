@@ -65,7 +65,8 @@ def p_type(p):
     '''type : base_type
             | list_type
             | record_type
-            | func_ret_type'''
+            | func_ret_type
+            | union_type'''
     p[0] = p[1]
 
 # base_type ::= "str" | "int" | "float" | "bool"
@@ -76,6 +77,10 @@ def p_base_type(p):
                  | TYPE_BOOL
                  | TYPE_UNIT'''
     p[0] = p[1]
+
+def p_union_type(p):
+    '''union_type : TYPE_UNION LBRACKET type_list RBRACKET'''
+    p[0] = f"union[{p[3]}]"
 
 def p_func_ret_type(p):
     '''func_ret_type : LPAREN type_list RPAREN'''

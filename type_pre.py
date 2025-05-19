@@ -196,7 +196,32 @@ class RecordType(Type):
 
     def __hash__(self) -> int:
         return hash(("record", tuple(self._fields.items())))
+    
+class UnionType(Type):
+    def __init__(self, types: List[Type]):
+        self._types = list(set(types))
+        if not self._types:
+            raise ValueError("UnionType must have at least one type.")
 
+    def __str__(self) -> str:
+        return f"union[{', '.join(str(t) for t in self._types)}]"
+
+    @property
+    def types(self) -> List[Type]:
+        return self._types
+
+    def is_subtype_of(self, other: 'Type') -> bool:
+        if isinstance(other, AnyType):
+            return True
+        if isinstance(other, UnionType):
+            return all(any(t.is_subtype_of(o) for o in other.types) for t in self._types)
+        return all(t.is_subtype_of(other) for t in self._types)
+
+    def __eq__(self, other) -> bool:
+        return isinstance(other, UnionType) and set(self._types) == set(other._types)
+
+    def __hash__(self) -> int:
+        return hash(("union", tuple(sorted(self._types, key=str))))
 
 # --- FunctionType ---
 class FunctionType(Type):
@@ -284,8 +309,14 @@ def string_to_type(type_str: str) -> Type:
         return_types = [string_to_type(r.strip()) for r in return_strs.split(",") if r.strip()]
         return FunctionType(param_types, return_types)
 
-    raise ValueError(f"Unknown type string: {type_str}")
+    # Union type
+    union_match = re.fullmatch(r'union\[(.+)\]', type_str)
+    if union_match:
+        # 解析 union[...] 内部的类型
+        types = [string_to_type(t.strip()) for t in union_match.group(1).split(",")]
+        return UnionType(types)
 
+    raise ValueError(f"Unknown type string: {type_str}")
 
 def type_to_pycode(t: Type) -> str:
     """Convert a Type instance to Python type annotation."""
@@ -297,7 +328,7 @@ def type_to_pycode(t: Type) -> str:
             "float": "float",
             "str": "str",
             "bool": "bool",
-            "unit": "unit",
+            "unit": "None",
         }.get(t.name, "Any")
     if isinstance(t, ListType):
         return f"List[{type_to_pycode(t.element_type)}]"
@@ -308,6 +339,8 @@ def type_to_pycode(t: Type) -> str:
         param_types = ", ".join(type_to_pycode(p) for p in t.param_types)
         return_types = ", ".join(type_to_pycode(r) for r in t.return_types)
         return f"Callable[[{param_types}], Tuple[{return_types}]]"
+    if isinstance(t, UnionType):
+        return f"Union[{', '.join(type_to_pycode(tp) for tp in t.types)}]"
     raise ValueError(f"Unknown type object: {t}")
 
 # --- Built-in Type Instances ---

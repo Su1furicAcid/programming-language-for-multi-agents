@@ -14,6 +14,7 @@ reserved = {
     "tuple": "TYPE_TUPLE",
     "list": "TYPE_LIST",
     "unit": "TYPE_UNIT",
+    "union": "TYPE_UNION",
     "fun": "FUN",
     "for": "FOR",
     "in": "IN",
