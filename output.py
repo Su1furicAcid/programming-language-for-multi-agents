@@ -56,10 +56,75 @@ def int_to_str(input: int) -> str:
 
 def str_to_int(input: str) -> int:
     return int(input)
-ans: int = 0
-lst = [1, 2, 3, 4]
-i: int = 0
-for i in lst:
-    ans: Any = (ans + i)
-str_ans: str = int_to_str(ans)
-_: Any = write_file("example_1_output.txt", str_ans)
+async def reader():
+    article: Any = read_file("article.txt")
+    return {'article': article}
+async def critic1(article: str = None):
+    model_name="gpt-3.5-turbo"
+    prompt = """
+    Play the role of a critic and judge the essay from a literary point of view.
+    essay: {article}
+    criticism: <completion0></completion0>
+    """.format(article=article)
+    client = AsyncOpenAI(
+        base_url=BASE_URL,
+        api_key=API_KEY
+    )
+    response = await client.chat.completions.create(
+        model=model_name,
+        messages=[
+            {"role": "system", "content": SYS_PROMPT},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    print(response)
+    criticism1 = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
+    return {'criticism1': criticism1}
+async def critic2(article: str = None):
+    model_name="gpt-3.5-turbo"
+    prompt = """
+    Play as a critic and judge the essay from the perspective of science.
+    essay: {article}
+    criticism: <completion0></completion0>
+    """.format(article=article)
+    client = AsyncOpenAI(
+        base_url=BASE_URL,
+        api_key=API_KEY
+    )
+    response = await client.chat.completions.create(
+        model=model_name,
+        messages=[
+            {"role": "system", "content": SYS_PROMPT},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    print(response)
+    criticism2 = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
+    return {'criticism2': criticism2}
+async def summarizer(criticism1: str = None, criticism2: str = None):
+    model_name="gpt-3.5-turbo"
+    prompt = """
+    Summarize the above two points.
+    point1: {criticism1}
+    point2: {criticism2}
+    summary: <completion0></completion0>
+    """.format(criticism1=criticism1, criticism2=criticism2)
+    client = AsyncOpenAI(
+        base_url=BASE_URL,
+        api_key=API_KEY
+    )
+    response = await client.chat.completions.create(
+        model=model_name,
+        messages=[
+            {"role": "system", "content": SYS_PROMPT},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    print(response)
+    summary = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
+    return {'summary': summary}
+async def writer(summary: str = None):
+    _: Any = write_file("article_summary.txt", summary)
+graph = {'reader': ['critic1', 'critic2'], 'critic1': ['summarizer'], 'critic2': ['summarizer'], 'summarizer': ['writer'], 'writer': []}
+param_mapping = {'critic1': {'article': ('reader', 'article')}, 'critic2': {'article': ('reader', 'article')}, 'summarizer': {'criticism1': ('critic1', 'criticism1'), 'criticism2': ('critic2', 'criticism2')}, 'writer': {'summary': ('summarizer', 'summary')}}
+asyncio.run(execute(graph, param_mapping))

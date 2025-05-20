@@ -77,9 +77,9 @@ class CodeGenerator:
         visitor = getattr(self, method_name, self._defaultVisitor)
         return visitor(ast_node)
 
-    def _defaultVisitor(self) -> None:
+    def _defaultVisitor(self, node) -> None:
         # TODO: 抛出一个错误
-        print("Not implemented yet.")
+        print("Not implemented yet.", node)
         return
 
     def visitProgram(self, node: Program) -> None:

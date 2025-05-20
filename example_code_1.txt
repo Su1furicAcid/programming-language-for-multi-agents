@@ -1,7 +1,59 @@
-ans : int = 0
-lst : list[int] = [1, 2, 3, 4]
-i : int = 0
-for i in lst:
-    ans = ans + i
-str_ans: str = int_to_str(ans)
-_ = write_file("example_1_output.txt", str_ans)
+agent reader:
+    output: 
+        article: str
+    article = read_file("article.txt")
+
+agent critic1:
+    input:
+        article: str
+    output:
+        criticism1: str
+    model: "gpt-3.5-turbo"
+    chat: """
+    Play the role of a critic and judge the essay from a literary point of view.
+    essay: {article}
+    criticism: ${criticism1}
+    """
+
+agent critic2:
+    input:
+        article: str
+    output:
+        criticism2: str
+    model: "gpt-3.5-turbo"
+    chat: """
+    Play as a critic and judge the essay from the perspective of science.
+    essay: {article}
+    criticism: ${criticism2}
+    """
+
+agent summarizer:
+    input: 
+        criticism1: str
+        criticism2: str
+    output:
+        summary: str
+    model: "gpt-3.5-turbo"
+    chat: """
+    Summarize the above two points.
+    point1: {criticism1}
+    point2: {criticism2}
+    summary: ${summary}
+    """
+
+agent writer:
+    input:
+        summary: str
+    _ = write_file("article_summary.txt", summary)
+
+connect:
+    line1: str
+        reader.output.article -> critic1.input.article
+    line2: str
+        reader.output.article -> critic2.input.article
+    line3: str
+        critic1.output.criticism1 -> summarizer.input.criticism1
+    line4: str
+        critic2.output.criticism2 -> summarizer.input.criticism2
+    line5: str
+        summarizer.output.summary -> writer.input.summary
