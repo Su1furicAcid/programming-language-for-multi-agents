@@ -77,7 +77,6 @@ async def critic1(article: str = None):
             {"role": "user", "content": prompt}
         ]
     )
-    print(response)
     criticism1 = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
     return {'criticism1': criticism1}
 async def critic2(article: str = None):
@@ -98,7 +97,6 @@ async def critic2(article: str = None):
             {"role": "user", "content": prompt}
         ]
     )
-    print(response)
     criticism2 = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
     return {'criticism2': criticism2}
 async def summarizer(criticism1: str = None, criticism2: str = None):
@@ -120,7 +118,6 @@ async def summarizer(criticism1: str = None, criticism2: str = None):
             {"role": "user", "content": prompt}
         ]
     )
-    print(response)
     summary = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
     return {'summary': summary}
 async def writer(summary: str = None):

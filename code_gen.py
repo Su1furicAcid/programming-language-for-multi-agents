@@ -79,7 +79,7 @@ class CodeGenerator:
 
     def _defaultVisitor(self, node) -> None:
         # TODO: 抛出一个错误
-        print("Not implemented yet.", node)
+        print(type(node).__name__)
         return
 
     def visitProgram(self, node: Program) -> None:
@@ -90,7 +90,7 @@ class CodeGenerator:
         decl_var_name_str = self.visit(node.name)
         decl_var_type_str = type_to_pycode(string_to_type(node.var_type))
         decl_var_expr = node.value
-        if decl_var_expr is not None:
+        if decl_var_expr is not "":
             decl_var_expr_str = self.visit(decl_var_expr)
             return f"{decl_var_name_str}: {decl_var_type_str} = {decl_var_expr_str}"
         else:
@@ -189,7 +189,7 @@ class CodeGenerator:
         return f"{param_name}: {param_type}"
     
     def visitReturnStmt(self, node: ReturnStmt) -> None:
-        if node.value is not None:
+        if node.value is not "":
             return_value_code = self.visit(node.value)
             self.add_line(f"return {return_value_code}")
         else:
