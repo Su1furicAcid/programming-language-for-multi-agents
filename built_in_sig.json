@@ -5,5 +5,6 @@
     "read_lines": "(str) -> (list[str])",
     "write_lines": "(str, list[str]) -> (unit)",
     "str_to_int": "(str) -> (int)",
-    "int_to_str": "(int) -> (str)"
+    "int_to_str": "(int) -> (str)",
+    "console": "(any) -> (unit)"
 }

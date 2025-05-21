@@ -48,11 +48,6 @@ class CodeGenerator:
 
     def _initCodeGenerator(self):
         # TODO: Prepare for generating
-        self.add_line("from openai import AsyncOpenAI")
-        self.add_line("import asyncio")
-        self.add_line("from typing import *")
-        self.add_line("from sys_prompt import SYS_PROMPT")
-        self.add_line("from config import API_KEY, BASE_URL")
         self._include_built_in_functions("built_in.py")
         return
     

@@ -4,19 +4,30 @@ from type_checker import TypeChecker
 from code_gen import CodeGenerator
 import traceback
 
+from lexer import lexer
+from parser import parser
+from type_checker import TypeChecker
+from code_gen import CodeGenerator
+import traceback
+
 def run_code(source_code):
     try:
+        # 解析代码生成 AST
         ast = parser.parse(source_code, lexer=lexer)
+        # 类型检查
         type_checker = TypeChecker()
         type_checker.checkProgram(ast)
+        # 代码生成
         code_generator = CodeGenerator()
         py_code = code_generator.generate(ast)
-        return py_code
+        # 执行生成的 Python 代码
+        exec(py_code, globals(), {})
     except Exception as e:
-        return "Error: " + str(e) + "\n" + traceback.format_exc()
+        print("Error: " + str(e))
+        print(traceback.format_exc())
 
 def repl():
-    print("Multi-Agent Language REPL. 输入 exit 退出。")
+    print("Multi-Agent Language REPL")
     buffer = []
     while True:
         try:
@@ -27,14 +38,13 @@ def repl():
                 code = "\n".join(buffer)
                 if not code.strip():
                     continue
-                py_code = run_code(code)
-                buffer.clear()
+                run_code(code)
             else:
                 buffer.append(line)
         except EOFError:
             break
         except Exception as e:
-            print("REPL 错误：", e)
+            print("REPL Error: ", e)
             buffer.clear()
 
 if __name__ == "__main__":
