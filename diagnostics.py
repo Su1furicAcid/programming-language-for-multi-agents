@@ -1,4 +1,4 @@
-from parser import parser, ParseError
+from pllm_parser import parser, ParseError
 import json
 
 def generage_diagnostics(source_code) -> list:

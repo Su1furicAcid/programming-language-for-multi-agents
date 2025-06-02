@@ -184,7 +184,7 @@ class CodeGenerator:
         return f"{param_name}: {param_type}"
     
     def visitReturnStmt(self, node: ReturnStmt) -> None:
-        if node.value is not "":
+        if node.value != "":
             return_value_code = self.visit(node.value)
             self.add_line(f"return {return_value_code}")
         else:

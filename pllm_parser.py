@@ -1,6 +1,6 @@
 import ply.yacc as yacc
 from pllm_ast import *
-from lexer import lexer, tokens
+from pllm_lexer import lexer, tokens
 from type_checker import TypeChecker
 from code_gen import CodeGenerator
 
