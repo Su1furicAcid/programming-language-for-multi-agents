@@ -552,6 +552,13 @@ Construct the parser.
 parser = yacc.yacc(debug=True, debugfile='parser.out')
 
 def parse(source_code):
+    """
+    Parses the given source code and returns the AST and any parse errors.
+    Args:
+        source_code (str): The source code to parse.
+    Returns:
+        tuple: A tuple containing the AST (or None if parsing failed) and a list of parse errors.
+    """
     global parse_errors
     parse_errors = []
     result = parser.parse(source_code, lexer=lexer)

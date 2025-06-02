@@ -1,18 +1,29 @@
-from pllm_parser import parser, ParseError
+"""
+File name: diagnostics.py
+Description: This script generates diagnostics for a given source code file. The diagonostics will be delivered to VSCode language server.
+Author: Sun Ao
+Last edited: 2025-6-2
+"""
+from pllm_parser import parse
 import json
 
-def generage_diagnostics(source_code) -> list:
+def generate_diagnostics(source_code) -> dict:
+    """
+    Generates diagnostics for the provided source code.
+    Args:
+        source_code (str): The source code to analyze.
+    Returns:
+        dict: A dictionary containing the result and any diagnostics found.
+    """
     diagnostics = {
         "result": "success",
         "diagnostics": []
     }
-    try:
-        parser.parse(source_code)
-    except ParseError as e:
-        diagnostics = {
-            "result": "error",
-            "diagnostics": e.diagnostics
-        }
+    _, parse_errors = parse(source_code)
+    if parse_errors:
+        diagnostics["result"] = "error"
+        diagnostics["diagnostics"] = parse_errors
+        return diagnostics
     return diagnostics
 
 if __name__ == "__main__":
@@ -28,5 +39,5 @@ if __name__ == "__main__":
     except FileNotFoundError:
         print(f"Error: File '{source_code_path}' not found.")
         sys.exit(1)
-    diagnostics = generage_diagnostics(source_code)
+    diagnostics = generate_diagnostics(source_code)
     print(json.dumps(diagnostics, indent=2))
