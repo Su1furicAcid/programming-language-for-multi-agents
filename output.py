@@ -125,6 +125,9 @@ async def summarizer(criticism1: str = None, criticism2: str = None):
     summary = response.choices[0].message.content.split("<completion0>")[1].split("</completion0>")[0].strip()
     return {'summary': summary}
 async def writer(summary: str = None):
+    a: int = 1
+    b: str = "Summary of the article"
+    c: Any = (a + b)
     _: Any = write_file("article_summary.txt", summary)
 graph = {'reader': ['critic1', 'critic2'], 'critic1': ['summarizer'], 'critic2': ['summarizer'], 'summarizer': ['writer'], 'writer': []}
 param_mapping = {'critic1': {'article': ('reader', 'article')}, 'critic2': {'article': ('reader', 'article')}, 'summarizer': {'criticism1': ('critic1', 'criticism1'), 'criticism2': ('critic2', 'criticism2')}, 'writer': {'summary': ('summarizer', 'summary')}}

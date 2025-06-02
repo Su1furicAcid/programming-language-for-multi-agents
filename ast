@@ -46,7 +46,7 @@ digraph {
 	node10 -> node24
 	node6 -> node10
 	node2 -> node6 [label=body]
-	node25 [label="position: {'start': {'line': 1, 'column': 1}, 'end': {'line': 5, 'column': 0}}"]
+	node25 [label="position: {'start': {'line': 1, 'column': 1}, 'end': {'line': 4, 'column': 38}}"]
 	node2 -> node25
 	node1 -> node2
 	node26 [label=AgentDef]
@@ -120,14 +120,14 @@ digraph {
 	node56 -> node59
 	node30 -> node56
 	node26 -> node30 [label=body]
-	node60 [label="position: {'start': {'line': 6, 'column': 1}, 'end': {'line': 13, 'column': 0}}"]
+	node60 [label="position: {'start': {'line': 6, 'column': 1}, 'end': {'line': 16, 'column': 7}}"]
 	node26 -> node60
 	node1 -> node26
 	node61 [label=AgentDef]
 	node62 [label=Identifier]
 	node63 [label="name: critic2"]
 	node62 -> node63
-	node64 [label="position: {'start': {'line': 14, 'column': 7}, 'end': {'line': 14, 'column': 13}}"]
+	node64 [label="position: {'start': {'line': 18, 'column': 7}, 'end': {'line': 18, 'column': 13}}"]
 	node62 -> node64
 	node61 -> node62 [label=name]
 	node65 [label=List]
@@ -137,7 +137,7 @@ digraph {
 	node69 [label=Identifier]
 	node70 [label="name: article"]
 	node69 -> node70
-	node71 [label="position: {'start': {'line': 16, 'column': 9}, 'end': {'line': 16, 'column': 15}}"]
+	node71 [label="position: {'start': {'line': 20, 'column': 9}, 'end': {'line': 20, 'column': 15}}"]
 	node69 -> node71
 	node68 -> node69 [label=name]
 	node72 [label="var_type: str"]
@@ -148,7 +148,7 @@ digraph {
 	node68 -> node74
 	node67 -> node68
 	node66 -> node67 [label=variables]
-	node75 [label="position: {'start': {'line': 15, 'column': 5}, 'end': {'line': 16, 'column': 20}}"]
+	node75 [label="position: {'start': {'line': 19, 'column': 5}, 'end': {'line': 20, 'column': 20}}"]
 	node66 -> node75
 	node65 -> node66
 	node76 [label=OutputBlock]
@@ -157,7 +157,7 @@ digraph {
 	node79 [label=Identifier]
 	node80 [label="name: criticism2"]
 	node79 -> node80
-	node81 [label="position: {'start': {'line': 18, 'column': 9}, 'end': {'line': 18, 'column': 18}}"]
+	node81 [label="position: {'start': {'line': 22, 'column': 9}, 'end': {'line': 22, 'column': 18}}"]
 	node79 -> node81
 	node78 -> node79 [label=name]
 	node82 [label="var_type: str"]
@@ -168,17 +168,17 @@ digraph {
 	node78 -> node84
 	node77 -> node78
 	node76 -> node77 [label=variables]
-	node85 [label="position: {'start': {'line': 17, 'column': 5}, 'end': {'line': 18, 'column': 23}}"]
+	node85 [label="position: {'start': {'line': 21, 'column': 5}, 'end': {'line': 22, 'column': 23}}"]
 	node76 -> node85
 	node65 -> node76
 	node86 [label=ModelBlock]
 	node87 [label=Constant]
 	node88 [label="value: \"gpt-3.5-turbo\""]
 	node87 -> node88
-	node89 [label="position: {'start': {'line': 19, 'column': 12}, 'end': {'line': 19, 'column': 26}}"]
+	node89 [label="position: {'start': {'line': 23, 'column': 12}, 'end': {'line': 23, 'column': 26}}"]
 	node87 -> node89
 	node86 -> node87 [label=model_name]
-	node90 [label="position: {'start': {'line': 19, 'column': 5}, 'end': {'line': 0, 'column': 116}}"]
+	node90 [label="position: {'start': {'line': 23, 'column': 5}, 'end': {'line': 0, 'column': 116}}"]
 	node86 -> node90
 	node65 -> node86
 	node91 [label=ChatBlock]
@@ -190,18 +190,18 @@ digraph {
     criticism: ${criticism2}
     \"\"\""]
 	node91 -> node93
-	node94 [label="position: {'start': {'line': 20, 'column': 5}, 'end': {'line': 20, 'column': 145}}"]
+	node94 [label="position: {'start': {'line': 24, 'column': 5}, 'end': {'line': 24, 'column': 145}}"]
 	node91 -> node94
 	node65 -> node91
 	node61 -> node65 [label=body]
-	node95 [label="position: {'start': {'line': 14, 'column': 1}, 'end': {'line': 21, 'column': 0}}"]
+	node95 [label="position: {'start': {'line': 18, 'column': 1}, 'end': {'line': 28, 'column': 7}}"]
 	node61 -> node95
 	node1 -> node61
 	node96 [label=AgentDef]
 	node97 [label=Identifier]
 	node98 [label="name: summarizer"]
 	node97 -> node98
-	node99 [label="position: {'start': {'line': 22, 'column': 7}, 'end': {'line': 22, 'column': 16}}"]
+	node99 [label="position: {'start': {'line': 30, 'column': 7}, 'end': {'line': 30, 'column': 16}}"]
 	node97 -> node99
 	node96 -> node97 [label=name]
 	node100 [label=List]
@@ -211,7 +211,7 @@ digraph {
 	node104 [label=Identifier]
 	node105 [label="name: criticism1"]
 	node104 -> node105
-	node106 [label="position: {'start': {'line': 24, 'column': 9}, 'end': {'line': 24, 'column': 18}}"]
+	node106 [label="position: {'start': {'line': 32, 'column': 9}, 'end': {'line': 32, 'column': 18}}"]
 	node104 -> node106
 	node103 -> node104 [label=name]
 	node107 [label="var_type: str"]
@@ -225,7 +225,7 @@ digraph {
 	node111 [label=Identifier]
 	node112 [label="name: criticism2"]
 	node111 -> node112
-	node113 [label="position: {'start': {'line': 25, 'column': 9}, 'end': {'line': 25, 'column': 18}}"]
+	node113 [label="position: {'start': {'line': 33, 'column': 9}, 'end': {'line': 33, 'column': 18}}"]
 	node111 -> node113
 	node110 -> node111 [label=name]
 	node114 [label="var_type: str"]
@@ -236,7 +236,7 @@ digraph {
 	node110 -> node116
 	node102 -> node110
 	node101 -> node102 [label=variables]
-	node117 [label="position: {'start': {'line': 23, 'column': 5}, 'end': {'line': 25, 'column': 23}}"]
+	node117 [label="position: {'start': {'line': 31, 'column': 5}, 'end': {'line': 33, 'column': 23}}"]
 	node101 -> node117
 	node100 -> node101
 	node118 [label=OutputBlock]
@@ -245,7 +245,7 @@ digraph {
 	node121 [label=Identifier]
 	node122 [label="name: summary"]
 	node121 -> node122
-	node123 [label="position: {'start': {'line': 27, 'column': 9}, 'end': {'line': 27, 'column': 15}}"]
+	node123 [label="position: {'start': {'line': 35, 'column': 9}, 'end': {'line': 35, 'column': 15}}"]
 	node121 -> node123
 	node120 -> node121 [label=name]
 	node124 [label="var_type: str"]
@@ -256,17 +256,17 @@ digraph {
 	node120 -> node126
 	node119 -> node120
 	node118 -> node119 [label=variables]
-	node127 [label="position: {'start': {'line': 26, 'column': 5}, 'end': {'line': 27, 'column': 20}}"]
+	node127 [label="position: {'start': {'line': 34, 'column': 5}, 'end': {'line': 35, 'column': 20}}"]
 	node118 -> node127
 	node100 -> node118
 	node128 [label=ModelBlock]
 	node129 [label=Constant]
 	node130 [label="value: \"gpt-3.5-turbo\""]
 	node129 -> node130
-	node131 [label="position: {'start': {'line': 28, 'column': 12}, 'end': {'line': 28, 'column': 26}}"]
+	node131 [label="position: {'start': {'line': 36, 'column': 12}, 'end': {'line': 36, 'column': 26}}"]
 	node129 -> node131
 	node128 -> node129 [label=model_name]
-	node132 [label="position: {'start': {'line': 28, 'column': 5}, 'end': {'line': 0, 'column': 116}}"]
+	node132 [label="position: {'start': {'line': 36, 'column': 5}, 'end': {'line': 0, 'column': 116}}"]
 	node128 -> node132
 	node100 -> node128
 	node133 [label=ChatBlock]
@@ -279,18 +279,18 @@ digraph {
     summary: ${summary}
     \"\"\""]
 	node133 -> node135
-	node136 [label="position: {'start': {'line': 29, 'column': 5}, 'end': {'line': 29, 'column': 131}}"]
+	node136 [label="position: {'start': {'line': 37, 'column': 5}, 'end': {'line': 37, 'column': 131}}"]
 	node133 -> node136
 	node100 -> node133
 	node96 -> node100 [label=body]
-	node137 [label="position: {'start': {'line': 22, 'column': 1}, 'end': {'line': 30, 'column': 0}}"]
+	node137 [label="position: {'start': {'line': 30, 'column': 1}, 'end': {'line': 42, 'column': 7}}"]
 	node96 -> node137
 	node1 -> node96
 	node138 [label=AgentDef]
 	node139 [label=Identifier]
 	node140 [label="name: writer"]
 	node139 -> node140
-	node141 [label="position: {'start': {'line': 31, 'column': 7}, 'end': {'line': 31, 'column': 12}}"]
+	node141 [label="position: {'start': {'line': 44, 'column': 7}, 'end': {'line': 44, 'column': 12}}"]
 	node139 -> node141
 	node138 -> node139 [label=name]
 	node142 [label=List]
@@ -300,7 +300,7 @@ digraph {
 	node146 [label=Identifier]
 	node147 [label="name: summary"]
 	node146 -> node147
-	node148 [label="position: {'start': {'line': 33, 'column': 9}, 'end': {'line': 33, 'column': 15}}"]
+	node148 [label="position: {'start': {'line': 46, 'column': 9}, 'end': {'line': 46, 'column': 15}}"]
 	node146 -> node148
 	node145 -> node146 [label=name]
 	node149 [label="var_type: str"]
@@ -311,316 +311,382 @@ digraph {
 	node145 -> node151
 	node144 -> node145
 	node143 -> node144 [label=variables]
-	node152 [label="position: {'start': {'line': 32, 'column': 5}, 'end': {'line': 33, 'column': 20}}"]
+	node152 [label="position: {'start': {'line': 45, 'column': 5}, 'end': {'line': 46, 'column': 20}}"]
 	node143 -> node152
 	node142 -> node143
 	node153 [label=AssignStmt]
 	node154 [label=Identifier]
-	node155 [label="name: _"]
+	node155 [label="name: a"]
 	node154 -> node155
-	node156 [label="position: {'start': {'line': 34, 'column': 5}, 'end': {'line': 34, 'column': 5}}"]
+	node156 [label="position: {'start': {'line': 47, 'column': 5}, 'end': {'line': 47, 'column': 5}}"]
 	node154 -> node156
 	node153 -> node154 [label=target]
-	node157 [label="var_type: "]
+	node157 [label="var_type: int"]
 	node153 -> node157
-	node158 [label=FuncCall]
-	node159 [label=Identifier]
-	node160 [label="name: write_file"]
-	node159 -> node160
-	node161 [label="position: {'start': {'line': 34, 'column': 9}, 'end': {'line': 34, 'column': 18}}"]
-	node159 -> node161
-	node158 -> node159 [label=func_name]
-	node162 [label=List]
-	node163 [label=Constant]
-	node164 [label="value: \"article_summary.txt\""]
-	node163 -> node164
-	node165 [label="position: {'start': {'line': 34, 'column': 20}, 'end': {'line': 34, 'column': 40}}"]
-	node163 -> node165
-	node162 -> node163
-	node166 [label=Identifier]
-	node167 [label="name: summary"]
-	node166 -> node167
-	node168 [label="position: {'start': {'line': 34, 'column': 43}, 'end': {'line': 34, 'column': 49}}"]
-	node166 -> node168
-	node162 -> node166
-	node158 -> node162 [label=args]
-	node169 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 34, 'column': 50}}"]
-	node158 -> node169
+	node158 [label=Constant]
+	node159 [label="value: 1"]
+	node158 -> node159
+	node160 [label="position: {'start': {'line': 47, 'column': 14}, 'end': {'line': 47, 'column': 14}}"]
+	node158 -> node160
 	node153 -> node158 [label=value]
-	node170 [label="position: {'start': {'line': 34, 'column': 5}, 'end': {'line': 34, 'column': 50}}"]
-	node153 -> node170
+	node161 [label="position: {'start': {'line': 47, 'column': 5}, 'end': {'line': 47, 'column': 14}}"]
+	node153 -> node161
 	node142 -> node153
-	node138 -> node142 [label=body]
-	node171 [label="position: {'start': {'line': 31, 'column': 1}, 'end': {'line': 35, 'column': 0}}"]
-	node138 -> node171
-	node1 -> node138
-	node172 [label=ConnectBlock]
-	node173 [label=List]
-	node174 [label=Connection]
-	node175 [label=Identifier]
-	node176 [label="name: line1"]
-	node175 -> node176
-	node177 [label="position: {'start': {'line': 37, 'column': 5}, 'end': {'line': 37, 'column': 9}}"]
-	node175 -> node177
-	node174 -> node175 [label=name]
-	node178 [label="conn_type: str"]
-	node174 -> node178
-	node179 [label=AgentRef]
-	node180 [label=List]
+	node162 [label=AssignStmt]
+	node163 [label=Identifier]
+	node164 [label="name: b"]
+	node163 -> node164
+	node165 [label="position: {'start': {'line': 48, 'column': 5}, 'end': {'line': 48, 'column': 5}}"]
+	node163 -> node165
+	node162 -> node163 [label=target]
+	node166 [label="var_type: str"]
+	node162 -> node166
+	node167 [label=Constant]
+	node168 [label="value: \"Summary of the article\""]
+	node167 -> node168
+	node169 [label="position: {'start': {'line': 48, 'column': 14}, 'end': {'line': 48, 'column': 37}}"]
+	node167 -> node169
+	node162 -> node167 [label=value]
+	node170 [label="position: {'start': {'line': 48, 'column': 5}, 'end': {'line': 48, 'column': 37}}"]
+	node162 -> node170
+	node142 -> node162
+	node171 [label=AssignStmt]
+	node172 [label=Identifier]
+	node173 [label="name: c"]
+	node172 -> node173
+	node174 [label="position: {'start': {'line': 49, 'column': 5}, 'end': {'line': 49, 'column': 5}}"]
+	node172 -> node174
+	node171 -> node172 [label=target]
+	node175 [label="var_type: "]
+	node171 -> node175
+	node176 [label=BinaryOp]
+	node177 [label=Identifier]
+	node178 [label="name: a"]
+	node177 -> node178
+	node179 [label="position: {'start': {'line': 49, 'column': 9}, 'end': {'line': 49, 'column': 9}}"]
+	node177 -> node179
+	node176 -> node177 [label=left]
+	node180 [label="op: +"]
+	node176 -> node180
 	node181 [label=Identifier]
-	node182 [label="name: reader"]
+	node182 [label="name: b"]
 	node181 -> node182
-	node183 [label="position: {'start': {'line': 38, 'column': 9}, 'end': {'line': 38, 'column': 14}}"]
+	node183 [label="position: {'start': {'line': 49, 'column': 13}, 'end': {'line': 49, 'column': 13}}"]
 	node181 -> node183
-	node180 -> node181
-	node184 [label=output]
-	node180 -> node184
-	node185 [label=Identifier]
-	node186 [label="name: article"]
-	node185 -> node186
-	node187 [label="position: {'start': {'line': 38, 'column': 23}, 'end': {'line': 38, 'column': 29}}"]
-	node185 -> node187
-	node180 -> node185
-	node179 -> node180 [label=parts]
-	node188 [label="position: {'start': {'line': 38, 'column': 9}, 'end': {'line': 38, 'column': 29}}"]
-	node179 -> node188
-	node174 -> node179 [label=source]
-	node189 [label=AgentRef]
-	node190 [label=List]
-	node191 [label=Identifier]
-	node192 [label="name: critic1"]
-	node191 -> node192
-	node193 [label="position: {'start': {'line': 38, 'column': 34}, 'end': {'line': 38, 'column': 40}}"]
-	node191 -> node193
-	node190 -> node191
-	node194 [label=input]
-	node190 -> node194
-	node195 [label=Identifier]
-	node196 [label="name: article"]
+	node176 -> node181 [label=right]
+	node184 [label="position: {'start': {'line': 49, 'column': 9}, 'end': {'line': 49, 'column': 13}}"]
+	node176 -> node184
+	node171 -> node176 [label=value]
+	node185 [label="position: {'start': {'line': 49, 'column': 5}, 'end': {'line': 49, 'column': 13}}"]
+	node171 -> node185
+	node142 -> node171
+	node186 [label=AssignStmt]
+	node187 [label=Identifier]
+	node188 [label="name: _"]
+	node187 -> node188
+	node189 [label="position: {'start': {'line': 50, 'column': 5}, 'end': {'line': 50, 'column': 5}}"]
+	node187 -> node189
+	node186 -> node187 [label=target]
+	node190 [label="var_type: "]
+	node186 -> node190
+	node191 [label=FuncCall]
+	node192 [label=Identifier]
+	node193 [label="name: write_file"]
+	node192 -> node193
+	node194 [label="position: {'start': {'line': 50, 'column': 9}, 'end': {'line': 50, 'column': 18}}"]
+	node192 -> node194
+	node191 -> node192 [label=func_name]
+	node195 [label=List]
+	node196 [label=Constant]
+	node197 [label="value: \"article_summary.txt\""]
+	node196 -> node197
+	node198 [label="position: {'start': {'line': 50, 'column': 20}, 'end': {'line': 50, 'column': 40}}"]
+	node196 -> node198
 	node195 -> node196
-	node197 [label="position: {'start': {'line': 38, 'column': 48}, 'end': {'line': 38, 'column': 54}}"]
-	node195 -> node197
-	node190 -> node195
-	node189 -> node190 [label=parts]
-	node198 [label="position: {'start': {'line': 38, 'column': 34}, 'end': {'line': 38, 'column': 54}}"]
-	node189 -> node198
-	node174 -> node189 [label=target]
-	node199 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 38, 'column': 54}}"]
-	node174 -> node199
-	node173 -> node174
-	node200 [label=Connection]
-	node201 [label=Identifier]
-	node202 [label="name: line2"]
-	node201 -> node202
-	node203 [label="position: {'start': {'line': 39, 'column': 5}, 'end': {'line': 39, 'column': 9}}"]
-	node201 -> node203
-	node200 -> node201 [label=name]
-	node204 [label="conn_type: str"]
-	node200 -> node204
-	node205 [label=AgentRef]
+	node199 [label=Identifier]
+	node200 [label="name: summary"]
+	node199 -> node200
+	node201 [label="position: {'start': {'line': 50, 'column': 43}, 'end': {'line': 50, 'column': 49}}"]
+	node199 -> node201
+	node195 -> node199
+	node191 -> node195 [label=args]
+	node202 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 50, 'column': 50}}"]
+	node191 -> node202
+	node186 -> node191 [label=value]
+	node203 [label="position: {'start': {'line': 50, 'column': 5}, 'end': {'line': 50, 'column': 50}}"]
+	node186 -> node203
+	node142 -> node186
+	node138 -> node142 [label=body]
+	node204 [label="position: {'start': {'line': 44, 'column': 1}, 'end': {'line': 50, 'column': 50}}"]
+	node138 -> node204
+	node1 -> node138
+	node205 [label=ConnectBlock]
 	node206 [label=List]
-	node207 [label=Identifier]
-	node208 [label="name: reader"]
-	node207 -> node208
-	node209 [label="position: {'start': {'line': 40, 'column': 9}, 'end': {'line': 40, 'column': 14}}"]
-	node207 -> node209
+	node207 [label=Connection]
+	node208 [label=Identifier]
+	node209 [label="name: line1"]
+	node208 -> node209
+	node210 [label="position: {'start': {'line': 53, 'column': 5}, 'end': {'line': 53, 'column': 9}}"]
+	node208 -> node210
+	node207 -> node208 [label=name]
+	node211 [label="conn_type: str"]
+	node207 -> node211
+	node212 [label=AgentRef]
+	node213 [label=List]
+	node214 [label=Identifier]
+	node215 [label="name: reader"]
+	node214 -> node215
+	node216 [label="position: {'start': {'line': 54, 'column': 9}, 'end': {'line': 54, 'column': 14}}"]
+	node214 -> node216
+	node213 -> node214
+	node217 [label=output]
+	node213 -> node217
+	node218 [label=Identifier]
+	node219 [label="name: article"]
+	node218 -> node219
+	node220 [label="position: {'start': {'line': 54, 'column': 23}, 'end': {'line': 54, 'column': 29}}"]
+	node218 -> node220
+	node213 -> node218
+	node212 -> node213 [label=parts]
+	node221 [label="position: {'start': {'line': 54, 'column': 9}, 'end': {'line': 54, 'column': 29}}"]
+	node212 -> node221
+	node207 -> node212 [label=source]
+	node222 [label=AgentRef]
+	node223 [label=List]
+	node224 [label=Identifier]
+	node225 [label="name: critic1"]
+	node224 -> node225
+	node226 [label="position: {'start': {'line': 54, 'column': 34}, 'end': {'line': 54, 'column': 40}}"]
+	node224 -> node226
+	node223 -> node224
+	node227 [label=input]
+	node223 -> node227
+	node228 [label=Identifier]
+	node229 [label="name: article"]
+	node228 -> node229
+	node230 [label="position: {'start': {'line': 54, 'column': 48}, 'end': {'line': 54, 'column': 54}}"]
+	node228 -> node230
+	node223 -> node228
+	node222 -> node223 [label=parts]
+	node231 [label="position: {'start': {'line': 54, 'column': 34}, 'end': {'line': 54, 'column': 54}}"]
+	node222 -> node231
+	node207 -> node222 [label=target]
+	node232 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 54, 'column': 54}}"]
+	node207 -> node232
 	node206 -> node207
-	node210 [label=output]
-	node206 -> node210
-	node211 [label=Identifier]
-	node212 [label="name: article"]
-	node211 -> node212
-	node213 [label="position: {'start': {'line': 40, 'column': 23}, 'end': {'line': 40, 'column': 29}}"]
-	node211 -> node213
-	node206 -> node211
-	node205 -> node206 [label=parts]
-	node214 [label="position: {'start': {'line': 40, 'column': 9}, 'end': {'line': 40, 'column': 29}}"]
-	node205 -> node214
-	node200 -> node205 [label=source]
-	node215 [label=AgentRef]
-	node216 [label=List]
-	node217 [label=Identifier]
-	node218 [label="name: critic2"]
-	node217 -> node218
-	node219 [label="position: {'start': {'line': 40, 'column': 34}, 'end': {'line': 40, 'column': 40}}"]
-	node217 -> node219
-	node216 -> node217
-	node220 [label=input]
-	node216 -> node220
-	node221 [label=Identifier]
-	node222 [label="name: article"]
-	node221 -> node222
-	node223 [label="position: {'start': {'line': 40, 'column': 48}, 'end': {'line': 40, 'column': 54}}"]
-	node221 -> node223
-	node216 -> node221
-	node215 -> node216 [label=parts]
-	node224 [label="position: {'start': {'line': 40, 'column': 34}, 'end': {'line': 40, 'column': 54}}"]
-	node215 -> node224
-	node200 -> node215 [label=target]
-	node225 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 40, 'column': 54}}"]
-	node200 -> node225
-	node173 -> node200
-	node226 [label=Connection]
-	node227 [label=Identifier]
-	node228 [label="name: line3"]
-	node227 -> node228
-	node229 [label="position: {'start': {'line': 41, 'column': 5}, 'end': {'line': 41, 'column': 9}}"]
-	node227 -> node229
-	node226 -> node227 [label=name]
-	node230 [label="conn_type: str"]
-	node226 -> node230
-	node231 [label=AgentRef]
-	node232 [label=List]
-	node233 [label=Identifier]
-	node234 [label="name: critic1"]
-	node233 -> node234
-	node235 [label="position: {'start': {'line': 42, 'column': 9}, 'end': {'line': 42, 'column': 15}}"]
-	node233 -> node235
-	node232 -> node233
-	node236 [label=output]
-	node232 -> node236
-	node237 [label=Identifier]
-	node238 [label="name: criticism1"]
-	node237 -> node238
-	node239 [label="position: {'start': {'line': 42, 'column': 24}, 'end': {'line': 42, 'column': 33}}"]
-	node237 -> node239
-	node232 -> node237
-	node231 -> node232 [label=parts]
-	node240 [label="position: {'start': {'line': 42, 'column': 9}, 'end': {'line': 42, 'column': 33}}"]
-	node231 -> node240
-	node226 -> node231 [label=source]
-	node241 [label=AgentRef]
-	node242 [label=List]
-	node243 [label=Identifier]
-	node244 [label="name: summarizer"]
-	node243 -> node244
-	node245 [label="position: {'start': {'line': 42, 'column': 38}, 'end': {'line': 42, 'column': 47}}"]
-	node243 -> node245
-	node242 -> node243
-	node246 [label=input]
-	node242 -> node246
-	node247 [label=Identifier]
-	node248 [label="name: criticism1"]
-	node247 -> node248
-	node249 [label="position: {'start': {'line': 42, 'column': 55}, 'end': {'line': 42, 'column': 64}}"]
-	node247 -> node249
-	node242 -> node247
-	node241 -> node242 [label=parts]
-	node250 [label="position: {'start': {'line': 42, 'column': 38}, 'end': {'line': 42, 'column': 64}}"]
-	node241 -> node250
-	node226 -> node241 [label=target]
-	node251 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 42, 'column': 64}}"]
-	node226 -> node251
-	node173 -> node226
-	node252 [label=Connection]
-	node253 [label=Identifier]
-	node254 [label="name: line4"]
-	node253 -> node254
-	node255 [label="position: {'start': {'line': 43, 'column': 5}, 'end': {'line': 43, 'column': 9}}"]
-	node253 -> node255
-	node252 -> node253 [label=name]
-	node256 [label="conn_type: str"]
-	node252 -> node256
-	node257 [label=AgentRef]
-	node258 [label=List]
-	node259 [label=Identifier]
-	node260 [label="name: critic2"]
-	node259 -> node260
-	node261 [label="position: {'start': {'line': 44, 'column': 9}, 'end': {'line': 44, 'column': 15}}"]
-	node259 -> node261
-	node258 -> node259
-	node262 [label=output]
-	node258 -> node262
-	node263 [label=Identifier]
-	node264 [label="name: criticism2"]
-	node263 -> node264
-	node265 [label="position: {'start': {'line': 44, 'column': 24}, 'end': {'line': 44, 'column': 33}}"]
-	node263 -> node265
-	node258 -> node263
-	node257 -> node258 [label=parts]
-	node266 [label="position: {'start': {'line': 44, 'column': 9}, 'end': {'line': 44, 'column': 33}}"]
-	node257 -> node266
-	node252 -> node257 [label=source]
-	node267 [label=AgentRef]
-	node268 [label=List]
-	node269 [label=Identifier]
-	node270 [label="name: summarizer"]
-	node269 -> node270
-	node271 [label="position: {'start': {'line': 44, 'column': 38}, 'end': {'line': 44, 'column': 47}}"]
-	node269 -> node271
-	node268 -> node269
-	node272 [label=input]
-	node268 -> node272
-	node273 [label=Identifier]
-	node274 [label="name: criticism2"]
-	node273 -> node274
-	node275 [label="position: {'start': {'line': 44, 'column': 55}, 'end': {'line': 44, 'column': 64}}"]
-	node273 -> node275
-	node268 -> node273
-	node267 -> node268 [label=parts]
-	node276 [label="position: {'start': {'line': 44, 'column': 38}, 'end': {'line': 44, 'column': 64}}"]
-	node267 -> node276
-	node252 -> node267 [label=target]
-	node277 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 44, 'column': 64}}"]
-	node252 -> node277
-	node173 -> node252
-	node278 [label=Connection]
-	node279 [label=Identifier]
-	node280 [label="name: line5"]
-	node279 -> node280
-	node281 [label="position: {'start': {'line': 45, 'column': 5}, 'end': {'line': 45, 'column': 9}}"]
-	node279 -> node281
-	node278 -> node279 [label=name]
-	node282 [label="conn_type: str"]
-	node278 -> node282
-	node283 [label=AgentRef]
-	node284 [label=List]
-	node285 [label=Identifier]
-	node286 [label="name: summarizer"]
-	node285 -> node286
-	node287 [label="position: {'start': {'line': 46, 'column': 9}, 'end': {'line': 46, 'column': 18}}"]
-	node285 -> node287
-	node284 -> node285
-	node288 [label=output]
-	node284 -> node288
-	node289 [label=Identifier]
-	node290 [label="name: summary"]
-	node289 -> node290
-	node291 [label="position: {'start': {'line': 46, 'column': 27}, 'end': {'line': 46, 'column': 33}}"]
-	node289 -> node291
-	node284 -> node289
-	node283 -> node284 [label=parts]
-	node292 [label="position: {'start': {'line': 46, 'column': 9}, 'end': {'line': 46, 'column': 33}}"]
-	node283 -> node292
-	node278 -> node283 [label=source]
-	node293 [label=AgentRef]
-	node294 [label=List]
-	node295 [label=Identifier]
-	node296 [label="name: writer"]
-	node295 -> node296
-	node297 [label="position: {'start': {'line': 46, 'column': 38}, 'end': {'line': 46, 'column': 43}}"]
-	node295 -> node297
-	node294 -> node295
-	node298 [label=input]
-	node294 -> node298
-	node299 [label=Identifier]
-	node300 [label="name: summary"]
-	node299 -> node300
-	node301 [label="position: {'start': {'line': 46, 'column': 51}, 'end': {'line': 46, 'column': 57}}"]
-	node299 -> node301
-	node294 -> node299
-	node293 -> node294 [label=parts]
-	node302 [label="position: {'start': {'line': 46, 'column': 38}, 'end': {'line': 46, 'column': 57}}"]
-	node293 -> node302
-	node278 -> node293 [label=target]
-	node303 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 46, 'column': 58}}"]
-	node278 -> node303
-	node173 -> node278
-	node172 -> node173 [label=connections]
-	node304 [label="position: {'start': {'line': 36, 'column': 1}, 'end': {'line': 46, 'column': 58}}"]
-	node172 -> node304
-	node1 -> node172
+	node233 [label=Connection]
+	node234 [label=Identifier]
+	node235 [label="name: line2"]
+	node234 -> node235
+	node236 [label="position: {'start': {'line': 55, 'column': 5}, 'end': {'line': 55, 'column': 9}}"]
+	node234 -> node236
+	node233 -> node234 [label=name]
+	node237 [label="conn_type: str"]
+	node233 -> node237
+	node238 [label=AgentRef]
+	node239 [label=List]
+	node240 [label=Identifier]
+	node241 [label="name: reader"]
+	node240 -> node241
+	node242 [label="position: {'start': {'line': 56, 'column': 9}, 'end': {'line': 56, 'column': 14}}"]
+	node240 -> node242
+	node239 -> node240
+	node243 [label=output]
+	node239 -> node243
+	node244 [label=Identifier]
+	node245 [label="name: article"]
+	node244 -> node245
+	node246 [label="position: {'start': {'line': 56, 'column': 23}, 'end': {'line': 56, 'column': 29}}"]
+	node244 -> node246
+	node239 -> node244
+	node238 -> node239 [label=parts]
+	node247 [label="position: {'start': {'line': 56, 'column': 9}, 'end': {'line': 56, 'column': 29}}"]
+	node238 -> node247
+	node233 -> node238 [label=source]
+	node248 [label=AgentRef]
+	node249 [label=List]
+	node250 [label=Identifier]
+	node251 [label="name: critic2"]
+	node250 -> node251
+	node252 [label="position: {'start': {'line': 56, 'column': 34}, 'end': {'line': 56, 'column': 40}}"]
+	node250 -> node252
+	node249 -> node250
+	node253 [label=input]
+	node249 -> node253
+	node254 [label=Identifier]
+	node255 [label="name: article"]
+	node254 -> node255
+	node256 [label="position: {'start': {'line': 56, 'column': 48}, 'end': {'line': 56, 'column': 54}}"]
+	node254 -> node256
+	node249 -> node254
+	node248 -> node249 [label=parts]
+	node257 [label="position: {'start': {'line': 56, 'column': 34}, 'end': {'line': 56, 'column': 54}}"]
+	node248 -> node257
+	node233 -> node248 [label=target]
+	node258 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 56, 'column': 54}}"]
+	node233 -> node258
+	node206 -> node233
+	node259 [label=Connection]
+	node260 [label=Identifier]
+	node261 [label="name: line3"]
+	node260 -> node261
+	node262 [label="position: {'start': {'line': 57, 'column': 5}, 'end': {'line': 57, 'column': 9}}"]
+	node260 -> node262
+	node259 -> node260 [label=name]
+	node263 [label="conn_type: str"]
+	node259 -> node263
+	node264 [label=AgentRef]
+	node265 [label=List]
+	node266 [label=Identifier]
+	node267 [label="name: critic1"]
+	node266 -> node267
+	node268 [label="position: {'start': {'line': 58, 'column': 9}, 'end': {'line': 58, 'column': 15}}"]
+	node266 -> node268
+	node265 -> node266
+	node269 [label=output]
+	node265 -> node269
+	node270 [label=Identifier]
+	node271 [label="name: criticism1"]
+	node270 -> node271
+	node272 [label="position: {'start': {'line': 58, 'column': 24}, 'end': {'line': 58, 'column': 33}}"]
+	node270 -> node272
+	node265 -> node270
+	node264 -> node265 [label=parts]
+	node273 [label="position: {'start': {'line': 58, 'column': 9}, 'end': {'line': 58, 'column': 33}}"]
+	node264 -> node273
+	node259 -> node264 [label=source]
+	node274 [label=AgentRef]
+	node275 [label=List]
+	node276 [label=Identifier]
+	node277 [label="name: summarizer"]
+	node276 -> node277
+	node278 [label="position: {'start': {'line': 58, 'column': 38}, 'end': {'line': 58, 'column': 47}}"]
+	node276 -> node278
+	node275 -> node276
+	node279 [label=input]
+	node275 -> node279
+	node280 [label=Identifier]
+	node281 [label="name: criticism1"]
+	node280 -> node281
+	node282 [label="position: {'start': {'line': 58, 'column': 55}, 'end': {'line': 58, 'column': 64}}"]
+	node280 -> node282
+	node275 -> node280
+	node274 -> node275 [label=parts]
+	node283 [label="position: {'start': {'line': 58, 'column': 38}, 'end': {'line': 58, 'column': 64}}"]
+	node274 -> node283
+	node259 -> node274 [label=target]
+	node284 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 58, 'column': 64}}"]
+	node259 -> node284
+	node206 -> node259
+	node285 [label=Connection]
+	node286 [label=Identifier]
+	node287 [label="name: line4"]
+	node286 -> node287
+	node288 [label="position: {'start': {'line': 59, 'column': 5}, 'end': {'line': 59, 'column': 9}}"]
+	node286 -> node288
+	node285 -> node286 [label=name]
+	node289 [label="conn_type: str"]
+	node285 -> node289
+	node290 [label=AgentRef]
+	node291 [label=List]
+	node292 [label=Identifier]
+	node293 [label="name: critic2"]
+	node292 -> node293
+	node294 [label="position: {'start': {'line': 60, 'column': 9}, 'end': {'line': 60, 'column': 15}}"]
+	node292 -> node294
+	node291 -> node292
+	node295 [label=output]
+	node291 -> node295
+	node296 [label=Identifier]
+	node297 [label="name: criticism2"]
+	node296 -> node297
+	node298 [label="position: {'start': {'line': 60, 'column': 24}, 'end': {'line': 60, 'column': 33}}"]
+	node296 -> node298
+	node291 -> node296
+	node290 -> node291 [label=parts]
+	node299 [label="position: {'start': {'line': 60, 'column': 9}, 'end': {'line': 60, 'column': 33}}"]
+	node290 -> node299
+	node285 -> node290 [label=source]
+	node300 [label=AgentRef]
+	node301 [label=List]
+	node302 [label=Identifier]
+	node303 [label="name: summarizer"]
+	node302 -> node303
+	node304 [label="position: {'start': {'line': 60, 'column': 38}, 'end': {'line': 60, 'column': 47}}"]
+	node302 -> node304
+	node301 -> node302
+	node305 [label=input]
+	node301 -> node305
+	node306 [label=Identifier]
+	node307 [label="name: criticism2"]
+	node306 -> node307
+	node308 [label="position: {'start': {'line': 60, 'column': 55}, 'end': {'line': 60, 'column': 64}}"]
+	node306 -> node308
+	node301 -> node306
+	node300 -> node301 [label=parts]
+	node309 [label="position: {'start': {'line': 60, 'column': 38}, 'end': {'line': 60, 'column': 64}}"]
+	node300 -> node309
+	node285 -> node300 [label=target]
+	node310 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 60, 'column': 64}}"]
+	node285 -> node310
+	node206 -> node285
+	node311 [label=Connection]
+	node312 [label=Identifier]
+	node313 [label="name: line5"]
+	node312 -> node313
+	node314 [label="position: {'start': {'line': 61, 'column': 5}, 'end': {'line': 61, 'column': 9}}"]
+	node312 -> node314
+	node311 -> node312 [label=name]
+	node315 [label="conn_type: str"]
+	node311 -> node315
+	node316 [label=AgentRef]
+	node317 [label=List]
+	node318 [label=Identifier]
+	node319 [label="name: summarizer"]
+	node318 -> node319
+	node320 [label="position: {'start': {'line': 62, 'column': 9}, 'end': {'line': 62, 'column': 18}}"]
+	node318 -> node320
+	node317 -> node318
+	node321 [label=output]
+	node317 -> node321
+	node322 [label=Identifier]
+	node323 [label="name: summary"]
+	node322 -> node323
+	node324 [label="position: {'start': {'line': 62, 'column': 27}, 'end': {'line': 62, 'column': 33}}"]
+	node322 -> node324
+	node317 -> node322
+	node316 -> node317 [label=parts]
+	node325 [label="position: {'start': {'line': 62, 'column': 9}, 'end': {'line': 62, 'column': 33}}"]
+	node316 -> node325
+	node311 -> node316 [label=source]
+	node326 [label=AgentRef]
+	node327 [label=List]
+	node328 [label=Identifier]
+	node329 [label="name: writer"]
+	node328 -> node329
+	node330 [label="position: {'start': {'line': 62, 'column': 38}, 'end': {'line': 62, 'column': 43}}"]
+	node328 -> node330
+	node327 -> node328
+	node331 [label=input]
+	node327 -> node331
+	node332 [label=Identifier]
+	node333 [label="name: summary"]
+	node332 -> node333
+	node334 [label="position: {'start': {'line': 62, 'column': 51}, 'end': {'line': 62, 'column': 57}}"]
+	node332 -> node334
+	node327 -> node332
+	node326 -> node327 [label=parts]
+	node335 [label="position: {'start': {'line': 62, 'column': 38}, 'end': {'line': 62, 'column': 57}}"]
+	node326 -> node335
+	node311 -> node326 [label=target]
+	node336 [label="position: {'start': {'line': 0, 'column': 1}, 'end': {'line': 62, 'column': 58}}"]
+	node311 -> node336
+	node206 -> node311
+	node205 -> node206 [label=connections]
+	node337 [label="position: {'start': {'line': 52, 'column': 1}, 'end': {'line': 62, 'column': 58}}"]
+	node205 -> node337
+	node1 -> node205
 	node0 -> node1 [label=body]
-	node305 [label="position: {'start': {'line': 1, 'column': 1}, 'end': {'line': 46, 'column': 58}}"]
-	node0 -> node305
+	node338 [label="position: {'start': {'line': 1, 'column': 1}, 'end': {'line': 62, 'column': 58}}"]
+	node0 -> node338
 }

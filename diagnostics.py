@@ -5,6 +5,7 @@ Author: Sun Ao
 Last edited: 2025-6-2
 """
 from pllm_parser import parse
+from type_checker import check_types
 import json
 
 def generate_diagnostics(source_code) -> dict:
@@ -19,11 +20,10 @@ def generate_diagnostics(source_code) -> dict:
         "result": "success",
         "diagnostics": []
     }
-    _, parse_errors = parse(source_code)
-    if parse_errors:
-        diagnostics["result"] = "error"
-        diagnostics["diagnostics"] = parse_errors
-        return diagnostics
+    ast_node, parse_errors = parse(source_code)
+    type_errors = check_types(ast_node)
+    diagnostics["result"] = "error" if parse_errors or type_errors else "success"
+    diagnostics["diagnostics"] = parse_errors + type_errors
     return diagnostics
 
 if __name__ == "__main__":

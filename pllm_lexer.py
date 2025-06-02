@@ -84,6 +84,7 @@ t_RBRACKET = r"\]"
 # -------------------------------
 def t_TRIPLE_STRING(t):
     r'"""(?:.|\n)*?"""'
+    t.lexer.lineno += t.value.count('\n')
     return t
 
 def t_STRING(t):
@@ -113,17 +114,13 @@ indent_stack = [0]
 def t_NEWLINE(t):
     r'\n[ \t]*'
     t.lexer.lineno += 1
-    spaces = len(t.value) - 1  # count spaces after \n
+    spaces = len(t.value) - 1
     next_indent = spaces
 
-    # Peek next char; if it's a newline or comment, skip it
     pos = t.lexer.lexpos
     if pos >= len(t.lexer.lexdata):
         return None
     next_char = t.lexer.lexdata[pos]
-    if next_char == '\n' or next_char == '#':
-        return None
-
     current_indent = indent_stack[-1]
     if next_indent > current_indent:
         indent_stack.append(next_indent)
@@ -143,7 +140,7 @@ def t_NEWLINE(t):
         t.lexer.dedent_tokens = dedent_tokens
         return t.lexer.dedent_tokens.pop(0)
     else:
-        return None  # same indent, no token
+        return None
 
 # -------------------------------
 # 处理 DEDENT Token 插入
@@ -187,3 +184,4 @@ def t_error(t):
 lexer = lex.lex()
 lexer.token_original = lexer.token
 lexer.token = lexer_token
+lexer.lineno = 1

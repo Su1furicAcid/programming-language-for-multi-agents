@@ -15,16 +15,15 @@ class TypeErrorHandler:
         :param node: 发生错误的AST节点
         """
         if node:
-            # 利用 repr 打印 AST 节点的详细信息
-            error_message = f"Error at {type(node).__name__}: {message}\n  Node details: {repr(node)}"
-        else:
-            error_message = f"Error: {message}"
-        self.errors.append(error_message)
+            self.errors.append({
+                **node.position,
+                "message": message or "Type Error",
+            })
 
     def show(self) -> None:
         if len(self.errors) > 0:
             for err in self.errors:
-                print(err)
+                print(f"{err['start']['line']}:{err['start']['column']} ~ {err['end']['line']}:{err['end']['column']} : {err['message']}")
 
 class TypeChecker:
     def __init__(self):
@@ -49,7 +48,7 @@ class TypeChecker:
     def checkProgram(self, program_node: Program) -> None:
         self._initTypeEnvironment()
         self.visit(program_node)
-        self._show()
+        # self._show()
 
     def visit(self, ast_node: ASTNode) -> Optional[Type]:
         method_name: str = f"visit{type(ast_node).__name__}"
@@ -420,3 +419,8 @@ class TypeChecker:
             return RecordType({f"ret{i}": t for i, t in enumerate(func_type.return_types)})
         else:
             return Unit
+        
+def check_types(program_node: Program) -> None:
+    type_checker = TypeChecker()
+    type_checker.checkProgram(program_node)
+    return type_checker.err_handler.errors
