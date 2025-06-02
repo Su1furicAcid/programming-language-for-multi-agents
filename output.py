@@ -1,8 +1,10 @@
+# import 
 from openai import AsyncOpenAI
 import asyncio
 from typing import *
 from sys_prompt import SYS_PROMPT
 from config import API_KEY, BASE_URL
+
 # private
 async def execute(graph, param_mapping):
     agent_outputs = {}
@@ -56,6 +58,9 @@ def int_to_str(input: int) -> str:
 
 def str_to_int(input: str) -> int:
     return int(input)
+
+def console(input: Any) -> None:
+    print(input)
 async def reader():
     article: Any = read_file("article.txt")
     return {'article': article}

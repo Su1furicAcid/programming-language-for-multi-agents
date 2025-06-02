@@ -11,6 +11,10 @@ precedence = (
     ('left', 'EQ', 'NEQ', 'GT', 'LT', 'LE', 'GE'),
 )
 
+class ParseError(Exception):
+    def __init__(self, diagnostic):
+        self.diagnostic = diagnostic
+
 # program ::= program_body
 def p_program(p):
     '''program : program_body'''
@@ -442,7 +446,13 @@ def p_empty(p):
 
 # 错误处理
 def p_error(p):
-    print(f"Syntax error at {p.value!r}" if p else "Syntax error at EOF")
+    raise ParseError({
+        "range": {
+            "start": {"line": p.lineno, "column": p.lexpos},
+            "end": {"line": p.lineno, "column": p.lexpos + len(p.value) if p else 0}
+        },
+        "msg": "Syntax error at '%s'" % (p.value if p else "end of input")
+    })
 
 # 构建解析器
 parser = yacc.yacc(debug=True, debugfile='parser.out')
