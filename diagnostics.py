@@ -2,18 +2,18 @@ from pllm_parser import parser, ParseError
 import json
 
 def generage_diagnostics(source_code) -> list:
-    diagnostic = {
+    diagnostics = {
         "result": "success",
-        "diagnostic": {}
+        "diagnostics": []
     }
     try:
         parser.parse(source_code)
     except ParseError as e:
-        diagnostic = {
+        diagnostics = {
             "result": "error",
-            "diagnostic": e.diagnostic
+            "diagnostics": e.diagnostics
         }
-    return diagnostic
+    return diagnostics
 
 if __name__ == "__main__":
     import sys

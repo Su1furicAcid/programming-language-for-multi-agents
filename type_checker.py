@@ -57,8 +57,7 @@ class TypeChecker:
         return visitor(ast_node)
     
     def _defaultVisitor(self, node: ASTNode) -> None:
-        # TODO: 抛出一个错误
-        print("Not implemented yet.")
+        return
 
     # Program
     def visitProgram(self, node: Program) -> None:

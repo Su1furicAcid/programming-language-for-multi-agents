@@ -85,7 +85,7 @@ class CodeGenerator:
         decl_var_name_str = self.visit(node.name)
         decl_var_type_str = type_to_pycode(string_to_type(node.var_type))
         decl_var_expr = node.value
-        if decl_var_expr is not "":
+        if decl_var_expr != "":
             decl_var_expr_str = self.visit(decl_var_expr)
             return f"{decl_var_name_str}: {decl_var_type_str} = {decl_var_expr_str}"
         else:

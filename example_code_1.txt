@@ -1,6 +1,6 @@
 agent reader:
     output: 
-        article: str
+        article: strr
     article = read_file("article.txt")
 
 agent critic1:
