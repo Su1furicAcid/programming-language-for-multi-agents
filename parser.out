@@ -32,7 +32,7 @@ Rule 21    base_type -> TYPE_INT
 Rule 22    base_type -> TYPE_FLOAT
 Rule 23    base_type -> TYPE_BOOL
 Rule 24    base_type -> TYPE_UNIT
-Rule 25    type_alias -> identifier
+Rule 25    type_alias -> IDENTIFIER
 Rule 26    union_type -> TYPE_UNION LBRACKET type_list RBRACKET
 Rule 27    func_ret_type -> LPAREN type_list RPAREN
 Rule 28    type_list -> type
@@ -87,7 +87,7 @@ Rule 76    statement -> break_stmt
 Rule 77    statement -> continue_stmt
 Rule 78    statement -> return_stmt
 Rule 79    statement -> type_def_stmt
-Rule 80    type_def_stmt -> TYPE identifier EQUALS type
+Rule 80    type_def_stmt -> TYPE IDENTIFIER EQUALS type
 Rule 81    assign_stmt -> assign_target COLON type EQUALS expr
 Rule 82    assign_stmt -> assign_target EQUALS expr
 Rule 83    assign_stmt -> assign_target COLON type EQUALS error
@@ -171,7 +171,7 @@ FOR                  : 89 90
 FUN                  : 60 61 62 63
 GE                   : 141
 GT                   : 139
-IDENTIFIER           : 110
+IDENTIFIER           : 25 80 110
 IF                   : 93 94 95 96
 IN                   : 89 90
 INDENT               : 35 43 44 45 46 51 54 69
@@ -241,7 +241,7 @@ for_stmt             : 72
 func_call            : 106
 func_def             : 7
 func_ret_type        : 17
-identifier           : 10 11 12 13 25 34 35 49 54 55 56 60 61 62 63 80 85 89 90 108 123 124 125 125 126
+identifier           : 10 11 12 13 34 35 49 54 55 56 60 61 62 63 85 89 90 108 123 124 125 125 126
 if_stmt              : 73
 index_access         : 87 105
 input_block          : 38
@@ -315,7 +315,7 @@ state 0
     (91) break_stmt -> . BREAK
     (92) continue_stmt -> . CONTINUE
     (88) return_stmt -> . RETURN expr
-    (80) type_def_stmt -> . TYPE identifier EQUALS type
+    (80) type_def_stmt -> . TYPE IDENTIFIER EQUALS type
     (85) assign_target -> . identifier
     (86) assign_target -> . field_access
     (87) assign_target -> . index_access
@@ -333,7 +333,7 @@ state 0
     CONTINUE        shift and go to state 25
     RETURN          shift and go to state 26
     TYPE            shift and go to state 27
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     program                        shift and go to state 1
     program_body                   shift and go to state 2
@@ -352,8 +352,8 @@ state 0
     type_def_stmt                  shift and go to state 15
     identifier                     shift and go to state 17
     assign_target                  shift and go to state 23
-    field_access                   shift and go to state 28
-    index_access                   shift and go to state 29
+    field_access                   shift and go to state 29
+    index_access                   shift and go to state 30
 
 state 1
 
@@ -407,7 +407,7 @@ state 3
     (91) break_stmt -> . BREAK
     (92) continue_stmt -> . CONTINUE
     (88) return_stmt -> . RETURN expr
-    (80) type_def_stmt -> . TYPE identifier EQUALS type
+    (80) type_def_stmt -> . TYPE IDENTIFIER EQUALS type
     (85) assign_target -> . identifier
     (86) assign_target -> . field_access
     (87) assign_target -> . index_access
@@ -426,7 +426,7 @@ state 3
     CONTINUE        shift and go to state 25
     RETURN          shift and go to state 26
     TYPE            shift and go to state 27
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     program_body_item              shift and go to state 3
     program_body                   shift and go to state 31
@@ -444,8 +444,8 @@ state 3
     type_def_stmt                  shift and go to state 15
     identifier                     shift and go to state 17
     assign_target                  shift and go to state 23
-    field_access                   shift and go to state 28
-    index_access                   shift and go to state 29
+    field_access                   shift and go to state 29
+    index_access                   shift and go to state 30
 
 state 4
 
@@ -708,7 +708,7 @@ state 16
     (35) agent_def -> AGENT . identifier COLON INDENT agent_body DEDENT
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 32
 
@@ -739,7 +739,7 @@ state 19
     (63) func_def -> FUN . identifier LPAREN error RPAREN COLON stmt_block
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 36
 
@@ -749,7 +749,7 @@ state 20
     (90) for_stmt -> FOR . identifier IN error COLON stmt_block
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 37
 
@@ -781,7 +781,7 @@ state 21
     error           shift and go to state 39
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -822,7 +822,7 @@ state 22
     error           shift and go to state 54
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -918,7 +918,7 @@ state 26
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -935,30 +935,12 @@ state 26
 
 state 27
 
-    (80) type_def_stmt -> TYPE . identifier EQUALS type
-    (110) identifier -> . IDENTIFIER
+    (80) type_def_stmt -> TYPE . IDENTIFIER EQUALS type
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 58
 
-    identifier                     shift and go to state 58
 
 state 28
-
-    (86) assign_target -> field_access .
-
-    COLON           reduce using rule 86 (assign_target -> field_access .)
-    EQUALS          reduce using rule 86 (assign_target -> field_access .)
-
-
-state 29
-
-    (87) assign_target -> index_access .
-
-    COLON           reduce using rule 87 (assign_target -> index_access .)
-    EQUALS          reduce using rule 87 (assign_target -> index_access .)
-
-
-state 30
 
     (110) identifier -> IDENTIFIER .
 
@@ -1000,8 +982,23 @@ state 30
     COMMA           reduce using rule 110 (identifier -> IDENTIFIER .)
     RPAREN          reduce using rule 110 (identifier -> IDENTIFIER .)
     RBRACE          reduce using rule 110 (identifier -> IDENTIFIER .)
-    INDENT          reduce using rule 110 (identifier -> IDENTIFIER .)
     ARROW           reduce using rule 110 (identifier -> IDENTIFIER .)
+
+
+state 29
+
+    (86) assign_target -> field_access .
+
+    COLON           reduce using rule 86 (assign_target -> field_access .)
+    EQUALS          reduce using rule 86 (assign_target -> field_access .)
+
+
+state 30
+
+    (87) assign_target -> index_access .
+
+    COLON           reduce using rule 87 (assign_target -> index_access .)
+    EQUALS          reduce using rule 87 (assign_target -> index_access .)
 
 
 state 31
@@ -1023,7 +1020,7 @@ state 33
     (125) field_access -> identifier DOT . identifier
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 60
 
@@ -1051,7 +1048,7 @@ state 34
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -1503,7 +1500,7 @@ state 49
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -1527,7 +1524,7 @@ state 50
     (123) instance_assign -> . identifier EQUALS expr
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     record_elements                shift and go to state 82
     instance_assign                shift and go to state 83
@@ -1644,8 +1641,7 @@ state 55
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -1656,7 +1652,7 @@ state 55
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
     type                           shift and go to state 87
     base_type                      shift and go to state 88
@@ -1665,7 +1661,6 @@ state 55
     func_ret_type                  shift and go to state 91
     union_type                     shift and go to state 92
     type_alias                     shift and go to state 93
-    identifier                     shift and go to state 103
 
 state 56
 
@@ -1693,7 +1688,7 @@ state 56
     error           shift and go to state 105
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -1733,7 +1728,7 @@ state 57
 
 state 58
 
-    (80) type_def_stmt -> TYPE identifier . EQUALS type
+    (80) type_def_stmt -> TYPE IDENTIFIER . EQUALS type
 
     EQUALS          shift and go to state 106
 
@@ -1800,7 +1795,7 @@ state 62
     (54) connection -> . identifier COLON type INDENT agent_ref ARROW agent_ref DEDENT
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     connection_list                shift and go to state 109
     connection                     shift and go to state 110
@@ -1824,7 +1819,7 @@ state 63
 
     error           shift and go to state 114
     RPAREN          reduce using rule 142 (empty -> .)
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 112
     param_list                     shift and go to state 113
@@ -1858,7 +1853,7 @@ state 64
     error           shift and go to state 119
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -1918,7 +1913,7 @@ state 67
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -2083,7 +2078,7 @@ state 79
     RPAREN          reduce using rule 142 (empty -> .)
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -2535,8 +2530,7 @@ state 101
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -2547,7 +2541,7 @@ state 101
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
     type_list                      shift and go to state 140
     type                           shift and go to state 141
@@ -2557,7 +2551,6 @@ state 101
     func_ret_type                  shift and go to state 91
     union_type                     shift and go to state 92
     type_alias                     shift and go to state 93
-    identifier                     shift and go to state 103
 
 state 102
 
@@ -2568,32 +2561,32 @@ state 102
 
 state 103
 
-    (25) type_alias -> identifier .
+    (25) type_alias -> IDENTIFIER .
 
-    EQUALS          reduce using rule 25 (type_alias -> identifier .)
-    COMMA           reduce using rule 25 (type_alias -> identifier .)
-    RPAREN          reduce using rule 25 (type_alias -> identifier .)
-    AGENT           reduce using rule 25 (type_alias -> identifier .)
-    CONNECT         reduce using rule 25 (type_alias -> identifier .)
-    FUN             reduce using rule 25 (type_alias -> identifier .)
-    FOR             reduce using rule 25 (type_alias -> identifier .)
-    IF              reduce using rule 25 (type_alias -> identifier .)
-    WHILE           reduce using rule 25 (type_alias -> identifier .)
-    BREAK           reduce using rule 25 (type_alias -> identifier .)
-    CONTINUE        reduce using rule 25 (type_alias -> identifier .)
-    RETURN          reduce using rule 25 (type_alias -> identifier .)
-    TYPE            reduce using rule 25 (type_alias -> identifier .)
-    IDENTIFIER      reduce using rule 25 (type_alias -> identifier .)
-    $end            reduce using rule 25 (type_alias -> identifier .)
-    INPUT           reduce using rule 25 (type_alias -> identifier .)
-    OUTPUT          reduce using rule 25 (type_alias -> identifier .)
-    MODEL           reduce using rule 25 (type_alias -> identifier .)
-    CHAT            reduce using rule 25 (type_alias -> identifier .)
-    DEDENT          reduce using rule 25 (type_alias -> identifier .)
-    RBRACKET        reduce using rule 25 (type_alias -> identifier .)
-    INDENT          reduce using rule 25 (type_alias -> identifier .)
-    COLON           reduce using rule 25 (type_alias -> identifier .)
-    RBRACE          reduce using rule 25 (type_alias -> identifier .)
+    EQUALS          reduce using rule 25 (type_alias -> IDENTIFIER .)
+    COMMA           reduce using rule 25 (type_alias -> IDENTIFIER .)
+    RPAREN          reduce using rule 25 (type_alias -> IDENTIFIER .)
+    AGENT           reduce using rule 25 (type_alias -> IDENTIFIER .)
+    CONNECT         reduce using rule 25 (type_alias -> IDENTIFIER .)
+    FUN             reduce using rule 25 (type_alias -> IDENTIFIER .)
+    FOR             reduce using rule 25 (type_alias -> IDENTIFIER .)
+    IF              reduce using rule 25 (type_alias -> IDENTIFIER .)
+    WHILE           reduce using rule 25 (type_alias -> IDENTIFIER .)
+    BREAK           reduce using rule 25 (type_alias -> IDENTIFIER .)
+    CONTINUE        reduce using rule 25 (type_alias -> IDENTIFIER .)
+    RETURN          reduce using rule 25 (type_alias -> IDENTIFIER .)
+    TYPE            reduce using rule 25 (type_alias -> IDENTIFIER .)
+    IDENTIFIER      reduce using rule 25 (type_alias -> IDENTIFIER .)
+    $end            reduce using rule 25 (type_alias -> IDENTIFIER .)
+    INPUT           reduce using rule 25 (type_alias -> IDENTIFIER .)
+    OUTPUT          reduce using rule 25 (type_alias -> IDENTIFIER .)
+    MODEL           reduce using rule 25 (type_alias -> IDENTIFIER .)
+    CHAT            reduce using rule 25 (type_alias -> IDENTIFIER .)
+    DEDENT          reduce using rule 25 (type_alias -> IDENTIFIER .)
+    RBRACKET        reduce using rule 25 (type_alias -> IDENTIFIER .)
+    INDENT          reduce using rule 25 (type_alias -> IDENTIFIER .)
+    COLON           reduce using rule 25 (type_alias -> IDENTIFIER .)
+    RBRACE          reduce using rule 25 (type_alias -> IDENTIFIER .)
 
 
 state 104
@@ -2644,7 +2637,7 @@ state 105
 
 state 106
 
-    (80) type_def_stmt -> TYPE identifier EQUALS . type
+    (80) type_def_stmt -> TYPE IDENTIFIER EQUALS . type
     (14) type -> . base_type
     (15) type -> . list_type
     (16) type -> . record_type
@@ -2660,8 +2653,7 @@ state 106
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -2672,9 +2664,8 @@ state 106
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
-    identifier                     shift and go to state 103
     type                           shift and go to state 143
     base_type                      shift and go to state 88
     list_type                      shift and go to state 89
@@ -2724,7 +2715,7 @@ state 107
     (91) break_stmt -> . BREAK
     (92) continue_stmt -> . CONTINUE
     (88) return_stmt -> . RETURN expr
-    (80) type_def_stmt -> . TYPE identifier EQUALS type
+    (80) type_def_stmt -> . TYPE IDENTIFIER EQUALS type
     (85) assign_target -> . identifier
     (86) assign_target -> . field_access
     (87) assign_target -> . index_access
@@ -2743,7 +2734,7 @@ state 107
     CONTINUE        shift and go to state 25
     RETURN          shift and go to state 26
     TYPE            shift and go to state 27
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 17
     agent_body                     shift and go to state 144
@@ -2762,8 +2753,8 @@ state 107
     return_stmt                    shift and go to state 14
     type_def_stmt                  shift and go to state 15
     assign_target                  shift and go to state 23
-    field_access                   shift and go to state 28
-    index_access                   shift and go to state 29
+    field_access                   shift and go to state 29
+    index_access                   shift and go to state 30
 
 state 108
 
@@ -2822,7 +2813,7 @@ state 110
     (110) identifier -> . IDENTIFIER
 
     DEDENT          reduce using rule 53 (connection_list -> connection .)
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     connection                     shift and go to state 110
     connection_list                shift and go to state 156
@@ -2961,7 +2952,7 @@ state 121
     (91) break_stmt -> . BREAK
     (92) continue_stmt -> . CONTINUE
     (88) return_stmt -> . RETURN expr
-    (80) type_def_stmt -> . TYPE identifier EQUALS type
+    (80) type_def_stmt -> . TYPE IDENTIFIER EQUALS type
     (85) assign_target -> . identifier
     (86) assign_target -> . field_access
     (87) assign_target -> . index_access
@@ -2976,7 +2967,7 @@ state 121
     CONTINUE        shift and go to state 25
     RETURN          shift and go to state 26
     TYPE            shift and go to state 27
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     statement_list                 shift and go to state 168
     statement                      shift and go to state 169
@@ -2990,8 +2981,8 @@ state 121
     type_def_stmt                  shift and go to state 15
     identifier                     shift and go to state 17
     assign_target                  shift and go to state 23
-    field_access                   shift and go to state 28
-    index_access                   shift and go to state 29
+    field_access                   shift and go to state 29
+    index_access                   shift and go to state 30
 
 state 122
 
@@ -3172,7 +3163,7 @@ state 130
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -3240,7 +3231,7 @@ state 133
     (123) instance_assign -> . identifier EQUALS expr
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     instance_assign                shift and go to state 176
     identifier                     shift and go to state 84
@@ -3269,7 +3260,7 @@ state 134
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -3356,7 +3347,7 @@ state 137
     error           shift and go to state 179
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -3389,8 +3380,7 @@ state 138
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -3401,7 +3391,7 @@ state 138
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
     type                           shift and go to state 180
     base_type                      shift and go to state 88
@@ -3410,7 +3400,6 @@ state 138
     func_ret_type                  shift and go to state 91
     union_type                     shift and go to state 92
     type_alias                     shift and go to state 93
-    identifier                     shift and go to state 103
 
 state 139
 
@@ -3420,7 +3409,7 @@ state 139
     (34) field_decl -> . identifier COLON type
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     field_decl_list                shift and go to state 181
     field_decl                     shift and go to state 182
@@ -3463,8 +3452,7 @@ state 142
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -3475,7 +3463,7 @@ state 142
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
     type_list                      shift and go to state 186
     type                           shift and go to state 141
@@ -3485,29 +3473,28 @@ state 142
     func_ret_type                  shift and go to state 91
     union_type                     shift and go to state 92
     type_alias                     shift and go to state 93
-    identifier                     shift and go to state 103
 
 state 143
 
-    (80) type_def_stmt -> TYPE identifier EQUALS type .
+    (80) type_def_stmt -> TYPE IDENTIFIER EQUALS type .
 
-    AGENT           reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    CONNECT         reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    FUN             reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    FOR             reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    IF              reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    WHILE           reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    BREAK           reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    CONTINUE        reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    RETURN          reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    TYPE            reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    IDENTIFIER      reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    $end            reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    INPUT           reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    OUTPUT          reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    MODEL           reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    CHAT            reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
-    DEDENT          reduce using rule 80 (type_def_stmt -> TYPE identifier EQUALS type .)
+    AGENT           reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    CONNECT         reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    FUN             reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    FOR             reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    IF              reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    WHILE           reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    BREAK           reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    CONTINUE        reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    RETURN          reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    TYPE            reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    IDENTIFIER      reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    $end            reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    INPUT           reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    OUTPUT          reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    MODEL           reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    CHAT            reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
+    DEDENT          reduce using rule 80 (type_def_stmt -> TYPE IDENTIFIER EQUALS type .)
 
 
 state 144
@@ -3559,7 +3546,7 @@ state 145
     (91) break_stmt -> . BREAK
     (92) continue_stmt -> . CONTINUE
     (88) return_stmt -> . RETURN expr
-    (80) type_def_stmt -> . TYPE identifier EQUALS type
+    (80) type_def_stmt -> . TYPE IDENTIFIER EQUALS type
     (85) assign_target -> . identifier
     (86) assign_target -> . field_access
     (87) assign_target -> . index_access
@@ -3579,7 +3566,7 @@ state 145
     CONTINUE        shift and go to state 25
     RETURN          shift and go to state 26
     TYPE            shift and go to state 27
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     agent_body_item                shift and go to state 145
     agent_body                     shift and go to state 188
@@ -3598,8 +3585,8 @@ state 145
     type_def_stmt                  shift and go to state 15
     identifier                     shift and go to state 17
     assign_target                  shift and go to state 23
-    field_access                   shift and go to state 28
-    index_access                   shift and go to state 29
+    field_access                   shift and go to state 29
+    index_access                   shift and go to state 30
 
 state 146
 
@@ -3727,7 +3714,7 @@ state 154
     (110) identifier -> . IDENTIFIER
 
     COLON           shift and go to state 193
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 192
 
@@ -3774,8 +3761,7 @@ state 157
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -3786,9 +3772,8 @@ state 157
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
-    identifier                     shift and go to state 103
     type                           shift and go to state 194
     base_type                      shift and go to state 88
     list_type                      shift and go to state 89
@@ -3816,8 +3801,7 @@ state 158
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -3828,9 +3812,8 @@ state 158
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
-    identifier                     shift and go to state 103
     type                           shift and go to state 195
     base_type                      shift and go to state 88
     list_type                      shift and go to state 89
@@ -3863,7 +3846,7 @@ state 159
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -3913,7 +3896,7 @@ state 163
     (13) var_decl -> . identifier
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     param_decl                     shift and go to state 201
     var_decl                       shift and go to state 117
@@ -3987,7 +3970,7 @@ state 169
     (91) break_stmt -> . BREAK
     (92) continue_stmt -> . CONTINUE
     (88) return_stmt -> . RETURN expr
-    (80) type_def_stmt -> . TYPE identifier EQUALS type
+    (80) type_def_stmt -> . TYPE IDENTIFIER EQUALS type
     (85) assign_target -> . identifier
     (86) assign_target -> . field_access
     (87) assign_target -> . index_access
@@ -4003,7 +3986,7 @@ state 169
     CONTINUE        shift and go to state 25
     RETURN          shift and go to state 26
     TYPE            shift and go to state 27
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     statement                      shift and go to state 169
     statement_list                 shift and go to state 206
@@ -4017,8 +4000,8 @@ state 169
     type_def_stmt                  shift and go to state 15
     identifier                     shift and go to state 17
     assign_target                  shift and go to state 23
-    field_access                   shift and go to state 28
-    index_access                   shift and go to state 29
+    field_access                   shift and go to state 29
+    index_access                   shift and go to state 30
 
 state 170
 
@@ -4097,7 +4080,7 @@ state 173
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -4277,8 +4260,7 @@ state 185
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -4289,7 +4271,7 @@ state 185
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
     type                           shift and go to state 141
     type_list                      shift and go to state 215
@@ -4299,7 +4281,6 @@ state 185
     func_ret_type                  shift and go to state 91
     union_type                     shift and go to state 92
     type_alias                     shift and go to state 93
-    identifier                     shift and go to state 103
 
 state 186
 
@@ -4423,8 +4404,7 @@ state 197
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -4435,9 +4415,8 @@ state 197
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
-    identifier                     shift and go to state 103
     type                           shift and go to state 225
     base_type                      shift and go to state 88
     list_type                      shift and go to state 89
@@ -4473,8 +4452,7 @@ state 199
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -4485,9 +4463,8 @@ state 199
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
-    identifier                     shift and go to state 103
     type                           shift and go to state 227
     base_type                      shift and go to state 88
     list_type                      shift and go to state 89
@@ -4708,7 +4685,7 @@ state 213
     (34) field_decl -> . identifier COLON type
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     field_decl                     shift and go to state 182
     field_decl_list                shift and go to state 233
@@ -4732,8 +4709,7 @@ state 214
     (31) record_type -> . TYPE_RECORD LBRACE field_decl_list RBRACE
     (27) func_ret_type -> . LPAREN type_list RPAREN
     (26) union_type -> . TYPE_UNION LBRACKET type_list RBRACKET
-    (25) type_alias -> . identifier
-    (110) identifier -> . IDENTIFIER
+    (25) type_alias -> . IDENTIFIER
 
     TYPE_STR        shift and go to state 94
     TYPE_INT        shift and go to state 95
@@ -4744,9 +4720,8 @@ state 214
     TYPE_RECORD     shift and go to state 100
     LPAREN          shift and go to state 101
     TYPE_UNION      shift and go to state 102
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 103
 
-    identifier                     shift and go to state 103
     type                           shift and go to state 234
     base_type                      shift and go to state 88
     list_type                      shift and go to state 89
@@ -4806,7 +4781,7 @@ state 217
     (110) identifier -> . IDENTIFIER
 
     error           shift and go to state 236
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     var_decl_list                  shift and go to state 235
     var_decl                       shift and go to state 237
@@ -4825,7 +4800,7 @@ state 218
     (110) identifier -> . IDENTIFIER
 
     error           shift and go to state 239
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     var_decl_list                  shift and go to state 238
     var_decl                       shift and go to state 237
@@ -4901,7 +4876,7 @@ state 223
     (55) agent_ref -> . identifier agent_ref_tail
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 241
     agent_ref                      shift and go to state 242
@@ -4930,7 +4905,7 @@ state 224
 
     LBRACKET        shift and go to state 49
     LBRACE          shift and go to state 50
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
     STRING          shift and go to state 51
     NUMBER          shift and go to state 52
 
@@ -5097,7 +5072,7 @@ state 237
     (110) identifier -> . IDENTIFIER
 
     DEDENT          reduce using rule 9 (var_decl_list -> var_decl .)
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     var_decl                       shift and go to state 237
     var_decl_list                  shift and go to state 248
@@ -5287,7 +5262,7 @@ state 252
 
     OUTPUT          shift and go to state 258
     INPUT           shift and go to state 259
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 257
 
@@ -5305,7 +5280,7 @@ state 254
     (55) agent_ref -> . identifier agent_ref_tail
     (110) identifier -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 30
+    IDENTIFIER      shift and go to state 28
 
     identifier                     shift and go to state 241
     agent_ref                      shift and go to state 260

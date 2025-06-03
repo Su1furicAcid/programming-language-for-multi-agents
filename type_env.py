@@ -34,8 +34,8 @@ class TypeEnvironment:
         return None
     
     def is_alias(self, name: str) -> bool:
-        for alias in reversed(self._aliases):
-            if name in alias:
+        for scope in reversed(self._aliases):
+            if name in scope:
                 return True
         return False
 

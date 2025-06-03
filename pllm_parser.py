@@ -284,7 +284,7 @@ def p_statement(p):
     p[0] = p[1]
 
 def p_type_def_stmt(p):
-    '''type_def_stmt : TYPE identifier EQUALS type'''
+    '''type_def_stmt : TYPE IDENTIFIER EQUALS type'''
     p[0] = TypeDefStmt(name=p[2], type=p[4], position=get_position(p))
 
 def p_assign_stmt(p):

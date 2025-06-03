@@ -1,3 +1,4 @@
+import re
 import json
 from typing import Optional
 from pllm_ast import *
@@ -421,15 +422,48 @@ class TypeChecker:
             return Unit
         
     def visitTypeDefStmt(self, node: TypeDefStmt) -> None:
-        alias_type = AliasType(node.name.name, string_to_type(node.type))
-        self.type_env.set_alias(node.name.name, alias_type)
+        self.type_env.set_alias(node.name, string_to_type_with_alias(node.type, self.type_env))
 
 def check_types(program_node: Program) -> None:
     type_checker = TypeChecker()
     type_checker.checkProgram(program_node)
     return type_checker.err_handler.errors
 
-def string_to_type_with_alias(name: str, type_env: TypeEnvironment) -> Type:
-    if type_env.is_alias(name):
-        return type_env.get_alias(name)
-    return string_to_type(name)
+def string_to_type_with_alias(type_str: str, type_env: TypeEnvironment, visited=None) -> Type:
+    if visited is None:
+        visited = set()
+    if type_str in visited:
+        raise ValueError(f"Recursive type alias detected: {' -> '.join(list(visited) + [type_str])}")
+    visited.add(type_str)
+    if type_env.is_alias(type_str):
+        alias_type = type_env.get_alias(type_str)
+        if hasattr(alias_type, 'target'):
+            return string_to_type_with_alias(str(alias_type.target), type_env, visited)
+        return alias_type
+    list_match = re.fullmatch(r'list\[(.+)\]', type_str)
+    if list_match:
+        return ListType(string_to_type_with_alias(list_match.group(1), type_env, set()))
+    record_match = re.fullmatch(r'record\{(.*)\}', type_str)
+    if record_match:
+        fields = {}
+        content = record_match.group(1).strip()
+        if content:
+            for field in content.split(','):
+                name, typeval = map(str.strip, field.split(":"))
+                fields[name] = string_to_type_with_alias(typeval, type_env, set())
+        return RecordType(fields)
+    func_match = re.fullmatch(r'\((.*)\)\s*->\s*\((.*)\)', type_str)
+    if func_match:
+        param_strs = func_match.group(1).strip()
+        return_strs = func_match.group(2).strip()
+        param_types = [string_to_type_with_alias(p.strip(), type_env, set()) for p in param_strs.split(",") if p.strip()]
+        return_types = [string_to_type_with_alias(r.strip(), type_env, set()) for r in return_strs.split(",") if r.strip()]
+        return FunctionType(param_types, return_types)
+    union_match = re.fullmatch(r'union\[(.+)\]', type_str)
+    if union_match:
+        types = [string_to_type_with_alias(t.strip(), type_env, set()) for t in union_match.group(1).split(",")]
+        return UnionType(types)
+    from type_pre import STRING_TO_TYPE, Any
+    if type_str in STRING_TO_TYPE:
+        return STRING_TO_TYPE[type_str]
+    raise ValueError(f"Unknown type string: {type_str}")

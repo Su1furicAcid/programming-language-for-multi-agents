@@ -1,1 +1,6 @@
-type student = record { name: str, age: int, grades: list[int] }
+type student = record{ name: str, age: int, grades: list[int] }
+type people = record{name: str, age: int}
+
+x : people = { name = "Alice", age = 30 }
+y : student = { name = "Bob", age = 20, grades = [90, 85, 88] }
+z : people = y

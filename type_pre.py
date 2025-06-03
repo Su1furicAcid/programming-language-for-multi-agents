@@ -274,35 +274,6 @@ class FunctionType(Type):
     def __hash__(self) -> int:
         return hash(("function", tuple(self._param_types), tuple(self._return_types)))
 
-class AliasType(Type):
-    def __init__(self, alias: str, target: Type):
-        if not alias:
-            raise ValueError("Alias name cannot be empty.")
-        if not isinstance(target, Type):
-            raise ValueError("Alias target must be a Type.")
-        self._alias = alias
-        self._target = target
-
-    @property
-    def alias(self) -> str:
-        return self._alias
-
-    @property
-    def target(self) -> Type:
-        return self._target
-
-    def __str__(self) -> str:
-        return self._alias
-
-    def is_subtype_of(self, other: 'Type') -> bool:
-        return self._target.is_subtype_of(other)
-
-    def __eq__(self, other) -> bool:
-        return isinstance(other, AliasType) and self._target == other._target
-
-    def __hash__(self) -> int:
-        return hash(("alias", self._alias, self._target))
-
 # --- Utilities ---
 def string_to_type(type_str: str) -> Type:
     """Convert a type string to a Type instance."""
