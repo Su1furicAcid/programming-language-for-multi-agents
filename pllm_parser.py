@@ -74,7 +74,8 @@ def p_type(p):
             | list_type
             | record_type
             | func_ret_type
-            | union_type'''
+            | union_type
+            | type_alias'''
     p[0] = p[1]
 
 def p_base_type(p):
@@ -83,6 +84,10 @@ def p_base_type(p):
                  | TYPE_FLOAT
                  | TYPE_BOOL
                  | TYPE_UNIT'''
+    p[0] = p[1]
+
+def p_type_alias(p):
+    '''type_alias : IDENTIFIER'''
     p[0] = p[1]
 
 def p_union_type(p):
@@ -274,8 +279,13 @@ def p_statement(p):
                  | assign_stmt
                  | break_stmt
                  | continue_stmt
-                 | return_stmt'''
+                 | return_stmt
+                 | type_def_stmt'''
     p[0] = p[1]
+
+def p_type_def_stmt(p):
+    '''type_def_stmt : TYPE identifier EQUALS type'''
+    p[0] = TypeDefStmt(name=p[2], type=p[4], position=get_position(p))
 
 def p_assign_stmt(p):
     '''assign_stmt : assign_target COLON type EQUALS expr

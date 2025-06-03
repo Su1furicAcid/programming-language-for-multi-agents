@@ -1,0 +1,1 @@
+type student = record { name: str, age: int, grades: list[int] }

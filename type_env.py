@@ -9,6 +9,7 @@ class TypeEnvironment:
 
     def __init__(self):
         self._scopes: List[Dict[str, Type]] = [{}]
+        self._aliases: List[Dict[str, Type]] = [{}]
 
     def define(self, name: str, type_: Type, level: int = 1) -> None:
         if not self._scopes:
@@ -20,14 +21,33 @@ class TypeEnvironment:
             if name in scope:
                 return scope[name]
         return Any
+    
+    def set_alias(self, name: str, type_: Type, level: int = 1) -> None:
+        if not self._aliases:
+            raise RuntimeError("No active alias scope found.")
+        self._aliases[-level][name] = type_
+
+    def get_alias(self, name: str) -> Optional[Type]:
+        for alias in reversed(self._aliases):
+            if name in alias:
+                return alias[name]
+        return None
+    
+    def is_alias(self, name: str) -> bool:
+        for alias in reversed(self._aliases):
+            if name in alias:
+                return True
+        return False
 
     def enterScope(self) -> None:
         self._scopes.append({})
+        self._aliases.append({})
 
     def exitScope(self) -> None:
         if len(self._scopes) <= 1:
             raise RuntimeError("Cannot exit the global scope.")
         self._scopes.pop()
+        self._aliases.pop()
 
     @contextmanager
     def scoped(self):
@@ -44,4 +64,4 @@ class TypeEnvironment:
         return "\n".join(scope_strs)
 
     def __repr__(self) -> str:
-        return f"<TypeEnvironment: {len(self._scopes)} scopes>"
+        return f"<TypeEnvironment: {len(self._scopes)} scopes, {len(self._aliases)} aliases>"

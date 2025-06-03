@@ -35,7 +35,7 @@ class TypeChecker:
         with open(built_in_path) as f:
             data = json.load(f)
             for key, val in data.items():
-                self.type_env.define(key, string_to_type(val))
+                self.type_env.define(key, string_to_type_with_alias(val, self.type_env))
 
     def _initTypeEnvironment(self) -> None:
         self._addBuiltInFuncs("built_in_sig.json")
@@ -67,7 +67,7 @@ class TypeChecker:
     # VarDecl
     def visitVarDecl(self, node: VarDecl) -> None:
         decl_var_name = node.name.name
-        decl_var_type = string_to_type(node.var_type)
+        decl_var_type = string_to_type_with_alias(node.var_type, self.type_env)
         decl_var_expr = node.value
         env_var_type = self.type_env.lookup(decl_var_name)
 
@@ -150,7 +150,7 @@ class TypeChecker:
     # FuncDef
     def visitFuncDef(self, node: FuncDef) -> None:
         func_name = node.name.name
-        func_return_type = string_to_type(node.return_type)
+        func_return_type = string_to_type_with_alias(node.return_type, self.type_env)
         param_types = []
         with self.type_env.scoped(): 
             for param in node.params:
@@ -208,7 +208,7 @@ class TypeChecker:
     # AssignStmt
     def visitAssignStmt(self, node: AssignStmt) -> None:
         decl_var_name = node.target
-        decl_var_type = string_to_type(node.var_type)
+        decl_var_type = string_to_type_with_alias(node.var_type, self.type_env)
         decl_var_expr = node.value
         exp_var_type = self.visit(decl_var_expr)
         # type(expr) <: type
@@ -420,7 +420,16 @@ class TypeChecker:
         else:
             return Unit
         
+    def visitTypeDefStmt(self, node: TypeDefStmt) -> None:
+        alias_type = AliasType(node.name.name, string_to_type(node.type))
+        self.type_env.set_alias(node.name.name, alias_type)
+
 def check_types(program_node: Program) -> None:
     type_checker = TypeChecker()
     type_checker.checkProgram(program_node)
     return type_checker.err_handler.errors
+
+def string_to_type_with_alias(name: str, type_env: TypeEnvironment) -> Type:
+    if type_env.is_alias(name):
+        return type_env.get_alias(name)
+    return string_to_type(name)

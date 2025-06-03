@@ -1,8 +1,15 @@
+"""
+File name: pllm_lexer.py
+Description: This file contains the lexer for the PLLM.
+Author: Sun Ao
+Last edited: 2025-6-3
+"""
+
 import ply.lex as lex
 
-# -------------------------------
-# 关键字和保留字
-# -------------------------------
+"""
+Reserved keywords and tokens.
+"""
 reserved = {
     "agent": "AGENT",
     "input": "INPUT",
@@ -27,12 +34,13 @@ reserved = {
     "bool": "TYPE_BOOL",
     "return": "RETURN",
     "break": "BREAK",
-    "continue": "CONTINUE"
+    "continue": "CONTINUE",
+    "type": "TYPE"
 }
 
-# -------------------------------
-# Token 列表
-# -------------------------------
+"""
+Token list.
+"""
 tokens = [
     "IDENTIFIER",
     "NUMBER",
@@ -53,9 +61,9 @@ tokens = [
     "COMMA"
 ] + list(reserved.values())
 
-# -------------------------------
-# 正则定义
-# -------------------------------
+"""
+Regular expressions for tokens.
+"""
 t_COLON = r":"
 t_EQUALS = r"="
 t_ARROW = r"->"
@@ -79,9 +87,9 @@ t_COMMA = r","
 t_LBRACKET = r"\["
 t_RBRACKET = r"\]"
 
-# -------------------------------
-# 字面值
-# -------------------------------
+"""
+Literal for immerdiate values.
+"""
 def t_TRIPLE_STRING(t):
     r'"""(?:.|\n)*?"""'
     t.lexer.lineno += t.value.count('\n')
@@ -106,9 +114,9 @@ def t_IDENTIFIER(t):
     t.type = reserved.get(t.value, 'IDENTIFIER')
     return t
 
-# -------------------------------
-# 缩进处理
-# -------------------------------
+"""
+Indentation handling.
+"""
 indent_stack = [0]
 
 def t_NEWLINE(t):
@@ -142,19 +150,20 @@ def t_NEWLINE(t):
     else:
         return None
 
-# -------------------------------
-# 处理 DEDENT Token 插入
-# -------------------------------
+"""
+Custom token function to handle indentation and dedentation.
+"""
 def lexer_token():
+    """Get the next token, handling indentation and dedentation."""
     if hasattr(lexer, 'dedent_tokens') and lexer.dedent_tokens:
         return lexer.dedent_tokens.pop(0)
     
     token = lexer.token_original()
     
-    # 如果到达输入末尾且缩进栈中还有未处理的缩进级别
+    
     if token is None and len(indent_stack) > 1:
         dedent_tokens = []
-        while len(indent_stack) > 1:  # 逐一弹出缩进级别
+        while len(indent_stack) > 1:
             indent_stack.pop()
             tok = lex.LexToken()
             tok.type = 'DEDENT'
@@ -163,14 +172,14 @@ def lexer_token():
             tok.lexpos = lexer.lexpos
             dedent_tokens.append(tok)
         
-        lexer.dedent_tokens = dedent_tokens  # 将生成的 DEDENT tokens 存入 dedent_tokens
+        lexer.dedent_tokens = dedent_tokens 
         return lexer.dedent_tokens.pop(0)
     
     return token
 
-# -------------------------------
-# 忽略空格和注释
-# -------------------------------
+"""
+Ignore whitespace and comments.
+"""
 t_ignore = ' '
 t_ignore_COMMENT = r'\#.*'
 
@@ -178,9 +187,9 @@ def t_error(t):
     print(f"Illegal character {t.value[0]!r} at line {t.lineno}")
     t.lexer.skip(1)
 
-# -------------------------------
-# 构建词法分析器
-# -------------------------------
+"""
+Initialize the lexer.
+"""
 lexer = lex.lex()
 lexer.token_original = lexer.token
 lexer.token = lexer_token

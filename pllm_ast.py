@@ -1,3 +1,10 @@
+"""
+File name: pllm_ast.py
+Description: This file contains the abstract syntax tree (AST) definitions for the PLLM.
+Author: Sun Ao
+Last edited: 2025-6-3
+"""
+
 class ASTNode:
     """基础 AST 节点类"""
     def __init__(self, **kwargs):
@@ -107,6 +114,11 @@ class ContinueStmt(Stmt):
     """Continue 语句"""
     def __init__(self, position={}):
         super().__init__(position=position)
+
+class TypeDefStmt(Stmt):
+    """类型别名语句"""
+    def __init__(self, name, type="", position={}):
+        super().__init__(name=name, type=type, position=position)
 
 class Expr(ASTNode):
     """表达式基类"""

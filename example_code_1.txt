@@ -1,6 +1,6 @@
 agent reader:
     output: 
-        article: strr
+        article: str
     article = read_file("article.txt")
 
 agent critic1:
@@ -44,9 +44,6 @@ agent summarizer:
 agent writer:
     input:
         summary: str
-    a: int = 1
-    b: str = "Summary of the article"
-    c = a + b
     _ = write_file("article_summary.txt", summary)
 
 connect:
