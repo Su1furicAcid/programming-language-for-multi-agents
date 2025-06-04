@@ -463,7 +463,6 @@ def string_to_type_with_alias(type_str: str, type_env: TypeEnvironment, visited=
     if union_match:
         types = [string_to_type_with_alias(t.strip(), type_env, set()) for t in union_match.group(1).split(",")]
         return UnionType(types)
-    from type_pre import STRING_TO_TYPE, Any
     if type_str in STRING_TO_TYPE:
         return STRING_TO_TYPE[type_str]
-    raise ValueError(f"Unknown type string: {type_str}")
+    return Any

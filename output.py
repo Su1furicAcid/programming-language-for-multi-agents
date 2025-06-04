@@ -63,6 +63,7 @@ def console(input: Any) -> None:
     print(input)
 async def reader():
     article: Any = read_file("article.txt")
+    return {'article': article}
 async def critic1(article: str = None):
     model_name="gpt-3.5-turbo"
     prompt = """
