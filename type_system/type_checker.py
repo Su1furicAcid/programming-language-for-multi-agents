@@ -1,9 +1,9 @@
 import re
 import json
 from typing import Optional
-from pllm_ast import *
-from type_env import TypeEnvironment
-from type_pre import *
+from parser.pllm_ast import *
+from type_system.type_env import TypeEnvironment
+from type_system.type_pre import *
 
 class TypeErrorHandler:
     def __init__(self):
@@ -49,7 +49,7 @@ class TypeChecker:
     def checkProgram(self, program_node: Program) -> None:
         self._initTypeEnvironment()
         self.visit(program_node)
-        # self._show()
+        self._show()
 
     def visit(self, ast_node: ASTNode) -> Optional[Type]:
         method_name: str = f"visit{type(ast_node).__name__}"

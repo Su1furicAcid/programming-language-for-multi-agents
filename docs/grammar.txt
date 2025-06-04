@@ -49,7 +49,7 @@ Syntax Rules:
 > arg_list        ::= expr ("," expr)*
 > bin_op          ::= "+" | "-" | "*" | "/" | "%" | "==" | "!=" | "<" | ">" | "<=" | ">="
 > type_def        ::= "type" IDENTIFIER "=" type
- 
+
 Reserved Keywords:
 IDENTIFIER      ::= /[a-zA-Z_][a-zA-Z0-9_]*/
 STRING          ::= /"[^"]*"/

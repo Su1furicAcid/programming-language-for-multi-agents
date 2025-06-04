@@ -1,0 +1,46 @@
+agent reader:
+    output: 
+        article: str
+    article = read_file("article.txt")
+
+agent critic1:
+    input:
+        article: str
+    output:
+        criticism1: str
+    model: "gpt-3.5-turbo"
+    chat: """
+    Play the role of a critic and judge the essay from a literary point of view.
+    essay: {article}
+    criticism: ${criticism1}
+    """
+
+
+agent summarizer:
+    input: 
+        criticism1: str
+        criticism2: str
+    output:
+        summary: str
+    model: "gpt-3.5-turbo"
+    chat: """
+    Summarize the above two points.
+    point1: {criticism1}
+    summary: ${summary}
+    """
+
+agent writer:
+    input:
+        summary: str
+    a: int = 1
+    b: str = "Summary of the article"
+    c = a + b
+    _ = write_file("article_summary.txt", summary)
+
+connect:
+    line1: str
+        reader.output.article -> critic1.input.article
+    line3: str
+        critic1.output.criticism1 -> summarizer.input.criticism1
+    line5: str
+        summarizer.output.summary -> writer.input.summary

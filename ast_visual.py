@@ -1,5 +1,5 @@
 from graphviz import Digraph
-from pllm_ast import *
+from parser.pllm_ast import *
 
 class ASTVisualizer:
     def __init__(self):
@@ -45,4 +45,4 @@ class ASTVisualizer:
 
     def render(self, output_file="ast"):
         """渲染并保存图形"""
-        self.graph.render(output_file, view=False)
+        self.graph.render("./examples/output/"+output_file, view=False)

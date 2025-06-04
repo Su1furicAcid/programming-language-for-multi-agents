@@ -1,10 +1,10 @@
 # TODO: Generate Python code based on tree pattern matching.
 from typing import Optional
 from contextlib import contextmanager
-from pllm_ast import *
-from type_pre import Type, string_to_type, type_to_pycode, RecordType, ListType, FunctionType
-from triplestring_parser import process_string
-from topo_manager import TopoManager
+from parser.pllm_ast import *
+from type_system.type_pre import Type, string_to_type, type_to_pycode, RecordType, ListType, FunctionType
+from generate.triplestring_parser import process_string
+from generate.topo_manager import TopoManager
 
 class IndentManager:
     def __init__(self, indent_str="    "):

@@ -6,8 +6,8 @@ Last edited: 2025-6-2
 """
 
 import ply.yacc as yacc
-from pllm_ast import *
-from pllm_lexer import lexer, tokens
+from parser.pllm_ast import *
+from parser.pllm_lexer import lexer, tokens
 
 """
 Precedence and associativity of operators

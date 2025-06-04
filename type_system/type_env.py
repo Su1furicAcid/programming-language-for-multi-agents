@@ -1,6 +1,6 @@
 from typing import Dict, Optional, List
 from contextlib import contextmanager
-from type_pre import Type, Any
+from type_system.type_pre import Type, Any
 
 class TypeEnvironment:
     """
