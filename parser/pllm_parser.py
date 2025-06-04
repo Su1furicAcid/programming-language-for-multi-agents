@@ -559,7 +559,7 @@ def get_position(p, start_idx=1, end_idx=None):
 """
 Construct the parser.
 """
-parser = yacc.yacc(debug=True, debugfile='parser.out')
+parser = yacc.yacc(debug=True, debugfile='debug/parser.out')
 
 def parse(source_code):
     """
