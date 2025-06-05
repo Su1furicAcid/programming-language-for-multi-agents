@@ -9,7 +9,7 @@ def main():
     # 命令行参数解析
     parser_args = argparse.ArgumentParser(description="Compile source code into Python code.")
     parser_args.add_argument("input_file", help="Path to the input source code file.")
-    parser_args.add_argument("--output_file", default="output.py", help="Path to save the generated Python code.")
+    parser_args.add_argument("--output_file", default="output/output.py", help="Path to save the generated Python code.")
     args = parser_args.parse_args()
 
     input_file = args.input_file

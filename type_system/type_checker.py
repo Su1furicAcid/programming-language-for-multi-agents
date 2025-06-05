@@ -1,5 +1,6 @@
 import re
 import json
+import os 
 from typing import Optional
 from parser.pllm_ast import *
 from type_system.type_env import TypeEnvironment
@@ -39,7 +40,7 @@ class TypeChecker:
                 self.type_env.define(key, string_to_type_with_alias(val, self.type_env))
 
     def _initTypeEnvironment(self) -> None:
-        self._addBuiltInFuncs("built_in_sig.json")
+        self._addBuiltInFuncs("type_system/built_in_sig.json")
         self.type_env.define("_", Any)
         return
     

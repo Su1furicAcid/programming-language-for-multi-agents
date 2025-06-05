@@ -45,4 +45,4 @@ class ASTVisualizer:
 
     def render(self, output_file="ast"):
         """渲染并保存图形"""
-        self.graph.render("./examples/output/"+output_file, view=False)
+        self.graph.render("output/"+output_file, view=False)
