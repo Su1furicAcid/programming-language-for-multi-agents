@@ -1,0 +1,6 @@
+x : int = 3
+y : int = 4
+z : int = 5
+p : int = 2
+ans : float = (3 + 4 + 5) / 2
+_ = console(ans)

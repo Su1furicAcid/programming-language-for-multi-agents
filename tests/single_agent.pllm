@@ -1,0 +1,13 @@
+agent extract:
+    model: "gpt-turbo-3.5"
+    expr: str = "1 + 2 + 3"
+    chat: """
+    What is the answer of {expr}?
+    Solve it in three steps.
+    Step 1: ${step1}
+    Step 2: ${step2}
+    Step 3: ${step3}
+    """
+    _ = console(step1)
+    _ = console(step2)
+    _ = console(step3)

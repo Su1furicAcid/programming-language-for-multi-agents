@@ -1,0 +1,10 @@
+prev = 0
+next = 1
+ans = 1
+num = 10
+while num > 0:
+    ans = prev + next
+    prev = next
+    next = ans
+    num = num - 1
+_ = console(num)
