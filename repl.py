@@ -1,11 +1,11 @@
-from parser.pllm_lexer import lexer
-from parser.pllm_parser import parser
+from pllm_parser.pllm_lexer import lexer
+from pllm_parser.pllm_parser import parser
 from type_system.type_checker import TypeChecker
 from generate.code_gen import CodeGenerator
 import traceback
 
-from parser.pllm_lexer import lexer
-from parser.pllm_parser import parser
+from pllm_parser.pllm_lexer import lexer
+from pllm_parser.pllm_parser import parser
 from type_system.type_checker import TypeChecker
 from generate.code_gen import CodeGenerator
 import traceback

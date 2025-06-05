@@ -6,8 +6,8 @@ Last edited: 2025-6-2
 """
 
 import ply.yacc as yacc
-from parser.pllm_ast import *
-from parser.pllm_lexer import lexer, tokens
+from pllm_parser.pllm_ast import *
+from pllm_parser.pllm_lexer import lexer, tokens
 
 """
 Precedence and associativity of operators
@@ -559,7 +559,7 @@ def get_position(p, start_idx=1, end_idx=None):
 """
 Construct the parser.
 """
-parser = yacc.yacc(debug=True, debugfile='output/parser.out')
+parser = yacc.yacc()
 
 def parse(source_code):
     """

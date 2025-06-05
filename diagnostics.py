@@ -4,7 +4,7 @@ Description: This script generates diagnostics for a given source code file. The
 Author: Sun Ao
 Last edited: 2025-6-2
 """
-from parser.pllm_parser import parse
+from pllm_parser.pllm_parser import parse
 from type_system.type_checker import check_types
 import json
 

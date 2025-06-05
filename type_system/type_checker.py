@@ -2,7 +2,7 @@ import re
 import json
 import os 
 from typing import Optional
-from parser.pllm_ast import *
+from pllm_parser.pllm_ast import *
 from type_system.type_env import TypeEnvironment
 from type_system.type_pre import *
 

@@ -1,5 +1,5 @@
 from graphviz import Digraph
-from parser.pllm_ast import *
+from pllm_parser.pllm_ast import *
 
 class ASTVisualizer:
     def __init__(self):
