@@ -7,15 +7,37 @@ from generate.triplestring_parser import process_string
 from generate.topo_manager import TopoManager
 
 class IndentManager:
+    """
+    IndentManager 是一个用于管理缩进层级的工具类，通常用于生成格式化的代码或文本。
+    属性:
+        indent_str (str): 单层缩进所使用的字符串（默认为四个空格）。
+        current_level (int): 当前缩进层级。
+    方法:
+        get_indent():
+            根据当前缩进层级返回对应的缩进字符串。
+        indent():
+            一个上下文管理器，进入时增加缩进层级，退出时减少缩进层级。
+    """
     def __init__(self, indent_str="    "):
         self.indent_str = indent_str
         self.current_level = 0
     
     def get_indent(self):
+        """
+        根据当前缩进层级返回对应的缩进字符串。
+        """
         return self.indent_str * self.current_level
     
     @contextmanager
     def indent(self):
+        """
+        一个上下文管理器，在进入上下文时增加缩进层级，退出时减少缩进层级。
+        适用于生成需要缩进的代码块。
+        用法示例：
+            with indent_manager.indent():
+            # 该代码块内的内容会自动缩进
+            pass
+        """
         self.current_level += 1
         try:
             yield
@@ -139,19 +161,39 @@ class CodeGenerator:
         self.add_line('    base_url=BASE_URL,')
         self.add_line('    api_key=API_KEY')
         self.add_line(')')
-        self.add_line('response = await client.chat.completions.create(')
+        self.add_line('try:')
         with self.indent():
-            self.add_line('model=model_name,')
-            self.add_line('messages=[')
-            self.add_line('    {"role": "system", "content": SYS_PROMPT},')
-            self.add_line('    {"role": "user", "content": prompt}')
-            self.add_line(']')
-        self.add_line(')')
-        if output_vars:
-            for i, var in enumerate(output_vars):
-                self.add_line(f'{var} = response.choices[0].message.content.split("<completion{i}>")[1].split("</completion{i}>")[0].strip()')
+            self.add_line('response = await client.chat.completions.create(')
+            with self.indent():
+                    self.add_line('model=model_name,')
+                    self.add_line('messages=[')
+                    self.add_line('    {"role": "system", "content": SYS_PROMPT},')
+                    self.add_line('    {"role": "user", "content": prompt}')
+                    self.add_line(']')
+            self.add_line(')')
+            if output_vars:
+                for i, var in enumerate(output_vars):
+                    self.add_line(f'import re')
+                    self.add_line(f'match_{i} = re.search(r"<completion{i}>(.*?)</completion{i}>", response.choices[0].message.content, re.DOTALL)')
+                    self.add_line(f'{var} = match_{i}.group(1).strip() if match_{i} else ""')
+        self.add_line('except Exception as e:')
+        with self.indent():
+            self.add_line('print(f"Error in chat block: {e}")')
+            self.add_line(f'{", ".join(output_vars)} = ""')  # Set outputs to empty string on error
 
     def _extract_agent_name(self, agent_ref: AgentRef) -> str:
+        """
+        从 AgentRef 对象中提取并返回代理(agent)名称。
+
+        该方法会遍历 agent_ref 的每个部分，如果部分是 Identifier，则调用 visit 处理。
+        如果存在至少一个部分，则返回第一个部分作为代理名称。
+
+        参数:
+            agent_ref (AgentRef): 包含代理标识各部分的 AgentRef 对象。
+
+        返回:
+            str: 提取到的代理名称（agent_ref 的第一个部分）。
+        """
         parts = [self.visit(part) if isinstance(part, Identifier) else part for part in agent_ref.parts]
         if len(parts) >= 1:
             return parts[0]
@@ -163,8 +205,10 @@ class CodeGenerator:
         self.add_line(graph_code)
         param_mapping_code = f"param_mapping = {repr(topo_manager.param_mapping)}"
         self.add_line(param_mapping_code)
-        execute_call = """asyncio.run(execute(graph, param_mapping))"""
-        self.add_line(execute_call)
+        self.add_line('if __name__ == "__main__":')
+        with self.indent():
+            execute_call = "asyncio.run(execute(graph, param_mapping))"
+            self.add_line(execute_call)
     
     def visitFuncDef(self, node: FuncDef) -> None:
         func_name = self.visit(node.name)
