@@ -126,6 +126,10 @@ def t_NEWLINE(t):
     next_indent = spaces
 
     pos = t.lexer.lexpos
+    while pos < len(t.lexer.lexdata) and t.lexer.lexdata[pos] in '\n\r':
+        t.lexer.lineno += 1
+        t.lexer.lexpos += 1
+        pos += 1
     if pos >= len(t.lexer.lexdata):
         return None
     next_char = t.lexer.lexdata[pos]
@@ -149,7 +153,6 @@ def t_NEWLINE(t):
         return t.lexer.dedent_tokens.pop(0)
     else:
         return None
-
 """
 Custom token function to handle indentation and dedentation.
 """
