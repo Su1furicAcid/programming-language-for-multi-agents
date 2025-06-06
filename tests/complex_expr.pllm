@@ -1,15 +1,10 @@
 type student = record{ name: str, age: int, grades: list[int] }
 type class = record{ students: list[student], class_name: str }
 
-students : list[student] = [
-    { name = "Alice", age = 20, grades = [90, 85, 88] },
-    { name = "Bob", age = 21, grades = [78, 82, 80] },
-    { name = "Charlie", age = 19, grades = [95, 92, 96] }
-]
+students : list[student] = [{ name = "Alice", age = 20, grades = [90, 85, 88] }, { name = "Bob", age = 21, grades = [78, 82, 80] }, { name = "Charlie", age = 19, grades = [95, 92, 96] }]
 
 my_class : class = { students = students, class_name = "Physics" }
 
-# 计算全班所有学生的平均成绩
 total_score : int = 0
 total_count : int = 0
 

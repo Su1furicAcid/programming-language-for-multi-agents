@@ -17,7 +17,7 @@ def main():
 
     # 加载输入文件
     try:
-        with open(input_file, 'r') as f:
+        with open(input_file, 'r', encoding="utf-8") as f:
             data = f.read()
     except FileNotFoundError:
         print(f"Error: File '{input_file}' not found.")
@@ -50,7 +50,7 @@ def main():
         print("Code generation completed.")
 
         # 保存生成的代码到输出文件
-        with open(output_file, 'w') as f:
+        with open(output_file, 'w', encoding="utf-8") as f:
             f.write(generated_code)
         print(f"Generated code has been saved to '{output_file}'.")
 

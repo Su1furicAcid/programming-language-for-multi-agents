@@ -264,11 +264,11 @@ class TypeChecker:
         cond_expr_type = self.visit(cond_expr)
         if not cond_expr_type.is_equivalent_to(Bool):
             self.err_handler.report(node=node)
-        for stmt in node.body:
-            with self.type_env.scoped():
+        with self.type_env.scoped():
+            for stmt in node.body:
                 self.visit(stmt)
-        for stmt in node.else_block:
-            with self.type_env.scoped():
+        with self.type_env.scoped():
+            for stmt in node.else_block:        
                 self.visit(stmt)
         return
     
@@ -278,24 +278,26 @@ class TypeChecker:
         cond_expr_type = self.visit(cond_expr)
         if not cond_expr_type.is_equivalent_to(Bool):
             self.err_handler.report(node=node)
-        for stmt in node.body:
-            with self.type_env.scoped():
+        with self.type_env.scoped():
+            for stmt in node.body:
                 self.visit(stmt)
         return
     
     # ForStmt
     def visitForStmt(self, node: ForStmt) -> None:
-        iterator = node.iterator.name
-        iterable = node.iterable.name
-        iterator_type = self.type_env.lookup(iterator)
-        iterable_type = self.type_env.lookup(iterable)
+        iterable_type = self.visit(node.iterable)
         if not isinstance(iterable_type, ListType):
-            print("TypeError")
-        element_type = iterable_type.element_type
-        if not iterator_type.is_subtype_of(element_type):
-            print("TypeError")
-        for stmt in node.body:
-            self.visit(stmt)
+            self.err_handler.report("For loop expects a list to iterate.", node=node)
+            element_type = Any
+        else:
+            element_type = iterable_type.element_type
+        with self.type_env.scoped():
+            if isinstance(node.iterator, Identifier):
+                self.type_env.define(node.iterator.name, element_type)
+            else:
+                self.err_handler.report("For loop iterator must be an identifier.", node=node)
+            for stmt in node.body:
+                self.visit(stmt)
 
     # BreakStmt
     def visitBreakStmt(self, node: BreakStmt) -> None:
@@ -376,18 +378,18 @@ class TypeChecker:
     
     # FieldAccess
     def visitFieldAccess(self, node: FieldAccess) -> Type:
-        obj = node.obj.name
-        obj_type = self.type_env.lookup(obj)
+        obj = node.obj
+        obj_type = self.visit(obj)
         if not isinstance(obj_type, RecordType):
             self.err_handler.report(node=node)
-        if node.field not in obj_type.fields:
+        if node.field.name not in obj_type.fields:
             self.err_handler.report(node=node)
-        return obj_type.fields[node.field]
+        return obj_type.fields[node.field.name]
     
     # IndexAccess
     def visitIndexAccess(self, node: IndexAccess) -> Type:
-        obj = node.obj.name
-        obj_type = self.type_env.lookup(obj)
+        obj = node.obj
+        obj_type = self.visit(obj)
         if not isinstance(obj_type, ListType):
             self.err_handler.report(node=node)
         return obj_type.element_type
@@ -464,6 +466,4 @@ def string_to_type_with_alias(type_str: str, type_env: TypeEnvironment, visited=
     if union_match:
         types = [string_to_type_with_alias(t.strip(), type_env, set()) for t in union_match.group(1).split(",")]
         return UnionType(types)
-    if type_str in STRING_TO_TYPE:
-        return STRING_TO_TYPE[type_str]
-    return Any
+    return string_to_type(type_str)
