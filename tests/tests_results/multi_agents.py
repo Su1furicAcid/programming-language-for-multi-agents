@@ -2,8 +2,16 @@
 from openai import AsyncOpenAI
 import asyncio
 from typing import *
-from generate.sys_prompt import SYS_PROMPT
 from config import API_KEY, BASE_URL
+
+SYS_PROMPT = """You are an AI assistant designed to generate structured outputs. 
+Complete the contents of all `<completionK>` tags in order.
+For example, you should respond as follows:
+<completion0>...</completion0>
+<completion1>...</completion1>
+Do not include any additional explanation or text outside the `<completion>` tags.
+Ensure all `<completionK>` tags are present, even if the values are empty or null. Missing values should be represented by an empty string within the `<completion>` tags.
+Follow this sequence strictly and do not deviate from the provided instructions."""
 
 # private
 async def execute(graph, param_mapping):
@@ -145,20 +153,20 @@ def console(input: Any) -> None:
     print(input)
 async def reader():
     article = read_file("article.txt")
-    return {'article = None': article = None}
-async def critic1(article = None):
+    return {'article': article}
+async def critic1(article=None):
     model_name="gpt-3.5-turbo"
-    prompt = """
+    prompt="""
     Play the role of a critic and judge the essay from a literary point of view.
     essay: {article}
     criticism: <completion0></completion0>
     """.format(article=article)
-    client = AsyncOpenAI(
+    client=AsyncOpenAI(
         base_url=BASE_URL,
         api_key=API_KEY
     )
     try:
-        response = await client.chat.completions.create(
+        response=await client.chat.completions.create(
             model=model_name,
             messages=[
                 {"role": "system", "content": SYS_PROMPT},
@@ -166,25 +174,25 @@ async def critic1(article = None):
             ]
         )
         import re
-        match_0 = re.search(r"<completion0>(.*?)</completion0>", response.choices[0].message.content, re.DOTALL)
-        criticism1 = match_0.group(1).strip() if match_0 else ""
+        match_0=re.search(r"<completion0>(.*?)</completion0>", response.choices[0].message.content, re.DOTALL)
+        criticism1=match_0.group(1).strip() if match_0 else ""
     except Exception as e:
         print(f"Error in chat block: {e}")
-        criticism1 = ""
-    return {'criticism1 = None': criticism1 = None}
-async def critic2(article = None):
+        criticism1=""
+    return {'criticism1': criticism1}
+async def critic2(article=None):
     model_name="gpt-3.5-turbo"
-    prompt = """
+    prompt="""
     Play as a critic and judge the essay from the perspective of science.
     essay: {article}
     criticism: <completion0></completion0>
     """.format(article=article)
-    client = AsyncOpenAI(
+    client=AsyncOpenAI(
         base_url=BASE_URL,
         api_key=API_KEY
     )
     try:
-        response = await client.chat.completions.create(
+        response=await client.chat.completions.create(
             model=model_name,
             messages=[
                 {"role": "system", "content": SYS_PROMPT},
@@ -192,26 +200,26 @@ async def critic2(article = None):
             ]
         )
         import re
-        match_0 = re.search(r"<completion0>(.*?)</completion0>", response.choices[0].message.content, re.DOTALL)
-        criticism2 = match_0.group(1).strip() if match_0 else ""
+        match_0=re.search(r"<completion0>(.*?)</completion0>", response.choices[0].message.content, re.DOTALL)
+        criticism2=match_0.group(1).strip() if match_0 else ""
     except Exception as e:
         print(f"Error in chat block: {e}")
-        criticism2 = ""
-    return {'criticism2 = None': criticism2 = None}
-async def summarizer(criticism1 = None, criticism2 = None):
+        criticism2=""
+    return {'criticism2': criticism2}
+async def summarizer(criticism1=None, criticism2=None):
     model_name="gpt-3.5-turbo"
-    prompt = """
+    prompt="""
     Summarize the above two points.
     point1: {criticism1}
     point2: {criticism2}
     summary: <completion0></completion0>
     """.format(criticism1=criticism1, criticism2=criticism2)
-    client = AsyncOpenAI(
+    client=AsyncOpenAI(
         base_url=BASE_URL,
         api_key=API_KEY
     )
     try:
-        response = await client.chat.completions.create(
+        response=await client.chat.completions.create(
             model=model_name,
             messages=[
                 {"role": "system", "content": SYS_PROMPT},
@@ -219,15 +227,15 @@ async def summarizer(criticism1 = None, criticism2 = None):
             ]
         )
         import re
-        match_0 = re.search(r"<completion0>(.*?)</completion0>", response.choices[0].message.content, re.DOTALL)
-        summary = match_0.group(1).strip() if match_0 else ""
+        match_0=re.search(r"<completion0>(.*?)</completion0>", response.choices[0].message.content, re.DOTALL)
+        summary=match_0.group(1).strip() if match_0 else ""
     except Exception as e:
         print(f"Error in chat block: {e}")
-        summary = ""
-    return {'summary = None': summary = None}
-async def writer(summary = None):
+        summary=""
+    return {'summary': summary}
+async def writer(summary=None):
     _ = write_file("article_summary.txt", summary)
 graph = {'reader': ['critic1', 'critic2'], 'critic1': ['summarizer'], 'critic2': ['summarizer'], 'summarizer': ['writer'], 'writer': []}
-param_mapping = {'critic1': {'article': ('reader', 'article')}, 'critic2': {'article': ('reader', 'article')}, 'summarizer': {'criticism1': ('critic1', 'criticism1'), 'criticism2': ('critic2', 'criticism2')}, 'writer': {'summary': ('summarizer', 'summary')}}
+param_mapping={'critic1': {'article': ('reader', 'article')}, 'critic2': {'article': ('reader', 'article')}, 'summarizer': {'criticism1': ('critic1', 'criticism1'), 'criticism2': ('critic2', 'criticism2')}, 'writer': {'summary': ('summarizer', 'summary')}}
 if __name__ == "__main__":
     asyncio.run(execute(graph, param_mapping))

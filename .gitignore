@@ -3,3 +3,4 @@
 output/
 **/__pycache__/*
 **/__pycache__
+tests/tests_results/config.py

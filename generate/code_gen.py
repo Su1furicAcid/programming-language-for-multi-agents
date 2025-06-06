@@ -111,9 +111,9 @@ class CodeGenerator:
         decl_var_expr = node.value
         if decl_var_expr != "":
             decl_var_expr_str = self.visit(decl_var_expr)
-            return f"{decl_var_name_str} = {decl_var_expr_str}"
+            return f"{decl_var_name_str}={decl_var_expr_str}"
         else:
-            return f"{decl_var_name_str} = None"
+            return f"{decl_var_name_str}=None"
 
     def visitAgentDef(self, node: AgentDef) -> None:
         agent_name_str = self.visit(node.name)
@@ -134,7 +134,7 @@ class CodeGenerator:
         self.insert_line(agent_def_str, agent_def_pos)
         with self.indent():
             if agent_returns:
-                return_dict = ", ".join(f"'{var.split(':')[0]}': {var.split(':')[0]}" for var in agent_returns)
+                return_dict = ", ".join(f"'{var.split('=')[0]}': {var.split('=')[0]}" for var in agent_returns)
                 self.add_line(f"return {{{return_dict}}}")
             else:
                 pass
@@ -156,16 +156,16 @@ class CodeGenerator:
         input_vars, output_vars, processed_string = process_string(node.template)
         if input_vars:
             input_formatting = ", ".join([f"{var}={var}" for var in input_vars])
-            self.add_line(f'prompt = {processed_string}.format({input_formatting})')
+            self.add_line(f'prompt={processed_string}.format({input_formatting})')
         else:
-            self.add_line(f'prompt = {processed_string}')
-        self.add_line('client = AsyncOpenAI(')
+            self.add_line(f'prompt={processed_string}')
+        self.add_line('client=AsyncOpenAI(')
         self.add_line('    base_url=BASE_URL,')
         self.add_line('    api_key=API_KEY')
         self.add_line(')')
         self.add_line('try:')
         with self.indent():
-            self.add_line('response = await client.chat.completions.create(')
+            self.add_line('response=await client.chat.completions.create(')
             with self.indent():
                     self.add_line('model=model_name,')
                     self.add_line('messages=[')
@@ -176,12 +176,12 @@ class CodeGenerator:
             if output_vars:
                 for i, var in enumerate(output_vars):
                     self.add_line(f'import re')
-                    self.add_line(f'match_{i} = re.search(r"<completion{i}>(.*?)</completion{i}>", response.choices[0].message.content, re.DOTALL)')
-                    self.add_line(f'{var} = match_{i}.group(1).strip() if match_{i} else ""')
+                    self.add_line(f'match_{i}=re.search(r"<completion{i}>(.*?)</completion{i}>", response.choices[0].message.content, re.DOTALL)')
+                    self.add_line(f'{var}=match_{i}.group(1).strip() if match_{i} else ""')
         self.add_line('except Exception as e:')
         with self.indent():
             self.add_line('print(f"Error in chat block: {e}")')
-            self.add_line(f'{", ".join(output_vars)} = ""')  # Set outputs to empty string on error
+            self.add_line(f'{", ".join(output_vars)}=""')  # Set outputs to empty string on error
 
     def _extract_agent_name(self, agent_ref: AgentRef) -> str:
         """
@@ -205,7 +205,7 @@ class CodeGenerator:
         topo_manager.build_graph(node.connections, self._extract_agent_name)
         graph_code = f"graph = {repr(topo_manager.graph)}"
         self.add_line(graph_code)
-        param_mapping_code = f"param_mapping = {repr(topo_manager.param_mapping)}"
+        param_mapping_code = f"param_mapping={repr(topo_manager.param_mapping)}"
         self.add_line(param_mapping_code)
         self.add_line('if __name__ == "__main__":')
         with self.indent():
