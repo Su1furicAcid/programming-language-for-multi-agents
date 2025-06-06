@@ -368,24 +368,20 @@ def p_while_stmt_error(p):
     parse_errors.append({**get_position(p), "message": "Invalid condition of While"})
 
 def p_expr(p):
-    '''expr : expr_head bin_op expr_tail
-            | expr_head'''
+    '''expr : expr bin_op expr_tail
+            | expr_tail'''
     if len(p) == 4:
         p[0] = BinaryOp(left=p[1], op=p[2], right=p[3], position=get_position(p))
     else:
         p[0] = p[1]
 
-def p_expr_head(p):
-    '''expr_head : atom
+def p_expr_tail(p):
+    '''expr_tail : atom
                  | list_expr
                  | record_expr
                  | field_access
                  | index_access
                  | func_call'''
-    p[0] = p[1]
-
-def p_expr_tail(p):
-    '''expr_tail : expr'''
     p[0] = p[1]
 
 def p_atom(p):
