@@ -2,7 +2,6 @@
 from openai import AsyncOpenAI
 import asyncio
 from typing import *
-from generate.sys_prompt import SYS_PROMPT
 from config import API_KEY, BASE_URL
 
 # private
