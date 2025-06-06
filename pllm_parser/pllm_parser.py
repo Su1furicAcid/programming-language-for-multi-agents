@@ -390,8 +390,12 @@ def p_expr_tail(p):
 
 def p_atom(p):
     '''atom : identifier
-            | constant'''
-    p[0] = p[1]
+            | constant
+            | LPAREN expr RPAREN'''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[2]
 
 def p_identifier(p):
     '''identifier : IDENTIFIER'''
