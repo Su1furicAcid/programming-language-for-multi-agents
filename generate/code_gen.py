@@ -2,7 +2,7 @@
 from typing import Optional
 from contextlib import contextmanager
 from pllm_parser.pllm_ast import *
-from type_system.type_pre import Type, string_to_type, type_to_pycode, RecordType, ListType, FunctionType
+from type_system.type_pre import Type, string_to_type, RecordType, ListType, FunctionType
 from generate.triplestring_parser import process_string
 from generate.topo_manager import TopoManager
 
@@ -74,13 +74,13 @@ class CodeGenerator:
         return
     
     def _include_built_in_functions(self, built_in_path: str) -> None:
-        with open(built_in_path, 'r') as f:
+        with open(built_in_path, 'r', encoding="utf-8") as f:
             built_in_code = f.read()
             self.add_line(built_in_code)
     
     def show(self):
         # TODO: Write to file and compile
-        with open('test.py', 'w') as f:
+        with open('test.py', 'w', encoding="utf-8") as f:
             for line in self.code:
                 f.write(line)
 
@@ -98,6 +98,9 @@ class CodeGenerator:
         # TODO: 抛出一个错误
         print(type(node).__name__)
         return
+    
+    def visitTypeDefStmt(self, node) -> None:
+        return
 
     def visitProgram(self, node: Program) -> None:
         for child in node.body:
@@ -105,13 +108,12 @@ class CodeGenerator:
 
     def visitVarDecl(self, node: VarDecl) -> str:
         decl_var_name_str = self.visit(node.name)
-        decl_var_type_str = type_to_pycode(string_to_type(node.var_type))
         decl_var_expr = node.value
         if decl_var_expr != "":
             decl_var_expr_str = self.visit(decl_var_expr)
-            return f"{decl_var_name_str}: {decl_var_type_str} = {decl_var_expr_str}"
+            return f"{decl_var_name_str} = {decl_var_expr_str}"
         else:
-            return f"{decl_var_name_str}: {decl_var_type_str} = None"
+            return f"{decl_var_name_str} = None"
 
     def visitAgentDef(self, node: AgentDef) -> None:
         agent_name_str = self.visit(node.name)
@@ -216,16 +218,14 @@ class CodeGenerator:
         for param in node.params:
             param_code = self.visitParamDecl(param)
             param_codes.append(param_code)
-        return_type = type_to_pycode(string_to_type(node.return_type))
-        self.add_line(f"def {func_name}({', '.join(param_codes)}) -> {return_type}:")
+        self.add_line(f"def {func_name}({', '.join(param_codes)}):")
         with self.indent():
             for stmt in node.stmt_body:
                 self.visit(stmt)
     
     def visitParamDecl(self, node: VarDecl) -> str:
         param_name = self.visit(node.name)
-        param_type = type_to_pycode(string_to_type(node.var_type))
-        return f"{param_name}: {param_type}"
+        return f"{param_name}"
     
     def visitReturnStmt(self, node: ReturnStmt) -> None:
         if node.value != "":
@@ -237,15 +237,9 @@ class CodeGenerator:
     def visitAssignStmt(self, node: AssignStmt) -> None:
         if isinstance(node.target, Identifier):
             target_code = self.visit(node.target)
-            target_type = string_to_type(node.var_type)
             expr_code = self.visit(node.value)
-            if isinstance(target_type, RecordType) or isinstance(target_type, ListType) or isinstance(target_type, FunctionType):
-                assign_code = f"{target_code} = {expr_code}"
-                self.add_line(assign_code)
-            else:
-                target_type = type_to_pycode(target_type)
-                assign_code = f"{target_code}: {target_type} = {expr_code}"
-                self.add_line(assign_code)
+            assign_code = f"{target_code} = {expr_code}"
+            self.add_line(assign_code)
         elif isinstance(node.target, FieldAccess):
             target_code = f"{self.visit(node.target.obj)}['{node.target.field.name}']"
             expr_code = self.visit(node.value)
@@ -326,7 +320,7 @@ class CodeGenerator:
 
     def visitFieldAccess(self, node: FieldAccess) -> str:
         obj_code = self.visit(node.obj)
-        field_name = node.field
+        field_name = node.field.name
         return f"{obj_code}['{field_name}']"
     
     def visitIndexAccess(self, node: IndexAccess) -> str:
