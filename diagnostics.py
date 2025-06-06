@@ -21,7 +21,6 @@ def generate_diagnostics(source_code) -> dict:
         "diagnostics": []
     }
     ast_node, parse_errors = parse(source_code)
-    print(ast_node)
     type_errors = check_types(ast_node)
     diagnostics["result"] = "error" if parse_errors or type_errors else "success"
     diagnostics["diagnostics"] = parse_errors + type_errors

@@ -1,3 +1,4 @@
 x : int = 1
 y : str = "2"
-# z : float = x + y
+z : float = x + y
+

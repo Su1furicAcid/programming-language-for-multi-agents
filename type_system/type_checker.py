@@ -311,7 +311,6 @@ class TypeChecker:
     def visitBinaryOp(self, node: BinaryOp) -> Type:
         left_type = self.visit(node.left)
         right_type = self.visit(node.right)
-        print(node, left_type, right_type)
 
         if node.op in {"+", "-", "*", "/", "%"}:
             if not (left_type.is_subtype_of(Int) or left_type.is_subtype_of(Float)):

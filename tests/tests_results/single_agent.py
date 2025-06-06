@@ -2,8 +2,16 @@
 from openai import AsyncOpenAI
 import asyncio
 from typing import *
-from generate.sys_prompt import SYS_PROMPT
 from config import API_KEY, BASE_URL
+
+SYS_PROMPT = """You are an AI assistant designed to generate structured outputs. 
+Complete the contents of all `<completionK>` tags in order.
+For example, you should respond as follows:
+<completion0>...</completion0>
+<completion1>...</completion1>
+Do not include any additional explanation or text outside the `<completion>` tags.
+Ensure all `<completionK>` tags are present, even if the values are empty or null. Missing values should be represented by an empty string within the `<completion>` tags.
+Follow this sequence strictly and do not deviate from the provided instructions."""
 
 # private
 async def execute(graph, param_mapping):
@@ -146,19 +154,19 @@ def console(input: Any) -> None:
 async def extract():
     model_name="gpt-turbo-3.5"
     expr = "1 + 2 + 3"
-    prompt = """
+    prompt="""
     What is the answer of {expr}?
     Solve it in three steps.
     Step 1: <completion0></completion0>
     Step 2: <completion1></completion1>
     Step 3: <completion2></completion2>
     """.format(expr=expr)
-    client = AsyncOpenAI(
+    client=AsyncOpenAI(
         base_url=BASE_URL,
         api_key=API_KEY
     )
     try:
-        response = await client.chat.completions.create(
+        response=await client.chat.completions.create(
             model=model_name,
             messages=[
                 {"role": "system", "content": SYS_PROMPT},
@@ -166,17 +174,17 @@ async def extract():
             ]
         )
         import re
-        match_0 = re.search(r"<completion0>(.*?)</completion0>", response.choices[0].message.content, re.DOTALL)
-        step1 = match_0.group(1).strip() if match_0 else ""
+        match_0=re.search(r"<completion0>(.*?)</completion0>", response.choices[0].message.content, re.DOTALL)
+        step1=match_0.group(1).strip() if match_0 else ""
         import re
-        match_1 = re.search(r"<completion1>(.*?)</completion1>", response.choices[0].message.content, re.DOTALL)
-        step2 = match_1.group(1).strip() if match_1 else ""
+        match_1=re.search(r"<completion1>(.*?)</completion1>", response.choices[0].message.content, re.DOTALL)
+        step2=match_1.group(1).strip() if match_1 else ""
         import re
-        match_2 = re.search(r"<completion2>(.*?)</completion2>", response.choices[0].message.content, re.DOTALL)
-        step3 = match_2.group(1).strip() if match_2 else ""
+        match_2=re.search(r"<completion2>(.*?)</completion2>", response.choices[0].message.content, re.DOTALL)
+        step3=match_2.group(1).strip() if match_2 else ""
     except Exception as e:
         print(f"Error in chat block: {e}")
-        step1, step2, step3 = ""
+        step1, step2, step3=""
     _ = console(step1)
     _ = console(step2)
     _ = console(step3)
