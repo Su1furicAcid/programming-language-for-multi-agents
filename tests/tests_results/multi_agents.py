@@ -144,7 +144,7 @@ def str_to_int(input: str) -> int:
     """
     return int(input)
 
-def console(input: Any) -> None:
+def console(input) -> None:
     """
     Prints the input to the console.
     Args:
